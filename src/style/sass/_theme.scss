@@ -1,0 +1,30 @@
+:root {
+    --blue: #0077FF;
+    --red: #F8244A;
+    --green: #00F2B8;
+    --orange: #FE9F2F;
+    --aqua: #F0F7FF;
+    --indigo: #001833;
+
+    --gray0: #ffffff;
+    --gray1: #F8F8F8;
+    --gray2: #b2becd;
+    --gray3: #6c7983;
+    --gray4: #454e56;
+    --gray5: #2a2e35;
+    --gray6: #12181b;
+    --gray7: #0a0b0c;
+    --gray8: #000000;
+
+    --background: var(--gray0);
+    --text-color: var(--gray8);
+
+    --font-light: "Poppins-Light";
+    --font-regular: "Poppins-Regular";
+    --font-medium: "Poppins-Medium";
+    --font-semibold: "Poppins-SemiBold";
+    --font-bold: "Poppins-Bold";
+    --font-extrabold: "Poppins-ExtraBold";
+    --font-black: "Poppins-Black";
+
+}
