@@ -1,3 +1,13 @@
 <template>
-    <h1>Home</h1>
+    <div>
+        <search-bar></search-bar>
+    </div>
 </template>
+
+
+<script>
+
+export default {
+   
+}
+</script>
