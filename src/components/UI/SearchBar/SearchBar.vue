@@ -1,5 +1,5 @@
 <template>
-    <input :placeholder=value />
+    <input :placeholder=inputFieldPlaceHolder v-model=inputFieldValue />
 </template>
 
 <script>
@@ -7,21 +7,23 @@
 export default {
    data(){
        return {
-           value: "Search Items..."
+           inputFieldPlaceHolder: "Search Items...",
+           inputFieldValue : ""
        }
-   }
+   },
 }
 </script>
 
 <style scoped lang="scss">
    input
    {
-       display: block;
-       width: calc(100% - 30px);
-       padding: 15px 15px;
+       display: flex;
+       min-width: calc(85% - 30px);
+       padding: 0px 15px;
+       height:40px;
        border: none;
        outline: none;
-       box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.05);
+       box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
        border-radius: 4px;
    }
 </style>
