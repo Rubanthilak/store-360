@@ -18,12 +18,12 @@ export default {
    input
    {
        display: flex;
-       min-width: calc(85% - 30px);
+       min-width: calc(80% - 30px);
        padding: 0px 15px;
        height:40px;
        border: none;
        outline: none;
        box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
-       border-radius: 4px;
+       border-radius: 4px;  
    }
 </style>

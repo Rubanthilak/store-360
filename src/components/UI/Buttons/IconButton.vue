@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>{{label}}</p>
+      <img src="../../../assets/icons/menu.svg" alt="search.svg">
   </div>
 </template>
 
@@ -9,39 +9,34 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
-      validator: function (value) {
-        return value;
-      },
-    },
-    icon: {
-      type: String,
       required: false,
       validator: function (value) {
         return value;
       },
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 div {
-  padding: 0px 25px;
   height: 40px;
+  width: 40px;
+  padding: 0px 5px;
   border: none;
   border-radius: 4px;
   background-color: var(--blue);
+  color: var(--gray0);
   outline: none;
   cursor: pointer;
   box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
+  font-family: var(--font-semibold);
+  font-size: 16px;
   margin-left: 10px;
 }
-
-p{
-  font-family: var(--font-semibold);
-  font-size: 14px;
-  line-height: 40px;
-  color: var(--gray0);
+img {
+  height: 24px !important;
+  width: 24px !important;
+  padding: 8px;
 }
 </style>

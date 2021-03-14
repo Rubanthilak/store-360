@@ -6,6 +6,7 @@
     h1{
         font-size: 18px;
         font-family: var(--font-medium);
+        color: var(--indigo);
 
         span{
             font-family: var(--font-extrabold);

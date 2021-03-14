@@ -43,7 +43,7 @@ a {
       background: var(--blue);
       position: absolute;
       left: -25%;
-      bottom: -19px;
+      bottom: -20px;
   }
 }
 

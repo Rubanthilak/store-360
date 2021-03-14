@@ -22,7 +22,7 @@ body{
 }
 
 main{
-  margin-top: 80px !important;
+  margin-top: 90px !important;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -36,6 +36,11 @@ p{
 a{
   text-decoration: none;
   color: var(--gray8);
+}
+
+hr {
+  border: none;
+  border-bottom: var(--h-border);
 }
 
 .container{
