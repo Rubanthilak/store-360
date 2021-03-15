@@ -7,6 +7,7 @@ import SearchBar from './components/UI/SearchBar/SearchBar.vue';
 import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
+import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 
 const app = createApp(App);
 
@@ -17,6 +18,7 @@ app.component('search-bar',SearchBar);
 app.component('the-button',TheButton);
 app.component('icon-button',IconButton);
 app.component('the-table',TheTable);
+app.component('delete-icon',DeleteIcon);
 
 app.mount('#app');
 

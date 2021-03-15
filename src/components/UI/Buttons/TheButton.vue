@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="color ? 'background-color:var(--'+ color +')' : ''">
     <p>{{label}}</p>
   </div>
 </template>
@@ -15,6 +15,13 @@ export default {
       },
     },
     icon: {
+      type: String,
+      required: false,
+      validator: function (value) {
+        return value;
+      },
+    },
+    color: {
       type: String,
       required: false,
       validator: function (value) {

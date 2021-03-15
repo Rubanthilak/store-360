@@ -15,8 +15,7 @@
 </template>
 
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>
@@ -80,7 +79,7 @@ table {
   text-align: left;
 }
 // Inorder to apply sccs to the slot, We include v-deep
-.content::v-deep { 
+.content::v-deep {
   tr {
     background: var(--gray0);
     padding: 0px 10px;
@@ -113,6 +112,47 @@ table {
   td:nth-of-type(1),
   td:nth-of-type(2) {
     text-align: left;
+  }
+}
+
+.table-editmode::v-deep {
+  tr {
+    background: var(--gray0);
+    padding: 0px 10px;
+    cursor: default;
+
+    &:hover {
+      background: var(--gray0);
+      color: var(--gray6);
+    }
+
+    input {
+      width: 95%;
+      text-align: right;
+      padding: 10px 0px;
+      font-family: var(--font-regular);
+      border: 2px solid transparent ;
+    }
+
+    input:hover{
+      cursor: cell;
+    }
+
+    input:focus{
+      background: var(--aqua);
+      border: 2px solid var(--blue) ;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    td {
+      text-align: right;
+      font-size: 14px;
+      font-family: var(--font-semibold);
+      border-bottom: 2px solid var(--gray1);
+      padding: 0px;
+    }
+
   }
 }
 </style>
