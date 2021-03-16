@@ -1,8 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-import store from './store'
-const {Sequelize} = require('sequelize');
 
 import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
@@ -11,19 +9,9 @@ import IconButton from './components/UI/Buttons/IconButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 
-new Sequelize({
-    username: "root",
-    password: "root",
-    storage: './db.sqlite',
-    host: "localhost",
-    dialect: "sqlite",
-    logging: console.log,
-});
-
 const app = createApp(App);
 
 app.use(router);
-app.use(store);
 
 app.component('navigation-bar',NavigationBar);
 app.component('search-bar',SearchBar);
