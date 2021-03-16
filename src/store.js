@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-const productLogic = require("./resources/bussinessLogic/Product/productLogic");
 
 const store = createStore({
   state() {
@@ -11,12 +10,6 @@ const store = createStore({
     setProductList(state, list) {
       state.productList = list;
     },
-  },
-  actions : {
-    getProductList({ commit }){
-        var response = productLogic.getProducts
-        commit('setProductList',response)
-    }
   }
 });
 
