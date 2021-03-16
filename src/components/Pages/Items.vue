@@ -290,6 +290,9 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log(this.$store.state.productList);
+  }
 };
 </script>
 <style lang="scss" scoped>
