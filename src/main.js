@@ -9,6 +9,8 @@ import IconButton from './components/UI/Buttons/IconButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 
+console.log(process.env);
+
 const app = createApp(App);
 
 app.use(router);
