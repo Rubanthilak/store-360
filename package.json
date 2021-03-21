@@ -16,6 +16,7 @@
     "core-js": "^3.6.5",
     "sequelize": "^6.5.1",
     "sqlite3": "^5.0.2",
+    "umzug": "^3.0.0-beta.15",
     "vue": "^3.0.0",
     "vue-router": "^4.0.4",
     "vuex": "^4.0.0"
@@ -33,6 +34,7 @@
     "node-sass": "^5.0.0",
     "sass": "^1.32.8",
     "sass-loader": "^10.1.1",
+    "sequelize-cli": "^6.2.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.6"
   },
   "eslintConfig": {

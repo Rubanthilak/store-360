@@ -10,6 +10,13 @@
 <script>
 export default {
   name: "App",
+  mounted(){
+    this.$store.dispatch('getProductList').then(() => {
+      this.$store.state.productList.forEach(product => {
+        console.log(product.dataValues)
+      });
+    })
+  }
 };
 </script>
 
