@@ -1,5 +1,5 @@
 <template>
-    <the-popup :open="open" @close="$emit('close')">
+    <the-popup :open="open" @close="close">
         <template #header>
             <div>
                 <h2>Add New Item</h2>
@@ -12,12 +12,13 @@
                 <input type="number" placeholder="MRP Price" v-model="product.productMrpPrice">
                 <input type="number" placeholder="Selling Price" v-model="product.productSellingPrice">
                 <input type="number" placeholder="Barcode" v-model="product.productBarcode">
+                <p class="error-text" v-if="errorFlag">Please fill all the fields*</p>
             </div>
         </template>
         <template #actions>
             <div class="flex button-container">
-                <the-button label="Cancel" color="red" @click="$emit('close')"></the-button>
-                <the-button label="Create"  @click="createNewItem"></the-button>
+                <the-button label="Cancel" color="red" @click="close"></the-button>
+                <the-button label="Create"  @click="validateNewItem"></the-button>
             </div>
         </template>
     </the-popup>
@@ -35,19 +36,38 @@ export default {
                 productMrpPrice: null,
                 productSellingPrice: null,
                 productBarcode: null,
-            }
+            },
+            errorFlag: false
         }
     },
     methods: {
+        close(){
+            this.errorFlag = false;
+            this.$emit('close');
+        },
+        validateNewItem(){
+            if( 
+            this.product.productName === "" ||
+            this.product.productQuantity === null ||
+            this.product.productMrpPrice === null ||
+            this.product.productSellingPrice === null ||
+            this.product.productBarcode === null
+            ){
+                this.errorFlag = true;
+            }
+            else{
+                this.errorFlag = false;
+                this.createNewItem()
+            }
+        },
         async createNewItem(){
-            const res = await this.$store.dispatch("postProduct",this.product);
-            console.log(res);
+            await this.$store.dispatch("postProduct",this.product);
             this.product.productName= "";
             this.product.productQuantity= null;
             this.product.productMrpPrice= null;
             this.product.productSellingPrice= null;
             this.product.productBarcode= null;
-            this.$emit('close');
+            this.close();
         }
     }
 }
@@ -63,6 +83,13 @@ input::-webkit-inner-spin-button {
 
 h2{
     font-family: var(--font-semibold);
+}
+
+.error-text{
+    color: var(--red);
+    font-family: var(--font-medium);
+    font-size: 12px;
+    margin-bottom: 15px;
 }
 
 .input-container{

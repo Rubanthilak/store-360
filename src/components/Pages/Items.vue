@@ -9,7 +9,6 @@
       </div>
       <div class="flex button-container" v-else>
         <the-button label="Save" @click="toggleTableEditMode"></the-button>
-        <!-- <the-button label="Back" color="red" @click="toggleTableEditMode"></the-button> -->
       </div>
     </div>
     <hr />
@@ -66,6 +65,7 @@
               class="max-wd"
               maxlength="6"
               @blur="validateInputField($event,item.id)"
+              field="unit"
             />
           </td>
           <td>
@@ -76,6 +76,7 @@
               class="mid-wd"
               placeholder="Enter Rupees"
               @blur="validateInputField($event,item.id)"
+              field="mrp_rupee"
             />.
             <input
               type="text"
@@ -84,6 +85,7 @@
               class="min-wd"
               maxlength="2"
               @blur="validateInputField($event,item.id)"
+              field="mrp_paisa"
             />
           </td>
           <td>
@@ -94,6 +96,7 @@
               class="mid-wd"
               placeholder="Enter Rupees"
               @blur="validateInputField($event,item.id)"
+              field="sell_rupee"
             />.
             <input
               type="text"
@@ -102,6 +105,7 @@
               class="min-wd"
               maxlength="2"
               @blur="validateInputField($event,item.id)"
+              field="sell_paisa"
             />
           </td>
           <td>{{item.barcode}}</td>
@@ -174,8 +178,23 @@ export default {
         if (e.target.value === "") {
           this.columnData.forEach((item) => {
             if (item.id === id) {
-              e.target.value = item.unit;
-              e.target.classList.remove("error-border");
+              switch(e.target.getAttribute('field')){
+                case "unit": 
+                  e.target.value = item.unit
+                  break;
+                case "mrp_rupee": 
+                  e.target.value = item.mrp_price.rupee
+                  break;
+                case "mrp_paisa": 
+                  e.target.value = item.mrp_price.paisa
+                  break;
+                case "sell_rupee": 
+                  e.target.value = item.selling_price.rupee
+                  break;
+                case "sell_paisa": 
+                  e.target.value = item.selling_price.paisa
+                  break;
+              }
             }
           });
         }
