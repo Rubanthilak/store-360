@@ -83,6 +83,7 @@
               v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="min-wd"
               maxlength="2"
+              @blur="validateInputField($event,item.id)"
             />
           </td>
           <td>
@@ -100,6 +101,7 @@
               v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="min-wd"
               maxlength="2"
+              @blur="validateInputField($event,item.id)"
             />
           </td>
           <td>{{item.barcode}}</td>
@@ -137,11 +139,11 @@ export default {
           unit:product.productQuantity,
           mrp_price:{
             rupee:Math.floor(product.productMrpPrice),
-            paisa:product.productMrpPrice%1,
+            paisa:Math.round(product.productMrpPrice%1*100) < 10 ? "0"+Math.round(product.productMrpPrice%1*100) : Math.round(product.productMrpPrice%1*100),
           },
           selling_price:{
             rupee:Math.floor(product.productSellingPrice),
-            paisa:Math.round(product.productSellingPrice%1*100),
+            paisa:Math.round(product.productSellingPrice%1*100) < 10 ? "0"+Math.round(product.productSellingPrice%1*100) : Math.round(product.productSellingPrice%1*100),
           },
           barcode:product.productBarcode,
         };
@@ -162,19 +164,26 @@ export default {
 
     validateInputField(e, id = null) {
       if (id == null) {
-        if (e.target.value == "") {
+        if (e.target.value === "") {
           e.target.classList.add("error-border");
           return false;
         } else {
           e.target.classList.remove("error-border");
         }
       } else {
-        if (e.target.value == "") {
+        if (e.target.value === "") {
           this.columnData.forEach((item) => {
-            if (item.id == id) {
+            if (item.id === id) {
               e.target.value = item.unit;
               e.target.classList.remove("error-border");
             }
+          });
+        }
+        else{
+          this.columnData.forEach(product => {
+              if(product.id === id){
+                this.$store.dispatch("updateProduct",product);
+              }
           });
         }
       }
@@ -193,7 +202,7 @@ export default {
       }
     },
 
-    arrowkeyEventHandler(e, id) {
+    arrowkeyEventHandler(e) {
       const inputs = Array.from(
         document
           .getElementById("table-in-editmode")
@@ -235,20 +244,7 @@ export default {
           break;
         case 46:
           // "Delete Key pressed!"
-          this.columnData.forEach((item) => {
-            if (item.id == id) {
-              e.target.value = "";
-              // if (type.localeCompare("unit") == 0) {
-              //   e.target.value = "";
-              // } else if (type.localeCompare("mrp") == 0) {
-              //   item.mrp_price.rupee = "";
-              //   item.mrp_price.paisa = "";
-              // } else {
-              //   item.selling_price.rupee = "";
-              //   item.selling_price.paisa = "";
-              // }
-            }
-          });
+          e.target.value = "";
           break;
       }
     },

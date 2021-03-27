@@ -67,9 +67,21 @@ const deleteProduct = async function(id){
   return res === 1 ? true : false;
 }
 
+
+const updateProduct = async function(obj,id){
+  const res = await Product.update(obj,{
+    where: {
+      id: id
+    }
+  });
+  return res[0] === 1 ? true : false;
+}
+
+
 export default {
   createTable:createTable,
   createProduct:createProduct,
   getProducts:getProducts,
-  deleteProduct:deleteProduct
+  deleteProduct:deleteProduct,
+  updateProduct:updateProduct
 }
