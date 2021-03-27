@@ -1,18 +1,16 @@
 <template>
-  <div class="flex">
-    <h1>Home</h1>
+  <div>
   </div>
 </template>
 
 
 <script>
 export default {
-
 };
 </script>
 
 <style lang="scss" scoped>
-    .flex{
-      justify-content: space-between;  
-    }
+.flex {
+  justify-content: space-between;
+}
 </style>

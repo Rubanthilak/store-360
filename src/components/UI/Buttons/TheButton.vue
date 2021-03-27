@@ -14,13 +14,6 @@ export default {
         return value;
       },
     },
-    icon: {
-      type: String,
-      required: false,
-      validator: function (value) {
-        return value;
-      },
-    },
     color: {
       type: String,
       required: false,
@@ -42,7 +35,6 @@ div {
   outline: none;
   cursor: pointer;
   box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
-  margin-left: 10px;
 }
 
 p{
@@ -50,5 +42,6 @@ p{
   font-size: 14px;
   line-height: 40px;
   color: var(--gray0);
+  text-align: center;
 }
 </style>

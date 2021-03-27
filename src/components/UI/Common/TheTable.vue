@@ -43,6 +43,7 @@ export default {};
 .wrapper {
   height: calc(100vh - 170px);
   width: 1200px;
+  margin: 0px auto;
   overflow-x: hidden;
   overflow-y: auto;
 }

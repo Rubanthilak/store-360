@@ -52,7 +52,7 @@ const createProduct = async function(obj){
       productSellingPrice : obj.productSellingPrice,
       productBarcode: obj.productBarcode
   })
-  return product;
+  return product.dataValues;
 }
 
 export default {

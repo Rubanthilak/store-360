@@ -3,7 +3,7 @@
     <div class="flex">
       <search-bar></search-bar>
       <div class="flex" v-if="!tableEditMode">
-        <the-button label="New"></the-button>
+        <the-button label="New" @click="popupNewItemTrigger"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <icon-button></icon-button>
       </div>
@@ -24,11 +24,11 @@
       </template>
       <template #thead>
         <tr>
-          <th v-for="title in tableData.columnName" :key="title">{{title}}</th>
+          <th v-for="title in columnName" :key="title">{{title}}</th>
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in tableData.columnData" :key="item.id">
+        <tr v-for="item in columnData" :key="item.id">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>{{item.unit}}</td>
@@ -50,11 +50,11 @@
       </template>
       <template #thead>
         <tr>
-          <th v-for="title in tableData.columnName" :key="title">{{title}}</th>
+          <th v-for="title in columnName" :key="title">{{title}}</th>
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in tableData.columnData" :key="item.id">
+        <tr v-for="item in columnData" :key="item.id">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>
@@ -116,92 +116,46 @@
 export default {
   data() {
     return {
-      tableData: {
-        columnName: [
-          "ID",
-          "ITEM NAME",
-          "STOCK",
-          "MRP PRICE (in ₹)",
-          "SELLING PRICE (in ₹)",
-          "BAR CODE",
-        ],
-        columnData: [
-          {
-            id: "000 129",
-            name: "Bourban Biscuit",
-            unit: "86",
-            mrp_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            selling_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            barcode: "1801251",
-          },
-          {
-            id: "000 130",
-            name: "Bourban Biscuit",
-            unit: "86",
-            mrp_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            selling_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            barcode: "1801251",
-          },
-          {
-            id: "000 131",
-            name: "Bourban Biscuit",
-            unit: "86",
-            mrp_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            selling_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            barcode: "1801251",
-          },
-          {
-            id: "000 132",
-            name: "Bourban Biscuit",
-            unit: "86",
-            mrp_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            selling_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            barcode: "1801251",
-          },
-          {
-            id: "000 133",
-            name: "Bourban Biscuit",
-            unit: "86",
-            mrp_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            selling_price: {
-              rupee: "10",
-              paisa: "00",
-            },
-            barcode: "1801251",
-          },
-        ],
-      },
+      columnName: [
+        "ID",
+        "ITEM NAME",
+        "STOCK",
+        "MRP PRICE (in ₹)",
+        "SELLING PRICE (in ₹)",
+        "BAR CODE",
+      ],
       tableEditMode: false,
     };
   },
+  computed: {
+    columnData(){
+      var tempList = [];
+      this.$store.state.productList.forEach(product => {
+        var tempProduct = {
+          id:product.id,
+          name:product.productName,
+          unit:product.productQuantity,
+          mrp_price:{
+            rupee:Math.floor(product.productMrpPrice),
+            paisa:product.productMrpPrice%1,
+          },
+          selling_price:{
+            rupee:Math.floor(product.productSellingPrice),
+            paisa:Math.round(product.productSellingPrice%1*100),
+          },
+          barcode:product.productBarcode,
+        };
+        tempList.push(tempProduct);
+      });
+      return tempList;
+    }
+  },
   methods: {
+    
+    popupNewItemTrigger(){
+      this.$store.commit("setActivePopup","popup-new-item")
+    },
+
     validateInputField(e, id = null) {
       if (id == null) {
         if (e.target.value == "") {
@@ -212,7 +166,7 @@ export default {
         }
       } else {
         if (e.target.value == "") {
-          this.tableData.columnData.forEach((item) => {
+          this.columnData.forEach((item) => {
             if (item.id == id) {
               item.unit = 56; //TODO: get value from database instead of 56
             }
@@ -275,10 +229,11 @@ export default {
           }
           break;
         case 46:
-          this.tableData.columnData.forEach((item) => {
+          // "Delete Key pressed!"
+          this.columnData.forEach((item) => {
             if (item.id == id) {
               if (type.localeCompare("unit") == 0) {
-                item.unit = "";
+                e.target.value = "";
               } else if (type.localeCompare("mrp") == 0) {
                 item.mrp_price.rupee = "";
               } else {
@@ -290,7 +245,9 @@ export default {
       }
     },
   },
-
+  async mounted(){
+      await this.$store.dispatch('getProductList');
+  },
 };
 </script>
 <style lang="scss" scoped>

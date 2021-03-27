@@ -17,13 +17,13 @@ module.exports = {
       },
     },
   },
-  // pluginOptions: {
-  //   electronBuilder: {
-  //     externals: ["sequelize"],
-  //     nodeIntegration: true,
-  //     builderOptions: {
-  //       extraResources: ["db.sqlite"],
-  //     },
-  //   },
-  // },
+  pluginOptions: {
+    electronBuilder: {
+      externals: ["sequelize"],
+      nodeIntegration: true,
+      builderOptions: {
+        extraResources: ["db.sqlite"],
+      },
+    },
+  },
 };
