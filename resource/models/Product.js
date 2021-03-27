@@ -40,7 +40,10 @@ const createTable = async function(){
 }
 
 const getProducts = async function(){
-  const products = await Product.findAll();
+  const products = await Product.findAll({
+      order: [['id', 'ASC']]
+    }
+  );
   return products;
 }
 
@@ -55,8 +58,18 @@ const createProduct = async function(obj){
   return product.dataValues;
 }
 
+const deleteProduct = async function(id){
+  const res = await Product.destroy({
+    where: {
+      id: id
+    }
+  });
+  return res === 1 ? true : false;
+}
+
 export default {
   createTable:createTable,
   createProduct:createProduct,
-  getProducts:getProducts
+  getProducts:getProducts,
+  deleteProduct:deleteProduct
 }

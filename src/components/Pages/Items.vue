@@ -2,12 +2,12 @@
   <div>
     <div class="flex">
       <search-bar></search-bar>
-      <div class="flex" v-if="!tableEditMode">
+      <div class="flex button-container" v-if="!tableEditMode">
         <the-button label="New" @click="popupNewItemTrigger"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <icon-button></icon-button>
       </div>
-      <div class="flex" v-else>
+      <div class="flex button-container" v-else>
         <the-button label="Save" @click="toggleTableEditMode"></the-button>
         <the-button label="Back" color="red" @click="toggleTableEditMode"></the-button>
       </div>
@@ -104,7 +104,7 @@
           </td>
           <td>{{item.barcode}}</td>
           <td>
-            <delete-icon></delete-icon>
+            <delete-icon @click="triggerDeleteProduct(item.id)"></delete-icon>
           </td>
         </tr>
       </template>
@@ -151,6 +151,10 @@ export default {
     }
   },
   methods: {
+
+    triggerDeleteProduct(id) {
+      this.$store.dispatch("deleteProduct",{id:id});
+    },
     
     popupNewItemTrigger(){
       this.$store.commit("setActivePopup","popup-new-item")
@@ -248,11 +252,20 @@ export default {
   async mounted(){
       await this.$store.dispatch('getProductList');
   },
+  async updated(){
+      await this.$store.dispatch('getProductList');
+  },
 };
 </script>
 <style lang="scss" scoped>
 .flex {
   justify-content: space-between;
+}
+
+.button-container{
+  div{
+    margin-left:10px;
+  }
 }
 
 hr:first-of-type {

@@ -26,6 +26,11 @@ const store = createStore({
         const product = await Database.Model.Product.createProduct(obj);
         await context.dispatch('getProductList');
         return product;
+      },
+      async deleteProduct(context,obj){
+        const res = await Database.Model.Product.deleteProduct(obj.id);
+        await context.dispatch('getProductList');
+        return res;
       }
   }
 })
