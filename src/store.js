@@ -11,7 +11,8 @@ const store = createStore({
   },
   mutations: {
     setProductList(state, { list }) {
-      state.productList = list;
+      state.productList.splice(0,state.productList.length);
+      state.productList.push(...list);
     },
     setActivePopup(state, currentPopup) {
       state.activePopup = currentPopup;

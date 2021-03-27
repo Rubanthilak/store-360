@@ -270,6 +270,9 @@ export default {
   },
   async mounted(){
       await this.$store.dispatch('getProductList');
+  },
+  async beforeUpdate(){
+      await this.$store.dispatch('getProductList');
   }
 };
 </script>
