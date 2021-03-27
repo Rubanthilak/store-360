@@ -9,7 +9,7 @@
       </div>
       <div class="flex button-container" v-else>
         <the-button label="Save" @click="toggleTableEditMode"></the-button>
-        <the-button label="Back" color="red" @click="toggleTableEditMode"></the-button>
+        <!-- <the-button label="Back" color="red" @click="toggleTableEditMode"></the-button> -->
       </div>
     </div>
     <hr />
@@ -61,7 +61,7 @@
             <input
               type="text"
               v-model="item.unit"
-              v-on:keydown="arrowkeyEventHandler($event,item.id,'unit')"
+              v-on:keydown="arrowkeyEventHandler($event,item.id)"
               placeholder="Stock"
               class="max-wd"
               maxlength="6"
@@ -72,7 +72,7 @@
             <input
               type="text"
               v-model="item.mrp_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id,'mrp')"
+              v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
               @blur="validateInputField($event,item.id)"
@@ -80,7 +80,7 @@
             <input
               type="text"
               v-model="item.mrp_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id,'mrp')"
+              v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="min-wd"
               maxlength="2"
             />
@@ -89,7 +89,7 @@
             <input
               type="text"
               v-model="item.selling_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id,'sell')"
+              v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
               @blur="validateInputField($event,item.id)"
@@ -97,7 +97,7 @@
             <input
               type="text"
               v-model="item.selling_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id,'sell')"
+              v-on:keydown="arrowkeyEventHandler($event,item.id)"
               class="min-wd"
               maxlength="2"
             />
@@ -172,7 +172,8 @@ export default {
         if (e.target.value == "") {
           this.columnData.forEach((item) => {
             if (item.id == id) {
-              item.unit = 56; //TODO: get value from database instead of 56
+              e.target.value = item.unit;
+              e.target.classList.remove("error-border");
             }
           });
         }
@@ -192,7 +193,7 @@ export default {
       }
     },
 
-    arrowkeyEventHandler(e, id, type = "") {
+    arrowkeyEventHandler(e, id) {
       const inputs = Array.from(
         document
           .getElementById("table-in-editmode")
@@ -236,13 +237,16 @@ export default {
           // "Delete Key pressed!"
           this.columnData.forEach((item) => {
             if (item.id == id) {
-              if (type.localeCompare("unit") == 0) {
-                e.target.value = "";
-              } else if (type.localeCompare("mrp") == 0) {
-                item.mrp_price.rupee = "";
-              } else {
-                item.selling_price.rupee = "";
-              }
+              e.target.value = "";
+              // if (type.localeCompare("unit") == 0) {
+              //   e.target.value = "";
+              // } else if (type.localeCompare("mrp") == 0) {
+              //   item.mrp_price.rupee = "";
+              //   item.mrp_price.paisa = "";
+              // } else {
+              //   item.selling_price.rupee = "";
+              //   item.selling_price.paisa = "";
+              // }
             }
           });
           break;
@@ -251,10 +255,7 @@ export default {
   },
   async mounted(){
       await this.$store.dispatch('getProductList');
-  },
-  async updated(){
-      await this.$store.dispatch('getProductList');
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
