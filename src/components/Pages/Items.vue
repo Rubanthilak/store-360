@@ -3,7 +3,7 @@
     <div class="flex">
       <search-bar></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
-        <the-button label="New" @click="popupNewItemTrigger"></the-button>
+        <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <icon-button></icon-button>
       </div>
@@ -135,25 +135,7 @@ export default {
   },
   computed: {
     columnData(){
-      var tempList = [];
-      this.$store.state.productList.forEach(product => {
-        var tempProduct = {
-          id:product.id,
-          name:product.productName,
-          unit:product.productQuantity,
-          mrp_price:{
-            rupee:Math.floor(product.productMrpPrice),
-            paisa:Math.round(product.productMrpPrice%1*100) < 10 ? "0"+Math.round(product.productMrpPrice%1*100) : Math.round(product.productMrpPrice%1*100),
-          },
-          selling_price:{
-            rupee:Math.floor(product.productSellingPrice),
-            paisa:Math.round(product.productSellingPrice%1*100) < 10 ? "0"+Math.round(product.productSellingPrice%1*100) : Math.round(product.productSellingPrice%1*100),
-          },
-          barcode:product.productBarcode,
-        };
-        tempList.push(tempProduct);
-      });
-      return tempList;
+      return this.$store.getters.products;
     }
   },
   methods: {
@@ -162,7 +144,7 @@ export default {
       this.$store.dispatch("deleteProduct",{id:id});
     },
     
-    popupNewItemTrigger(){
+    triggerCreateProduct(){
       this.$store.commit("setActivePopup","popup-new-item")
     },
 
@@ -268,10 +250,11 @@ export default {
     },
   },
   async mounted(){
-      await this.$store.dispatch('getProductList');
+    await this.$store.dispatch('getProductList');
   },
   async beforeUpdate(){
-      await this.$store.dispatch('getProductList');
+    console.log("updated");
+    await this.$store.dispatch('getProductList');
   }
 };
 </script>
