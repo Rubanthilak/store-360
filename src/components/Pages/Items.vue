@@ -8,7 +8,7 @@
         <icon-button></icon-button>
       </div>
       <div class="flex button-container" v-else>
-        <the-button label="Save" @click="toggleTableEditMode"></the-button>
+        <the-button label="Back" @click="toggleTableEditMode"></the-button>
       </div>
     </div>
     <hr />
@@ -166,47 +166,46 @@ export default {
       this.$store.commit("setActivePopup","popup-new-item")
     },
 
-    validateInputField(e, id = null) {
-      if (id == null) {
+    validateArrowKey(e){
         if (e.target.value === "") {
           e.target.classList.add("error-border");
           return false;
         } else {
           e.target.classList.remove("error-border");
         }
-      } else {
+        return true;
+    },
+
+    async validateInputField(e, id = null) {
         if (e.target.value === "") {
-          this.columnData.forEach((item) => {
-            if (item.id === id) {
-              switch(e.target.getAttribute('field')){
-                case "unit": 
-                  e.target.value = item.unit
-                  break;
-                case "mrp_rupee": 
-                  e.target.value = item.mrp_price.rupee
-                  break;
-                case "mrp_paisa": 
-                  e.target.value = item.mrp_price.paisa
-                  break;
-                case "sell_rupee": 
-                  e.target.value = item.selling_price.rupee
-                  break;
-                case "sell_paisa": 
-                  e.target.value = item.selling_price.paisa
-                  break;
-              }
-            }
-          });
+          e.target.classList.remove("error-border");
+          const item = await this.$store.dispatch("getProductById",{id})
+          switch(e.target.getAttribute('field')){
+            case "unit": 
+              e.target.value = item.unit
+              break;
+            case "mrp_rupee": 
+              e.target.value = item.mrp_price.rupee
+              break;
+            case "mrp_paisa": 
+              e.target.value = item.mrp_price.paisa
+              break;
+            case "sell_rupee": 
+              e.target.value = item.selling_price.rupee
+              break;
+            case "sell_paisa": 
+              e.target.value = item.selling_price.paisa
+              break;
+          }
         }
         else{
+          e.target.classList.remove("error-border");
           this.columnData.forEach(product => {
               if(product.id === id){
                 this.$store.dispatch("updateProduct",product);
               }
           });
         }
-      }
-      return true;
     },
 
     toggleTableEditMode() {
@@ -234,14 +233,14 @@ export default {
           if (
             index > 0 &&
             e.target.selectionStart == 0 &&
-            this.validateInputField(e)
+            this.validateArrowKey(e)
           ) {
             inputs[index - 1].focus();
           }
           break;
         case 38:
           // "Up Key pressed!"
-          if (index - 5 >= 0 && this.validateInputField(e)) {
+          if (index - 5 >= 0 && this.validateArrowKey(e)) {
             inputs[index - 5].focus();
           }
           break;
@@ -250,14 +249,14 @@ export default {
           if (
             index < inputs.length - 1 &&
             e.target.selectionStart == e.target.value.length &&
-            this.validateInputField(e)
+            this.validateArrowKey(e)
           ) {
             inputs[index + 1].focus();
           }
           break;
         case 40:
           // "Down Key pressed!"
-          if (index + 5 < inputs.length && this.validateInputField(e)) {
+          if (index + 5 < inputs.length && this.validateArrowKey(e)) {
             inputs[index + 5].focus();
           }
           break;

@@ -23,6 +23,24 @@ const store = createStore({
       const list = await Database.Model.Product.getProducts();
       context.commit("setProductList", { list });
     },
+    async getProductById(context,obj) {
+      const product = await Database.Model.Product.getProductById(obj.id);
+      var tempProduct = {
+        id:product.id,
+        name:product.productName,
+        unit:product.productQuantity,
+        mrp_price:{
+          rupee:Math.floor(product.productMrpPrice),
+          paisa:Math.round(product.productMrpPrice%1*100) < 10 ? "0"+Math.round(product.productMrpPrice%1*100) : Math.round(product.productMrpPrice%1*100),
+        },
+        selling_price:{
+          rupee:Math.floor(product.productSellingPrice),
+          paisa:Math.round(product.productSellingPrice%1*100) < 10 ? "0"+Math.round(product.productSellingPrice%1*100) : Math.round(product.productSellingPrice%1*100),
+        },
+        barcode:product.productBarcode,
+      };
+      return tempProduct;
+    },
     async postProduct(context, obj) {
       const product = await Database.Model.Product.createProduct(obj);
       await context.dispatch("getProductList");

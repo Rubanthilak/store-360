@@ -47,6 +47,11 @@ const getProducts = async function(){
   return products;
 }
 
+const getProductById = async function(id){
+    const product = await Product.findByPk(id);
+    return product;
+}
+
 const createProduct = async function(obj){
     const product = await Product.create({
       productName: obj.productName,
@@ -83,5 +88,6 @@ export default {
   createProduct:createProduct,
   getProducts:getProducts,
   deleteProduct:deleteProduct,
-  updateProduct:updateProduct
+  updateProduct:updateProduct,
+  getProductById:getProductById
 }
