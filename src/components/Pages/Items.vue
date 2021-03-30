@@ -131,6 +131,7 @@ export default {
         "BAR CODE",
       ],
       tableEditMode: false,
+      ItemDeleteIdProp: null
     };
   },
   computed: {
@@ -141,13 +142,15 @@ export default {
   methods: {
 
     triggerDeleteProduct(id) {
-      this.$store.dispatch("deleteProduct",{id:id});
+      this.$store.commit("setProductIdToDelete",id);
+      this.$store.commit("setActivePopup","popup-delete-item");
     },
     
     triggerCreateProduct(){
       this.$store.commit("setActivePopup","popup-new-item")
     },
 
+    // Adds red border to input field on keypress if input field is empty.
     validateArrowKey(e){
         if (e.target.value === "") {
           e.target.classList.add("error-border");
@@ -252,10 +255,6 @@ export default {
   async mounted(){
     await this.$store.dispatch('getProductList');
   },
-  async beforeUpdate(){
-    console.log("updated");
-    await this.$store.dispatch('getProductList');
-  }
 };
 </script>
 <style lang="scss" scoped>

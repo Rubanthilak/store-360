@@ -25,5 +25,5 @@ module.exports = {
         extraResources: ["db.sqlite"],
       },
     },
-  },
+  }
 };

@@ -1,6 +1,6 @@
 <template>
   <div :style="color ? 'background-color:var(--'+ color +')' : ''">
-    <p>{{label}}</p>
+    <p :style="textColor ? 'color:var(--'+ textColor +')' : ''">{{label}}</p>
   </div>
 </template>
 
@@ -10,6 +10,13 @@ export default {
     label: {
       type: String,
       required: true,
+      validator: function (value) {
+        return value;
+      },
+    },
+    textColor: {
+      type: String,
+      required: false,
       validator: function (value) {
         return value;
       },

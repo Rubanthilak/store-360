@@ -18,7 +18,7 @@
         <template #actions>
             <div class="flex button-container">
                 <the-button label="Cancel" color="red" @click="close"></the-button>
-                <the-button label="Create"  @click="validateNewItem"></the-button>
+                <the-button label="Create" @click="validateNewItem"></the-button>
             </div>
         </template>
     </the-popup>
@@ -97,11 +97,12 @@ h2{
     margin-top: 15px;
 
     input{
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         padding: 8px 10px;
         border-radius: 4px;
         border: 2px solid var(--gray2);
         font-family: var(--font-regular);
+        width: 320px;
 
         &:focus{
             border: 2px solid var(--blue);
@@ -117,7 +118,7 @@ h2{
         width:100%;
 
         &:last-child{
-            margin-left: 10px;
+            margin-left: 15px;
         }
     }
 }

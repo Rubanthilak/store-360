@@ -6,6 +6,7 @@ const store = createStore({
   state() {
     return {
       productList: [],
+      productIdToDelete : null,
       activePopup: "",
     };
   },
@@ -40,6 +41,9 @@ const store = createStore({
     setActivePopup(state, currentPopup) {
       state.activePopup = currentPopup;
     },
+    setProductIdToDelete(state, id){
+      state.productIdToDelete = id;
+    }
   },
   actions: {
     async getProductList(context) {
@@ -66,7 +70,6 @@ const store = createStore({
     },
     async postProduct(context, obj) {
       const product = await Database.Model.Product.createProduct(obj);
-      await context.dispatch("getProductList");
       return product;
     },
     async updateProduct(context, obj) {
@@ -86,7 +89,6 @@ const store = createStore({
     },
     async deleteProduct(context, obj) {
       const res = await Database.Model.Product.deleteProduct(obj.id);
-      await context.dispatch("getProductList");
       return res;
     },
   },

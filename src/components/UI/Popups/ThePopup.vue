@@ -1,5 +1,5 @@
 <template>
-  <teleport to="body">
+  <section>
     <transition name="overlay">
       <div v-if="open" class="overlay" @click="$emit('close')"></div>
     </transition>
@@ -16,12 +16,12 @@
         </section>
       </dialog>
     </transition>
-  </teleport>
+  </section>
 </template>
 
 <script>
 export default {
-  props: ["title","open"],
+  props: ["title", "open"],
   emits: ["close"],
 };
 </script>
@@ -52,13 +52,13 @@ dialog {
   margin: auto auto;
   border: none;
   font-family: var(--font-regular);
-  min-width: 300px;
+  min-width: 250px;
   padding: 20px 25px;
   border-radius: 8px;
 }
 
-.overlay-enter-active ,
-.overlay-leave-active{
+.overlay-enter-active,
+.overlay-leave-active {
   transition: opacity 0.2s ease-in;
 }
 
@@ -69,7 +69,7 @@ dialog {
 
 .popup-enter-active,
 .popup-leave-active {
-   transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .popup-enter-from,
@@ -77,5 +77,4 @@ dialog {
   opacity: 0;
   transform: translateY(-50px) scale(0.9);
 }
-
 </style>
