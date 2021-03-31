@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex">
-      <search-bar></search-bar>
+      <search-bar v-if="!tableEditMode"></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <icon-button></icon-button>
       </div>
-      <div class="flex button-container" v-else>
+      <div class="flex" v-else>
         <the-button label="Back" @click="toggleTableEditMode"></the-button>
       </div>
     </div>

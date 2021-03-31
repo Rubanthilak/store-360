@@ -1,3 +1,3 @@
 <template>
-    <h1>Customers</h1>
+    <customer-card></customer-card>
 </template>

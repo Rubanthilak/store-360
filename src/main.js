@@ -11,6 +11,7 @@ import TheTable from './components/UI/Common/TheTable.vue';
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
+import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 
 const app = createApp(App);
 
@@ -25,6 +26,7 @@ app.component('the-table',TheTable);
 app.component('delete-icon',DeleteIcon);
 app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
+app.component('customer-card',CustomerCard);
 
 app.mount('#app');
 

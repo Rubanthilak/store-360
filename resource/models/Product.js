@@ -72,7 +72,6 @@ const deleteProduct = async function(id){
   return res === 1 ? true : false;
 }
 
-
 const updateProduct = async function(obj,id){
   const res = await Product.update(obj,{
     where: {
