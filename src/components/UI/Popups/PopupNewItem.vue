@@ -61,7 +61,7 @@ export default {
             }
         },
         async createNewItem(){
-            await this.$store.dispatch("postProduct",this.product);
+            await this.$store.dispatch("product/postProduct",this.product);
             this.product.productName= "";
             this.product.productQuantity= null;
             this.product.productMrpPrice= null;

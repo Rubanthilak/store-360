@@ -27,8 +27,8 @@ export default {
       this.$emit("close");
     },
     async deleteProduct() {
-      await this.$store.dispatch("deleteProduct",{id:this.$store.state.productIdToDelete});
-      this.$store.commit("setProductIdToDelete",null);
+      await this.$store.dispatch("product/deleteProduct",{id:this.$store.getters["product/getProductIdToDelete"]});
+      this.$store.commit("product/setProductIdToDelete",null);
       this.$emit("close");
     },
   },

@@ -13,7 +13,7 @@ export default {
     PopupDeleteItem,
   },
   async updated() {
-    await this.$store.dispatch("getProductList");
+    await this.$store.dispatch("product/getProductList");
   },
   methods: {
     closePopup() {

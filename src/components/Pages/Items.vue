@@ -16,7 +16,7 @@
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 45%;" />
-        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 5%;"  />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 10%;" />
@@ -136,13 +136,13 @@ export default {
   },
   computed: {
     columnData(){
-      return this.$store.getters.products;
+      return this.$store.getters["product/getProducts"];
     }
   },
   methods: {
 
     triggerDeleteProduct(id) {
-      this.$store.commit("setProductIdToDelete",id);
+      this.$store.commit("product/setProductIdToDelete",id);
       this.$store.commit("setActivePopup","popup-delete-item");
     },
     
@@ -164,7 +164,7 @@ export default {
     async validateInputField(e, id = null) {
         if (e.target.value === "") {
           e.target.classList.remove("error-border");
-          const item = await this.$store.dispatch("getProductById",{id})
+          const item = await this.$store.dispatch("product/getProductById",{id})
           switch(e.target.getAttribute('field')){
             case "unit": 
               e.target.value = item.unit
@@ -187,7 +187,7 @@ export default {
           e.target.classList.remove("error-border");
           this.columnData.forEach(product => {
               if(product.id === id){
-                this.$store.dispatch("updateProduct",product);
+                this.$store.dispatch("product/updateProduct",product);
               }
           });
         }
@@ -253,7 +253,7 @@ export default {
     },
   },
   async mounted(){
-    await this.$store.dispatch('getProductList');
+    await this.$store.dispatch('product/getProductList');
   },
 };
 </script>

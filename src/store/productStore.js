@@ -1,4 +1,4 @@
-import Database from "../resource/Database";
+import Database from "../../resource/Database";
 
 const state = function() {
     return {
@@ -8,7 +8,7 @@ const state = function() {
 }
 
 const getters = {
-    products: state => {
+    getProducts: state => {
         var tempList = [];
         state.productList.forEach(product => {
           var tempProduct = {
@@ -28,6 +28,9 @@ const getters = {
           tempList.push(tempProduct);
         });
         return tempList;
+    },
+    getProductIdToDelete: state => {
+      return state.productIdToDelete;
     }
 }
 
@@ -89,7 +92,10 @@ const mutations = {
       }
 }
 
+const namespaced = true;
+
 export default {
+    namespaced,
     state,
     getters,
     actions,
