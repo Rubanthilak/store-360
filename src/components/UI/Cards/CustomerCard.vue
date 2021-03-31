@@ -1,7 +1,7 @@
 <template>
   <div class="flex cust-card">
     <div class="lhs-container">
-      <div class="avatar"></div>
+      <div class="avatar" :style="getBackgroundColor">S</div>
     </div>
     <div class="flex rhs-container">
       <div class="details-1">
@@ -10,9 +10,11 @@
       </div>
       <div class="flex details-2">
         <div class="flex credit">
+          <badge-icon size="18" color="green"></badge-icon>
           <p>748</p>
         </div>
         <div class="flex unpaid">
+          <wallet-icon size="18" color="red"></wallet-icon>
           <p>₹ 98.50</p>
         </div>
       </div>
@@ -21,7 +23,21 @@
 </template>
 
 <script>
-export default {};
+import BadgeIcon from "../Icons/BadgeIcon";
+import WalletIcon from "../Icons/WalletIcon";
+export default {
+  components: {
+    BadgeIcon,
+    WalletIcon
+  },
+  computed: {
+    getBackgroundColor(){
+     const color = ["red","green","orange","blue"];
+     const index = Math.floor(Math.random() * 10)%4;
+     return "background: var(--"+color[index]+")";
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -32,16 +48,20 @@ export default {};
   min-width: 240px;
   background: var(--gray0);
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .lhs-container {
   margin: auto 0px;
   .avatar {
+    color: var(--gray0);
+    font-family: var(--font-medium);
+    font-size: 46px;
+    text-align: center;
     height: 70px;
     width: 70px;
     border-radius: 100%;
-    background: var(--blue);
+    position: relative;
   }
 }
 
@@ -70,14 +90,16 @@ export default {};
       p {
         font-size: 12px;
         color: var(--green);
+        margin-left : 5px;
       }
     }
 
     .unpaid {
-      margin-left: 30px;
+      margin-left: 20px;
       p {
         font-size: 12px;
         color: var(--red);
+        margin-left : 5px;
       }
     }
   }
