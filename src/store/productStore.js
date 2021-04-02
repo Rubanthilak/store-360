@@ -41,8 +41,8 @@ const getters = {
 };
 
 const actions = {
-  async getProductList(context) {
-    const list = await Database.Model.Product.getProducts();
+  async getProductList(context,columnToSort) {
+    const list = await Database.Model.Product.getProducts(columnToSort);
     context.commit("setProductList", { list });
   },
   async getProductById(context, obj) {

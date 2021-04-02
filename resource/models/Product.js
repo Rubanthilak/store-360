@@ -39,9 +39,9 @@ const createTable = async function(){
   await Product.sync()
 }
 
-const getProducts = async function(){
+const getProducts = async function(columnToSort='id'){
   const products = await Product.findAll({
-      order: [['id', 'ASC']]
+      order: [[columnToSort, 'ASC']]
     }
   );
   return products;

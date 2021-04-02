@@ -12,6 +12,7 @@ import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
+import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 
 const app = createApp(App);
 
@@ -27,6 +28,7 @@ app.component('delete-icon',DeleteIcon);
 app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
+app.component('dropdown-menu',DropdownMenu);
 
 app.mount('#app');
 
