@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="flex">
-      <search-bar v-if="!tableEditMode"></search-bar>
+      <search-bar @typing="searchProduct"></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <icon-button></icon-button>
       </div>
-      <div class="flex" v-else>
-        <the-button label="Back" @click="toggleTableEditMode"></the-button>
+      <div class="flex button-container" v-if="tableEditMode">
+        <the-button label="Save" @click="toggleTableEditMode"></the-button>
       </div>
     </div>
     <hr />
@@ -27,7 +27,7 @@
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in columnData" :key="item.id">
+        <tr v-for="item in filteredProductList" :key="item.id">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>{{item.unit}}</td>
@@ -41,11 +41,11 @@
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 40%;" />
-        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 5%;"  />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 5%;"  />
       </template>
       <template #thead>
         <tr>
@@ -53,7 +53,7 @@
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in columnData" :key="item.id">
+        <tr v-for="item in filteredProductList" :key="item.id">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>
@@ -131,12 +131,18 @@ export default {
         "BAR CODE",
       ],
       tableEditMode: false,
-      ItemDeleteIdProp: null
+      ItemDeleteIdProp: null,
+      searchKeyword: ""
     };
   },
   computed: {
-    columnData(){
+    productList(){
       return this.$store.getters["product/getProducts"];
+    },
+    filteredProductList(){
+      return this.productList.filter(product => {
+        return product.name.toLowerCase().includes(this.searchKeyword.toLowerCase());
+      });
     }
   },
   methods: {
@@ -148,6 +154,10 @@ export default {
     
     triggerCreateProduct(){
       this.$store.commit("setActivePopup","popup-new-item")
+    },
+
+    searchProduct(str){
+      this.searchKeyword = str;
     },
 
     // Adds red border to input field on keypress if input field is empty.
@@ -185,7 +195,7 @@ export default {
         }
         else{
           e.target.classList.remove("error-border");
-          this.columnData.forEach(product => {
+          this.productList.forEach(product => {
               if(product.id === id){
                 this.$store.dispatch("product/updateProduct",product);
               }

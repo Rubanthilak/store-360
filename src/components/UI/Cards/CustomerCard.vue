@@ -14,7 +14,7 @@
           <p>748</p>
         </div>
         <div class="flex unpaid">
-          <wallet-icon size="18" color="red"></wallet-icon>
+          <wallet-icon size="16" color="red"></wallet-icon>
           <p>₹ 98.50</p>
         </div>
       </div>

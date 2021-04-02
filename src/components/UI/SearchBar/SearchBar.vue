@@ -1,16 +1,27 @@
 <template>
-    <input :placeholder=inputFieldPlaceHolder v-model=inputFieldValue />
+    <input :placeholder=inputFieldPlaceHolder v-model=inputFieldValue @input="validateInputField($event)"/>
 </template>
 
 <script>
 
 export default {
+    emits: ["enter","typing"],
    data(){
        return {
            inputFieldPlaceHolder: "Search Items...",
            inputFieldValue : ""
        }
    },
+   methods : {
+       validateInputField(e){
+           if(e.keyCode === 13 && (this.inputFieldValue !== "")){
+               this.$emit("enter",this.inputFieldValue);
+           }
+           else {
+               this.$emit("typing",this.inputFieldValue);
+           }
+       }
+   }
 }
 </script>
 
@@ -18,7 +29,7 @@ export default {
    input
    {
        display: flex;
-       min-width: calc(80% - 30px);
+       width: 100%;
        padding: 0px 15px;
        height:40px;
        border: none;
