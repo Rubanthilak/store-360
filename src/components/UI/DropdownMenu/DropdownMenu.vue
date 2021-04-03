@@ -1,9 +1,9 @@
 <template>
   <div class="menu-icon">
-    <img src="../../../assets/icons/menu.svg" alt="menu.svg" @click="toggleMenu" />
+    <img src="../../../assets/icons/menu.svg" alt="menu.svg" @click="toggleMenu"/>
     <transition name="dropdown">
       <div class="drop-down" v-if="menuMode">
-        <slot name="options"></slot>
+        <slot name="options" :closeTrigger="toggleMenu"></slot>
       </div>
     </transition>
   </div>
@@ -11,15 +11,6 @@
 
 <script>
 export default {
-  props: {
-    label: {
-      type: String,
-      required: false,
-      validator: function (value) {
-        return value;
-      },
-    },
-  },
   data() {
     return {
       menuMode: false,
@@ -66,8 +57,9 @@ export default {
   box-shadow: 0px 3px 10px #00000028;
   border-radius: 4px;
   overflow: hidden;
-  padding: 10px 15px;
+  padding: 10px 0px;
   font-family: var(--font-regular);
+  cursor: default;
 }
 
 .dropdown-enter-active,
@@ -77,7 +69,8 @@ export default {
 
 .dropdown-enter-from,
 .dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
   max-height: 0px;
-  opacity: 0.8;
 }
 </style>

@@ -5,22 +5,7 @@
       <div class="flex button-container" v-if="!tableEditMode">
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
-        <dropdown-menu >
-          <template #options>
-            <div>
-              <p>SORT BY</p>
-            </div>
-            <div @click="sortColumn('productName')">
-              <p>Name</p>
-            </div>
-            <div @click="sortColumn('productQuantity')">
-              <p>Stock</p>
-            </div>
-            <div @click="sortColumn('productMrpPrice')">
-              <p>MRP Price</p>
-            </div>
-          </template>
-        </dropdown-menu>
+        <dropdown-menu-item></dropdown-menu-item>
       </div>
       <div class="flex button-container" v-if="tableEditMode">
         <the-button label="Save" @click="toggleTableEditMode"></the-button>
@@ -134,7 +119,11 @@
 </template>
 
 <script>
+import DropdownMenuItem from "../UI/DropdownMenu/DropdownMenuItem"
 export default {
+  components: {
+    DropdownMenuItem
+  },
   data() {
     return {
       columnName: [
@@ -173,10 +162,6 @@ export default {
 
     searchProduct(str){
       this.searchKeyword = str;
-    },
-
-    async sortColumn(columnToSort){
-      await this.$store.dispatch('product/getProductList',columnToSort);
     },
 
     // Adds red border to input field on keypress if input field is empty.
