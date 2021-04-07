@@ -42,27 +42,54 @@ export default {};
 
 .wrapper {
   height: calc(100vh - 170px);
-  width: 1200px;
+  width: 100%;
   margin: 0px auto;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 table {
-  width: 1200px;
+  width: 100%;
   border-collapse: collapse;
   position: relative;
 }
 
+.header::v-deep {
+  margin-bottom: 50px;
+}
+
 .header::v-deep th {
   text-align: right;
-  padding-bottom: 10px;
+  padding: 15px 10px;
   font-size: 16px;
   color: var(--gray3);
   font-family: var(--font-semibold);
-  background: var(--gray1);
+  background: var(--gray0);
   position: sticky;
   top: 0;
+
+  &::before {
+    content: " ";
+    width: 100%;
+    height: 2px;
+    background: var(--blue);
+    position: absolute;
+    bottom: 5px;
+    z-index: 2;
+    left: 0px;
+  }  
+
+  
+  &::after {
+    content: " ";
+    width: 100%;
+    height: 5px;
+    background: var(--gray1);
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    left: 0px;
+  }  
 }
 
 .header::v-deep th:first-child {
@@ -81,6 +108,8 @@ table {
 }
 // Inorder to apply sccs to the slot, We include v-deep
 .content::v-deep {
+
+
   tr {
     background: var(--gray0);
     padding: 0px 10px;
@@ -115,5 +144,4 @@ table {
     text-align: left;
   }
 }
-
 </style>

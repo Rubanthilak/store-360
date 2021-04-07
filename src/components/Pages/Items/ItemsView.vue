@@ -50,6 +50,7 @@
       <template #thead>
         <tr>
           <th v-for="title in columnName" :key="title">{{title}}</th>
+          <th></th>
         </tr>
       </template>
       <template #tbody>
@@ -119,7 +120,7 @@
 </template>
 
 <script>
-import DropdownMenuItem from "../UI/DropdownMenu/DropdownMenuItem"
+import DropdownMenuItem from "../../UI/DropdownMenu/DropdownMenuItem"
 export default {
   components: {
     DropdownMenuItem
@@ -145,7 +146,7 @@ export default {
     },
     filteredProductList(){
       return this.productList.filter(product => {
-        return product.name.toLowerCase().includes(this.searchKeyword.toLowerCase());
+        return product.name.toLowerCase().includes(this.searchKeyword.toLowerCase()) || product.id.toString().toLowerCase().includes(this.searchKeyword.toLowerCase());
       });
     }
   },
@@ -239,6 +240,7 @@ export default {
           break;
         case 38:
           // "Up Key pressed!"
+          e.preventDefault();
           if (index - 5 >= 0 && this.validateArrowKey(e)) {
             inputs[index - 5].focus();
           }
@@ -255,6 +257,7 @@ export default {
           break;
         case 40:
           // "Down Key pressed!"
+          e.preventDefault();
           if (index + 5 < inputs.length && this.validateArrowKey(e)) {
             inputs[index + 5].focus();
           }

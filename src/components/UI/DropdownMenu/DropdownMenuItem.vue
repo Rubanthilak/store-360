@@ -4,6 +4,9 @@
       <div class="dropdown-subs">
         <p>SORT BY</p>
       </div>
+      <div @click="sortColumn('id',slotProps.closeTrigger)" class="dropdown-option">
+        <p>ID</p>
+      </div>
       <div @click="sortColumn('productName',slotProps.closeTrigger)" class="dropdown-option">
         <p>Name</p>
       </div>
@@ -16,9 +19,11 @@
       <div class="dropdown-subs">
         <p>TOOLS</p>
       </div>
-      <div class="dropdown-option">
-        <p>Add New Items</p>
-      </div>
+      <router-link to="/items/add">
+        <div class="dropdown-option">
+          <p>Add Items</p>
+        </div>
+      </router-link>
     </template>
   </dropdown-menu>
 </template>

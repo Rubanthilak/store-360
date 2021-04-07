@@ -1,6 +1,6 @@
 <template>
   <div class="menu-icon">
-    <img src="../../../assets/icons/menu.svg" alt="menu.svg" @click="toggleMenu"/>
+    <img src="../../../assets/icons/menu.svg" alt="menu.svg" @click="toggleMenu" />
     <transition name="dropdown">
       <div class="drop-down" v-if="menuMode">
         <slot name="options" :closeTrigger="toggleMenu"></slot>
@@ -25,7 +25,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .menu-icon {
   height: 40px;
   width: 40px;
@@ -47,19 +46,31 @@ export default {
 }
 
 .drop-down {
-  max-height: 200px;
-  min-width: 150px;
+  max-height: 500px;
+  min-width: 170px;
   position: absolute;
-  top: 120%;
+  top: 125%;
   right: 0px;
   background: white;
   z-index: 1;
   box-shadow: 0px 3px 10px #00000028;
   border-radius: 4px;
-  overflow: hidden;
   padding: 10px 0px;
   font-family: var(--font-regular);
   cursor: default;
+
+  &::before {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid var(--gray0);
+    content: " ";
+    position: absolute;
+    top: -16px;
+    right: 15px;
+  }
 }
 
 .dropdown-enter-active,
@@ -70,7 +81,7 @@ export default {
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
   max-height: 0px;
 }
 </style>
