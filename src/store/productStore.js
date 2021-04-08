@@ -73,6 +73,10 @@ const actions = {
     const product = await Database.Model.Product.createProduct(obj);
     return product;
   },
+  async postProductList(context, list) {
+    const productList = await Database.Model.Product.createBulkProduct(list);
+    return productList;
+  },
   async updateProduct(context, obj) {
     const res = await Database.Model.Product.updateProduct(
       {

@@ -1,18 +1,22 @@
 <template>
   <section>
-    <div class="flex button-container">
+    <div class="flex">
       <the-button label="Back"></the-button>
+      <div class="flex button-container">
+        <the-button label="Add Rows" @click="generateRows"></the-button>
+        <the-button label="Save" @click="validateProductList"></the-button>
+      </div>
     </div>
     <div class="table-wrapper">
       <the-table class="table-editmode" id="table">
         <template #colgroup>
-          <col span="1" style="width: 4%;" />
+          <col span="1" style="width: 5%;" />
           <col span="1" style="width: 35%;" />
           <col span="1" style="width: 10%;" />
           <col span="1" style="width: 15%;" />
           <col span="1" style="width: 15%;" />
           <col span="1" style="width: 12%;" />
-          <col span="1" style="width: 5%;" />
+          <col span="1" style="width: 4%;" />
         </template>
         <template #thead>
           <tr>
@@ -25,74 +29,68 @@
             <td>
               <input
                 type="text"
-                v-model="item.name"
-                placeholder="Name"
+                v-model="item.productName"
+                placeholder="Enter Name"
                 class="max-wd"
                 maxlength="6"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="name"
               />
             </td>
             <td>
               <input
                 type="text"
-                v-model="item.unit"
-                placeholder="Stock"
+                v-model="item.productQuantity"
+                placeholder="Enter Stock"
                 class="max-wd"
                 maxlength="6"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="unit"
               />
             </td>
             <td>
               <input
                 type="text"
-                v-model="item.mrp_price.rupee"
+                v-model="item.productMrpPrice.rupee"
                 class="mid-wd"
                 placeholder="Enter Rupees"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="mrp_rupee"
               />.
               <input
                 type="text"
-                v-model="item.mrp_price.paisa"
+                v-model="item.productMrpPrice.paisa"
                 class="min-wd"
                 maxlength="2"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="mrp_paisa"
+                placeholder="PP"
               />
             </td>
             <td>
               <input
                 type="text"
-                v-model="item.selling_price.rupee"
+                v-model="item.productSellingPrice.rupee"
                 class="mid-wd"
                 placeholder="Enter Rupees"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="sell_rupee"
               />.
               <input
                 type="text"
-                v-model="item.selling_price.paisa"
+                v-model="item.productSellingPrice.paisa"
                 class="min-wd"
                 maxlength="2"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                field="sell_paisa"
+                placeholder="PP"
               />
             </td>
             <td>
               <input
                 type="text"
-                v-model="item.barcode"
+                v-model="item.productBarcode"
                 class="max-sm-wd"
-                maxlength="2"
-                field="barcode"
                 v-on:keydown="arrowkeyEventHandler($event)"
-                placeholder="Barcode"
+                placeholder="Enter Barcode"
               />
             </td>
             <td>
-              <delete-icon></delete-icon>
+              <cross-icon @click="removeProduct(productList.indexOf(item))"></cross-icon>
             </td>
           </tr>
         </template>
@@ -112,21 +110,12 @@ export default {
         "MRP PRICE (in ₹)",
         "SELLING PRICE (in ₹)",
         "BAR CODE",
-        " "
+        " ",
       ],
       productList: [],
     };
   },
   methods: {
-    validateArrowKey(e) {
-      if (e.target.value === "") {
-        e.target.classList.add("error-border");
-        // return false;
-      } else {
-        e.target.classList.remove("error-border");
-      }
-      return true;
-    },
     arrowkeyEventHandler(e) {
       const inputs = Array.from(
         document.getElementById("table").getElementsByTagName("input")
@@ -135,18 +124,14 @@ export default {
       switch (e.keyCode) {
         case 37:
           // "Left Key pressed!"
-          if (
-            index > 0 &&
-            e.target.selectionStart == 0 &&
-            this.validateArrowKey(e)
-          ) {
+          if (index > 0 && e.target.selectionStart == 0) {
             inputs[index - 1].focus();
           }
           break;
         case 38:
           // "Up Key pressed!"
           e.preventDefault();
-          if (index - 7 >= 0 && this.validateArrowKey(e)) {
+          if (index - 7 >= 0) {
             inputs[index - 7].focus();
           }
           break;
@@ -154,8 +139,7 @@ export default {
           // "Right Key pressed!
           if (
             index < inputs.length - 1 &&
-            e.target.selectionStart == e.target.value.length &&
-            this.validateArrowKey(e)
+            e.target.selectionStart == e.target.value.length
           ) {
             inputs[index + 1].focus();
           }
@@ -163,7 +147,7 @@ export default {
         case 40:
           // "Down Key pressed!"
           e.preventDefault();
-          if (index + 7 < inputs.length && this.validateArrowKey(e)) {
+          if (index + 7 < inputs.length) {
             inputs[index + 7].focus();
           }
           break;
@@ -173,26 +157,73 @@ export default {
           break;
       }
     },
-    generateRows(num=20){
-      for (var i = 0; i < num; i++) {
-      this.productList.push({
-        name: "",
-        stock: null,
-        mrp_price: {
-          rupee: null,
-          paisa: null,
-        },
-        selling_price: {
-          rupee: null,
-          paisa: null,
-        },
-        barcode: null,
+    generateRows() {
+      if (this.productList.length < 100) {
+        for (var i = 0; i < 10; i++) {
+          this.productList.push({
+            productName: "",
+            productQuantity: null,
+            productMrpPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productSellingPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productBarcode: null,
+            hasError: false,
+          });
+        }
+      }
+      else{
+        //SnackBar : Limit is 100 rows
+      }
+    },
+    async validateProductList() {
+      var errorFlag = false;
+      this.productList.forEach((product) => {
+        if (
+          product.productName === "" ||
+          product.productQuantity === null ||
+          product.productMrpPrice.rupee === null ||
+          product.productSellingPrice.rupee === null ||
+          product.productBarcode === null
+        ) {
+          product.hasError = true;
+          errorFlag = true;
+        } else {
+          product.hasError = false;
+        }
       });
-     }
+
+      if (!errorFlag) {
+        var tempList = [];
+        this.productList.forEach((product) => {
+           var tempProduct = {
+              productName:  product.productName,
+              productQuantity: product.productQuantity,
+              productBarcode: product.productBarcode,
+              productMrpPrice: parseFloat(
+                product.productMrpPrice.rupee + "." + (product.productMrpPrice.paisa ? product.productMrpPrice.paisa : "00")
+              ),
+              productSellingPrice: parseFloat(
+                product.productSellingPrice.rupee + "." + (product.productSellingPrice.paisa? product.productSellingPrice.paisa: "00")
+              ), 
+           }
+           tempList.push(tempProduct);
+        });
+        await this.$store.dispatch("product/postProductList",tempList);
+      } else {
+        //Add a SnackBar Popup to check the invalid fields
+      }
+    },
+    removeProduct(index){
+      this.productList.splice(index,1);
     }
   },
   mounted() {
-    this.generateRows(25);
+    this.generateRows();
   },
 };
 </script>
@@ -207,14 +238,14 @@ export default {
   margin-top: 25px;
 }
 
+hr:first-of-type {
+  margin-top: 20px;
+}
+
 .button-container {
   & > div {
     margin-left: 10px;
   }
-}
-
-hr:first-of-type {
-  margin-top: 20px;
 }
 
 .table-editmode {
@@ -224,7 +255,7 @@ hr:first-of-type {
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
   th:last-child {
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -246,7 +277,7 @@ hr:first-of-type {
       border-bottom: 2px solid var(--gray1);
       padding: 0px;
 
-      &:first-of-type{
+      &:first-of-type {
         text-align: center;
       }
 

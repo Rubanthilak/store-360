@@ -63,6 +63,13 @@ const createProduct = async function(obj){
   return product.dataValues;
 }
 
+const createBulkProduct = async function(list){
+    await Product.bulkCreate(list);
+    return await Product.findAll({
+      order: [['id', 'ASC']]
+    });
+}
+
 const deleteProduct = async function(id){
   const res = await Product.destroy({
     where: {
@@ -85,6 +92,7 @@ const updateProduct = async function(obj,id){
 export default {
   createTable:createTable,
   createProduct:createProduct,
+  createBulkProduct:createBulkProduct,
   getProducts:getProducts,
   deleteProduct:deleteProduct,
   updateProduct:updateProduct,

@@ -21,7 +21,7 @@ export default {};
 <style lang="scss" scoped>
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 /* Track */
@@ -37,7 +37,7 @@ export default {};
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray5);
+  background: var(--gray3);
 }
 
 .wrapper {
