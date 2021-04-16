@@ -6,12 +6,15 @@ import Customers from './components/Pages/Customers.vue'
 import Sales from './components/Pages/Sales.vue'
 
 import ItemsAddView from './components/Pages/Items/ItemsAddView.vue'
+import ItemsListView from './components/Pages/Items/ItemsListView.vue'
 
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/items', component: ItemsView },
-  { path: '/items/add', component: ItemsAddView },
+  { path: '/items', component: ItemsView , children: [
+    { path: '', component: ItemsListView },
+    { path: 'add', component: ItemsAddView },
+  ]},
   { path: '/customers', component: Customers },
   { path: '/sales', component: Sales },
 ];

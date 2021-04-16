@@ -7,7 +7,13 @@
         <the-button label="Save" @click="validateProductList"></the-button>
       </div>
     </div>
-    <div class="table-wrapper">
+    <div v-if="isLoading" class="loading-wrapper">
+      <loading-spinner></loading-spinner>
+    </div>
+    <div  v-else-if="isSuccess" class="loading-wrapper">
+      <p>Successfully Added</p>
+    </div>
+    <div class="table-wrapper" v-else>
       <the-table class="table-editmode" id="table">
         <template #colgroup>
           <col span="1" style="width: 5%;" />
@@ -25,14 +31,18 @@
         </template>
         <template #tbody>
           <tr v-for="item in productList" :key="item.id">
-            <td>{{productList.indexOf(item)+1}}</td>
+            <td>
+              <div class="sno">
+                <warn-icon v-show="item.hasError"></warn-icon>
+                <p>{{productList.indexOf(item)+1}}</p>
+              </div>
+            </td>
             <td>
               <input
                 type="text"
                 v-model="item.productName"
                 placeholder="Enter Name"
                 class="max-wd"
-                maxlength="6"
                 v-on:keydown="arrowkeyEventHandler($event)"
               />
             </td>
@@ -44,6 +54,7 @@
                 class="max-wd"
                 maxlength="6"
                 v-on:keydown="arrowkeyEventHandler($event)"
+                @keypress="isNumber($event)"
               />
             </td>
             <td>
@@ -53,6 +64,7 @@
                 class="mid-wd"
                 placeholder="Enter Rupees"
                 v-on:keydown="arrowkeyEventHandler($event)"
+                @keypress="isNumber($event)"
               />.
               <input
                 type="text"
@@ -61,6 +73,7 @@
                 maxlength="2"
                 v-on:keydown="arrowkeyEventHandler($event)"
                 placeholder="PP"
+                @keypress="isNumber($event)"
               />
             </td>
             <td>
@@ -70,6 +83,7 @@
                 class="mid-wd"
                 placeholder="Enter Rupees"
                 v-on:keydown="arrowkeyEventHandler($event)"
+                @keypress="isNumber($event)"
               />.
               <input
                 type="text"
@@ -78,6 +92,7 @@
                 maxlength="2"
                 v-on:keydown="arrowkeyEventHandler($event)"
                 placeholder="PP"
+                @keypress="isNumber($event)"
               />
             </td>
             <td>
@@ -87,6 +102,7 @@
                 class="max-sm-wd"
                 v-on:keydown="arrowkeyEventHandler($event)"
                 placeholder="Enter Barcode"
+                @keypress="isNumber($event)"
               />
             </td>
             <td>
@@ -113,9 +129,22 @@ export default {
         " ",
       ],
       productList: [],
+      isLoading: true,
+      isSuccess: false,
     };
   },
   methods: {
+
+    isNumber: function(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode > 31 && (charCode < 48 || charCode > 57)) || charCode === 46) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+
     arrowkeyEventHandler(e) {
       const inputs = Array.from(
         document.getElementById("table").getElementsByTagName("input")
@@ -158,7 +187,7 @@ export default {
       }
     },
     generateRows() {
-      if (this.productList.length < 100) {
+      if (this.productList.length < 90) {
         for (var i = 0; i < 10; i++) {
           this.productList.push({
             productName: "",
@@ -175,13 +204,34 @@ export default {
             hasError: false,
           });
         }
-      }
-      else{
-        //SnackBar : Limit is 100 rows
+      } else if (
+        this.productList.length < 100 &&
+        this.productList.length > 90
+      ) {
+        var len = 100 - this.productList.length;
+        for (var j = 0; j < len; j++) {
+          this.productList.push({
+            productName: "",
+            productQuantity: null,
+            productMrpPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productSellingPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productBarcode: null,
+            hasError: false,
+          });
+        }
+      } else {
+        this.$store.commit("showSnackBar", "You can only add 100 rows.");
       }
     },
     async validateProductList() {
       var errorFlag = false;
+      this.isLoading = true;
       this.productList.forEach((product) => {
         if (
           product.productName === "" ||
@@ -200,27 +250,38 @@ export default {
       if (!errorFlag) {
         var tempList = [];
         this.productList.forEach((product) => {
-           var tempProduct = {
-              productName:  product.productName,
-              productQuantity: product.productQuantity,
-              productBarcode: product.productBarcode,
-              productMrpPrice: parseFloat(
-                product.productMrpPrice.rupee + "." + (product.productMrpPrice.paisa ? product.productMrpPrice.paisa : "00")
-              ),
-              productSellingPrice: parseFloat(
-                product.productSellingPrice.rupee + "." + (product.productSellingPrice.paisa? product.productSellingPrice.paisa: "00")
-              ), 
-           }
-           tempList.push(tempProduct);
+          var tempProduct = {
+            productName: product.productName,
+            productQuantity: product.productQuantity,
+            productBarcode: product.productBarcode,
+            productMrpPrice: parseFloat(
+              product.productMrpPrice.rupee +
+                "." +
+                (product.productMrpPrice.paisa
+                  ? product.productMrpPrice.paisa
+                  : "00")
+            ),
+            productSellingPrice: parseFloat(
+              product.productSellingPrice.rupee +
+                "." +
+                (product.productSellingPrice.paisa
+                  ? product.productSellingPrice.paisa
+                  : "00")
+            ),
+          };
+          tempList.push(tempProduct);
         });
-        await this.$store.dispatch("product/postProductList",tempList);
+        await this.$store.dispatch("product/postProductList", tempList);
+        this.isSuccess = true;
       } else {
         //Add a SnackBar Popup to check the invalid fields
+        this.$store.commit("showSnackBar", "Please, Enter correct values");
       }
+      setTimeout(() => this.isLoading = false ,3000);
     },
-    removeProduct(index){
-      this.productList.splice(index,1);
-    }
+    removeProduct(index) {
+      this.productList.splice(index, 1);
+    },
   },
   mounted() {
     this.generateRows();
@@ -246,6 +307,28 @@ hr:first-of-type {
   & > div {
     margin-left: 10px;
   }
+}
+
+.sno {
+  display: flex;
+  svg {
+    margin-left: -30px;
+    margin-right: 5px;
+  }
+  p {
+    line-height: 20px;
+  }
+}
+
+.loading-wrapper {
+  margin-top: 20px;
+  padding: 25px;
+  height: calc(100vh - 220px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  font-family: var(--font-regular);
 }
 
 .table-editmode {
@@ -279,6 +362,7 @@ hr:first-of-type {
 
       &:first-of-type {
         text-align: center;
+        padding-left: 35px;
       }
 
       &:nth-of-type(2) {

@@ -12,11 +12,12 @@ import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
+import SnackBar from './components/UI/SnackBar/SnackBar.vue'
+import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CrossIcon from './components/UI/Icons/CrossIcon.vue';
-
 
 const app = createApp(App);
 
@@ -36,6 +37,8 @@ app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
 app.component('dropdown-menu',DropdownMenu);
+app.component('snack-bar',SnackBar);
+app.component('loading-spinner',LoadingSpinner);
 
 app.mount('#app');
 

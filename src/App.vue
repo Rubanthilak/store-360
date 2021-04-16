@@ -1,6 +1,7 @@
 <template>
   <div>
     <popup-listener></popup-listener>
+    <snack-bar></snack-bar>
     <navigation-bar></navigation-bar>
     <main class="container">
       <router-view></router-view>

@@ -16,10 +16,10 @@
 </template>
 
 <style lang="scss" scoped>
-#delete {
+#delete-icon {
   cursor: pointer;
 }
-#delete:hover {
+#delete-icon:hover #delete{
   fill: red;
 }
 </style>
