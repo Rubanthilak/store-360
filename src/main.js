@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-import store from './store';
+import store from './store/index.js';
 
 import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
@@ -19,10 +19,14 @@ import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CrossIcon from './components/UI/Icons/CrossIcon.vue';
 
+import Home from './components/Pages/Home.vue';
+
 const app = createApp(App);
 
 app.use(router);
 app.use(store);
+
+app.component('the-home',Home);
 
 app.component('delete-icon',DeleteIcon);
 app.component('warn-icon',WarnIcon);

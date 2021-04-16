@@ -31,7 +31,7 @@ export default {
        display: flex;
        width: 100%;
        padding: 0px 15px;
-       height:40px;
+       height: 36px;
        border: none;
        outline: none;
        box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);

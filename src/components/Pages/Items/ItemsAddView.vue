@@ -1,28 +1,36 @@
 <template>
   <section>
     <div class="flex">
-      <the-button label="Back"></the-button>
-      <div class="flex button-container">
-        <the-button label="Add Rows" @click="generateRows"></the-button>
+      <router-link to="/items">
+         <the-button label="Back"></the-button>
+      </router-link>
+      <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
         <the-button label="Save" @click="validateProductList"></the-button>
+        <the-button label="Add Rows" @click="generateRows"></the-button>
+        <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
       </div>
     </div>
     <div v-if="isLoading" class="loading-wrapper">
       <loading-spinner></loading-spinner>
+      <p class="mg-top">Adding Items ....</p>
     </div>
-    <div  v-else-if="isSuccess" class="loading-wrapper">
+    <div v-else-if="isSuccess" class="loading-wrapper">
       <p>Successfully Added</p>
+    </div>
+    <div v-else-if="isListEmpty" class="loading-wrapper">
+      <p>The List is empty 📄.<br> Please add items by clicking the button below.</p>
+      <the-button label="Click Here" @click="generateRows"></the-button>
     </div>
     <div class="table-wrapper" v-else>
       <the-table class="table-editmode" id="table">
         <template #colgroup>
-          <col span="1" style="width: 5%;" />
+          <col span="1" style="width: 3%;" />
+          <col span="1" style="width: 3%;" />
           <col span="1" style="width: 35%;" />
-          <col span="1" style="width: 10%;" />
+          <col span="1" style="width: 14%;" />
           <col span="1" style="width: 15%;" />
           <col span="1" style="width: 15%;" />
           <col span="1" style="width: 12%;" />
-          <col span="1" style="width: 4%;" />
         </template>
         <template #thead>
           <tr>
@@ -32,9 +40,12 @@
         <template #tbody>
           <tr v-for="item in productList" :key="item.id">
             <td>
+              <input type="checkbox" v-model="item.isChecked"/>
+            </td>
+            <td>
               <div class="sno">
-                <warn-icon v-show="item.hasError"></warn-icon>
-                <p>{{productList.indexOf(item)+1}}</p>
+                <warn-icon v-if="item.hasError"></warn-icon>
+                <p v-else>{{productList.indexOf(item)+1}}</p>
               </div>
             </td>
             <td>
@@ -51,7 +62,7 @@
                 type="text"
                 v-model="item.productQuantity"
                 placeholder="Enter Stock"
-                class="max-wd"
+                class="max-sm-wd"
                 maxlength="6"
                 v-on:keydown="arrowkeyEventHandler($event)"
                 @keypress="isNumber($event)"
@@ -105,9 +116,6 @@
                 @keypress="isNumber($event)"
               />
             </td>
-            <td>
-              <cross-icon @click="removeProduct(productList.indexOf(item))"></cross-icon>
-            </td>
           </tr>
         </template>
       </the-table>
@@ -120,25 +128,44 @@ export default {
   data() {
     return {
       columnName: [
+        " ",
         "S.NO",
         "ITEM NAME",
         "STOCK",
         "MRP PRICE (in ₹)",
         "SELLING PRICE (in ₹)",
         "BAR CODE",
-        " ",
       ],
       productList: [],
-      isLoading: true,
+      isLoading: false,
       isSuccess: false,
     };
   },
+  computed: {
+    isListEmpty() {
+      if (this.productList.length === 0) {
+        return true;
+      }
+      return false;
+    },
+    isSelected(){
+      let flag = false;
+      this.productList.forEach((product) => {
+        if (product.isChecked) {
+          flag = true;
+        } 
+      });
+      return flag;
+    }
+  },
   methods: {
-
-    isNumber: function(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) || charCode === 46) {
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        (charCode > 31 && (charCode < 48 || charCode > 57)) ||
+        charCode === 46
+      ) {
         evt.preventDefault();
       } else {
         return true;
@@ -147,7 +174,7 @@ export default {
 
     arrowkeyEventHandler(e) {
       const inputs = Array.from(
-        document.getElementById("table").getElementsByTagName("input")
+        document.getElementById("table").querySelectorAll('input[type=text]')
       );
       const index = inputs.indexOf(e.target);
       switch (e.keyCode) {
@@ -186,6 +213,9 @@ export default {
           break;
       }
     },
+    removeRows(){
+      this.productList = this.productList.filter(product => !product.isChecked)
+    },
     generateRows() {
       if (this.productList.length < 90) {
         for (var i = 0; i < 10; i++) {
@@ -202,6 +232,7 @@ export default {
             },
             productBarcode: null,
             hasError: false,
+            isChecked: false
           });
         }
       } else if (
@@ -223,6 +254,7 @@ export default {
             },
             productBarcode: null,
             hasError: false,
+            isChecked: false
           });
         }
       } else {
@@ -232,6 +264,7 @@ export default {
     async validateProductList() {
       var errorFlag = false;
       this.isLoading = true;
+
       this.productList.forEach((product) => {
         if (
           product.productName === "" ||
@@ -276,11 +309,11 @@ export default {
       } else {
         //Add a SnackBar Popup to check the invalid fields
         this.$store.commit("showSnackBar", "Please, Enter correct values");
+        this.isLoading = false;
       }
-      setTimeout(() => this.isLoading = false ,3000);
-    },
-    removeProduct(index) {
-      this.productList.splice(index, 1);
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 3000);
     },
   },
   mounted() {
@@ -299,6 +332,10 @@ export default {
   margin-top: 25px;
 }
 
+.mg-top {
+  margin-top: 10px;
+}
+
 hr:first-of-type {
   margin-top: 20px;
 }
@@ -311,17 +348,14 @@ hr:first-of-type {
 
 .sno {
   display: flex;
-  svg {
-    margin-left: -30px;
-    margin-right: 5px;
-  }
+  justify-content: space-evenly;
+
   p {
     line-height: 20px;
   }
 }
 
 .loading-wrapper {
-  margin-top: 20px;
   padding: 25px;
   height: calc(100vh - 220px);
   display: flex;
@@ -329,6 +363,12 @@ hr:first-of-type {
   align-items: center;
   border-radius: 6px;
   font-family: var(--font-regular);
+  flex-direction: column;
+  text-align: center;
+
+  p{
+    margin: 10px 0px;
+  }
 }
 
 .table-editmode {
@@ -338,10 +378,13 @@ hr:first-of-type {
     -webkit-appearance: none;
     margin: 0;
   }
+  
+  th:nth-of-type(2) {
+    text-align: center !important;
+  }
 
-  th:last-child {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+   th:nth-of-type(3) {
+    text-align: left;
   }
 
   tr {
@@ -359,13 +402,28 @@ hr:first-of-type {
       font-size: 14px;
       border-bottom: 2px solid var(--gray1);
       padding: 0px;
+      overflow: hidden;
 
       &:first-of-type {
         text-align: center;
-        padding-left: 35px;
+        padding-left: 15px;
+        input{
+          cursor: pointer;
+        }
+      }
+
+      &:last-of-type {
+        padding-right: 15px;
       }
 
       &:nth-of-type(2) {
+        p{
+          text-align: center;
+        }
+      }
+
+      &:nth-of-type(3) {
+      text-align: left;
         input {
           text-align: left;
         }
@@ -385,7 +443,11 @@ hr:first-of-type {
         }
 
         &.max-sm-wd {
-          width: 85%;
+          width: calc(85% - 10px);
+        }
+
+        &.mid-sm-wd {
+          width: 55%;
         }
 
         &.mid-wd {

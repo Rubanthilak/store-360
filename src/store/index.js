@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import productStore from './store/productStore';
+import productStore from './product/index.js';
 
 // Create a new store instance.
 const store = createStore({

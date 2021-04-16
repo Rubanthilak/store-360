@@ -34,8 +34,8 @@ export default {
 
 <style lang="scss" scoped>
 div {
-  padding: 0px 25px;
-  height: 40px;
+  padding: 0px 20px;
+  height: 35px;
   border: none;
   border-radius: 4px;
   background-color: var(--blue);
@@ -47,7 +47,7 @@ div {
 p{
   font-family: var(--font-semibold);
   font-size: 14px;
-  line-height: 40px;
+  line-height: 35px;
   color: var(--gray0);
   text-align: center;
 }

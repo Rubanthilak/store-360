@@ -26,8 +26,8 @@ export default {
 
 <style lang="scss" scoped>
 .menu-icon {
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   padding: 0px 5px;
   border: none;
   border-radius: 4px;
@@ -39,8 +39,8 @@ export default {
   position: relative;
 
   img {
-    height: 24px !important;
-    width: 24px !important;
+    height: 20px !important;
+    width: 20px !important;
     padding: 8px;
   }
 }
