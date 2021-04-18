@@ -59,7 +59,7 @@ const createProduct = async function(obj){
       productMrpPrice : obj.productMrpPrice,
       productSellingPrice : obj.productSellingPrice,
       productBarcode: obj.productBarcode
-  })
+  });
   return product.dataValues;
 }
 

@@ -17,7 +17,6 @@
   </the-popup>
 </template>
 
-
 <script>
 export default {
   props: ["open"],

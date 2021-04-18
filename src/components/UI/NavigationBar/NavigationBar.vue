@@ -33,7 +33,6 @@ export default {
         .container{
             justify-content: space-between;
             align-items: center;  
-            width: 90%;  
         }
     }
 </style>

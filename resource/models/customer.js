@@ -15,7 +15,7 @@ const Customer = connection.sequelize.define("Customer", {
   customerPhoneNumber: {
     type: connection.DataTypes.NUMBER,
     allowNull: false,
-    unique : true
+    unique: true,
   },
   customerCreditPoint: {
     type: connection.DataTypes.NUMBER,
@@ -25,21 +25,35 @@ const Customer = connection.sequelize.define("Customer", {
     type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
-  doorNumber: {
+  customerDoorNumber: {
     type: connection.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  streetName: {
+  customerStreetName: {
     type: connection.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  landMark: {
+  customerCityName: {
     type: connection.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  pincode: {
+  customerPincode: {
     type: connection.DataTypes.NUMBER,
-    allowNull: false,
+    allowNull: true,
+  },
+  customerArchived: {
+    type: connection.DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: true,
+  },
+  fullAddress: {
+    type: connection.DataTypes.VIRTUAL,
+    get() {
+      return `${this.doorNumber} ${this.streetName} ${this.cityName} ${this.pincode}`;
+    },
+    set(value) {
+      throw new Error(value + " : Do not try to set the `fullAddress` value!");
+    },
   },
 });
 
@@ -55,7 +69,54 @@ const getCustomers = async function(columnToSort = "id") {
   return customers;
 };
 
-export default  {
+const getCustomerById = async function(id) {
+  const customer = await Customer.findByPk(id);
+  return customer;
+};
+
+const createCustomer = async function(obj) {
+  try {
+    const customer = await Customer.create({
+      customerName: obj.customerName,
+      customerPhoneNumber: obj.customerPhoneNumber,
+      customerCreditPoint: obj.customerCreditPoint,
+      customerUnpaidBalance: obj.customerUnpaidBalance,
+      customerDoorNumber: obj.customerDoorNumber,
+      customerStreetName: obj.customerStreetName,
+      customerCityName: obj.customerCityName,
+      customerPincode: obj.customerPincode,
+    });
+    return customer.dataValues;
+  } catch (err) {
+    if("SequelizeUniqueConstraintError: Validation error" === err.toString()){
+      return false;
+    }
+  }
+};
+
+const deleteCustomer = async function(id) {
+  const res = await Customer.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return res === 1 ? true : false;
+};
+
+const updateCustomer = async function(obj, id) {
+  const res = await Customer.update(obj, {
+    where: {
+      id: id,
+    },
+  });
+  return res[0] === 1 ? true : false;
+};
+
+export default {
   createTable,
-  getCustomers
-}
+  getCustomers,
+  getCustomerById,
+  createCustomer,
+  deleteCustomer,
+  updateCustomer,
+};

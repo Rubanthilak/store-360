@@ -50,5 +50,7 @@ p{
   line-height: 35px;
   color: var(--gray0);
   text-align: center;
+  white-space: nowrap
 }
+
 </style>
