@@ -30,6 +30,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .flex {
   justify-content: space-between;
   margin-bottom: 10px;
@@ -40,4 +41,5 @@ export default {
     margin-left: 10px;
   }
 }
+
 </style>

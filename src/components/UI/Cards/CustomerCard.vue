@@ -77,14 +77,13 @@ export default {
   flex-direction: column;
 
   .details-1 {
-
     .name {
       font-size: 16px;
       font-family: var(--font-semibold);
       white-space: nowrap;
       text-overflow: ellipsis;
-       width: 160px; 
-      overflow: hidden; 
+      width: 150px;
+      overflow: hidden;
     }
 
     .phone {
