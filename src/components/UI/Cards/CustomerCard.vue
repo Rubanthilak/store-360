@@ -1,21 +1,21 @@
 <template>
   <div class="flex cust-card">
     <div class="lhs-container">
-      <div class="avatar" :style="getBackgroundColor">S</div>
+      <div class="avatar" :style="getBackgroundColor">{{customer.customerName.charAt(0)}}</div>
     </div>
     <div class="flex rhs-container">
       <div class="details-1">
-        <p class="name">Sathish Kumar</p>
-        <p class="phone">9562154859</p>
+        <div class="name">{{customer.customerName}}</div>
+        <p class="phone">{{customer.customerPhoneNumber}}</p>
       </div>
       <div class="flex details-2">
         <div class="flex credit">
           <badge-icon size="18" color="green"></badge-icon>
-          <p>748</p>
+          <p>{{customer.customerCreditPoint}}</p>
         </div>
-        <div class="flex unpaid">
+        <div class="flex unpaid" v-if="customer.customerUnpaidBalance > 0">
           <wallet-icon size="16" color="red"></wallet-icon>
-          <p>₹ 98.50</p>
+          <p>₹ {{customer.customerUnpaidBalance}}</p>
         </div>
       </div>
     </div>
@@ -26,17 +26,18 @@
 import BadgeIcon from "../Icons/BadgeIcon";
 import WalletIcon from "../Icons/WalletIcon";
 export default {
+  props: ["customer"],
   components: {
     BadgeIcon,
-    WalletIcon
+    WalletIcon,
   },
   computed: {
-    getBackgroundColor(){
-     const color = ["red","green","orange","blue"];
-     const index = Math.floor(Math.random() * 10)%4;
-     return "background: var(--"+color[index]+")";
-    }
-  }
+    getBackgroundColor() {
+      const color = ["red", "green", "orange", "blue"];
+      const index = Math.floor(Math.random() * 10) % 4;
+      return "background: var(--" + color[index] + ")";
+    },
+  },
 };
 </script>
 
@@ -49,6 +50,12 @@ export default {
   background: var(--gray0);
   padding: 10px 20px;
   border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cust-card:hover {
+  transform: translateY(-3px);
 }
 
 .lhs-container {
@@ -70,9 +77,14 @@ export default {
   flex-direction: column;
 
   .details-1 {
+
     .name {
       font-size: 16px;
       font-family: var(--font-semibold);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+       width: 160px; 
+      overflow: hidden; 
     }
 
     .phone {
@@ -84,13 +96,13 @@ export default {
 
   .details-2 {
     font-family: var(--font-medium);
-    margin-top : 10px;
+    margin-top: 10px;
 
     .credit {
       p {
         font-size: 12px;
         color: var(--green);
-        margin-left : 5px;
+        margin-left: 5px;
       }
     }
 
@@ -99,7 +111,7 @@ export default {
       p {
         font-size: 12px;
         color: var(--red);
-        margin-left : 5px;
+        margin-left: 5px;
       }
     }
   }
