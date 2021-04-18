@@ -13,4 +13,8 @@ export default {
     const customer = await Database.Model.Customer.createCustomer(obj);
     return customer;
   },
+  async deleteCustomer(context,id) {
+    const res = await Database.Model.Customer.deleteCustomer(id);
+    return res;
+  },
 };

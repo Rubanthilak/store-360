@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <section>
     <popup-listener></popup-listener>
     <snack-bar></snack-bar>
-    <navigation-bar></navigation-bar>
+    <side-bar></side-bar>
     <main class="container">
       <router-view></router-view>
     </main>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -18,13 +18,13 @@ export default {
 <style lang='scss'>
 
 body{
-  margin: 0px;
+  margin: 0px 0px 0px 60px;
   padding: 0px;
   background: var(--gray1);
 }
 
 main{
-  margin-top: 90px !important;
+  padding-top: 25px !important;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -43,6 +43,7 @@ a{
 hr {
   border: none;
   border-bottom: var(--h-border);
+  margin-bottom: 15px;
 }
 
 .container{

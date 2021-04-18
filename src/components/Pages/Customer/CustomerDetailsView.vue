@@ -1,15 +1,21 @@
 <template>
-  <section>
+  <section v-if="customer">
     <div class="flex">
-      <router-link to="/customers">
-        <the-button label="Back"></the-button>
-      </router-link>
-      <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
+      <div class="flex">
+        <router-link to="/customers">
+          <div class="back-button">
+            <back-icon color="gray8" size="34"></back-icon>
+          </div>
+        </router-link>
+        <h1>{{customer.customerName}}</h1>
+      </div>
+      <div class="flex button-container">
         <the-button label="Update"></the-button>
-        <the-button label="Delete" color="red"></the-button>
+        <the-button label="Delete" color="red" @click="triggerDeleteCustomer"></the-button>
       </div>
     </div>
-    <customer-card :customer="customer" v-if="customer"></customer-card>
+    <hr />
+    <customer-card :customer="customer"></customer-card>
   </section>
 </template>
 
@@ -20,20 +26,27 @@ export default {
       customer: null,
     };
   },
+
   async beforeMount() {
     this.customer = await this.$store.dispatch(
       "customer/getCustomerById",
       this.$route.params.id
     );
   },
+
+  methods: {
+    triggerDeleteCustomer() {
+      this.$store.commit("customer/setCustomerIdToDelete", this.customer.id);
+      this.$store.commit("setActivePopup", "popup-delete-customer");
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .flex {
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
 }
 
 .button-container {
@@ -42,4 +55,14 @@ export default {
   }
 }
 
+h1 {
+  font-family: var(--font-semibold);
+  margin: 0px 10px;
+}
+
+.back-button {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
 </style>
