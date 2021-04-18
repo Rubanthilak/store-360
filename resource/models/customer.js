@@ -1,61 +1,61 @@
-import connection from '../helperFunctions/getConnection';
+import connection from "../helperFunctions/getConnection";
 
-const Customer = connection.sequelize.define('Customer', {
+const Customer = connection.sequelize.define("Customer", {
   id: {
     type: connection.DataTypes.INTEGER,
     allowNull: false,
     field: "customerId",
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true,
   },
   customerName: {
     type: connection.DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
-  customerNumber: {
+  customerPhoneNumber: {
     type: connection.DataTypes.NUMBER,
-    primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    unique : true
   },
   customerCreditPoint: {
     type: connection.DataTypes.NUMBER,
-    allowNull: false
+    allowNull: false,
   },
   customerUnpaidBalance: {
     type: connection.DataTypes.FLOAT,
-    allowNull: true
+    allowNull: true,
   },
-  customerAddress: {
-    doorNumber: {
-      type: connection.DataTypes.STRING,
-      allowNull: false
-    },
-    streetName: {
-      type: connection.DataTypes.STRING,
-      allowNull: false
-    },
-    areaName: {
-      type: connection.DataTypes.STRING,
-      allowNull: false
-    },
-    landMark: {
-        type: connection.DataTypes.STRING,
-        allowNull: false
-      },
-    pincode: {
-        type: connection.DataTypes.NUMBER,
-        allowNull: false
-      },
+  doorNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: false,
+  },
+  streetName: {
+    type: connection.DataTypes.STRING,
+    allowNull: false,
+  },
+  landMark: {
+    type: connection.DataTypes.STRING,
+    allowNull: false,
+  },
+  pincode: {
+    type: connection.DataTypes.NUMBER,
+    allowNull: false,
   },
 });
 
-const createTable = async function(){
-  await Customer.sync()
-}
+const createTable = async function() {
+  await Customer.sync();
+};
 
-const getCustomer = async function(columnToSort='id'){
-  const customers = await Cutomer.findAll({
-      order: [[columnToSort, 'ASC']]
-    }
-  );
-  return Customer;
+const getCustomers = async function(columnToSort = "id") {
+  const customers = await Customer.findAll({
+    order: [[columnToSort, "ASC"]],
+  });
+
+  return customers;
+};
+
+export default  {
+  createTable,
+  getCustomers
 }
