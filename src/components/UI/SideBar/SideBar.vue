@@ -3,7 +3,6 @@
     <div class="side-bar flex">
       <div class="wrapper flex">
         <div class="links">
-          <div class="logo"></div>
           <router-link to="/">
             <home-icon></home-icon>
           </router-link>
@@ -43,21 +42,23 @@ export default {
 .side-bar {
   position: absolute;
   left: 0px;
-  top: 0px;
-  height: 100%;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+  top: 50px;
+  height: calc(100% - 50px);
+  box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.05);
   width: 60px;
   background: var(--gray0);
   align-items: center;
   flex-direction: column;
   z-index: 99;
+  
 
   .wrapper {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    margin-top: 25px;
     margin-bottom: 25px;
-    height: calc(100% - 25px);
+    height: calc(100% - 50px);
   }
 
   .logo {
@@ -73,13 +74,14 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    -webkit-app-region: none;
 
     a {
       margin-bottom: 35px;
       width: 60px;
       text-align: center;
+      cursor: pointer;
     }
-
     svg {
       cursor: pointer;
     }
