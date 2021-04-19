@@ -4,6 +4,7 @@ import router from './router';
 import store from './store/index.js';
 
 import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
+import SideBar from './components/UI/SideBar/SideBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
 import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
@@ -18,6 +19,7 @@ import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CrossIcon from './components/UI/Icons/CrossIcon.vue';
+import BackIcon from './components/UI/Icons/BackIcon.vue';
 
 
 const app = createApp(App);
@@ -28,8 +30,10 @@ app.use(store);
 app.component('delete-icon',DeleteIcon);
 app.component('warn-icon',WarnIcon);
 app.component('cross-icon',CrossIcon);
+app.component('back-icon',BackIcon);
 
 app.component('navigation-bar',NavigationBar);
+app.component('side-bar',SideBar);
 app.component('search-bar',SearchBar);
 app.component('the-button',TheButton);
 app.component('icon-button',IconButton);

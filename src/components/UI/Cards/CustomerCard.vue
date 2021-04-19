@@ -33,9 +33,9 @@ export default {
   },
   computed: {
     getBackgroundColor() {
-      const color = ["red", "green", "orange", "blue"];
-      const index = Math.floor(Math.random() * 10) % 4;
-      return "background: var(--" + color[index] + ")";
+      const color = ["957DAD", "FFC618" , "C74BA3" , "3E45AA" ,];
+      const index = Math.floor(Math.random() * 10) % color.length;
+      return "background:#" + color[index];
     },
   },
 };

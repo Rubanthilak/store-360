@@ -2,7 +2,9 @@
   <section>
     <div class="flex">
       <router-link to="/items">
-         <the-button label="Back"></the-button>
+        <div class="back-button">
+          <back-icon color="gray8" size="34"></back-icon>
+        </div>
       </router-link>
       <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
         <the-button label="Save" @click="validateProductList"></the-button>
@@ -10,6 +12,7 @@
         <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
       </div>
     </div>
+    <hr>
     <div v-if="isLoading" class="loading-wrapper">
       <loading-spinner></loading-spinner>
       <p class="mg-top">Adding Items ....</p>
@@ -18,7 +21,10 @@
       <p>Successfully Added</p>
     </div>
     <div v-else-if="isListEmpty" class="loading-wrapper">
-      <p>The List is empty 📄.<br> Please add items by clicking the button below.</p>
+      <p>
+        The List is empty 📄.
+        <br />Please add items by clicking the button below.
+      </p>
       <the-button label="Click Here" @click="generateRows"></the-button>
     </div>
     <div class="table-wrapper" v-else>
@@ -40,7 +46,7 @@
         <template #tbody>
           <tr v-for="item in productList" :key="item.id">
             <td>
-              <input type="checkbox" v-model="item.isChecked"/>
+              <input type="checkbox" v-model="item.isChecked" />
             </td>
             <td>
               <div class="sno">
@@ -148,15 +154,15 @@ export default {
       }
       return false;
     },
-    isSelected(){
+    isSelected() {
       let flag = false;
       this.productList.forEach((product) => {
         if (product.isChecked) {
           flag = true;
-        } 
+        }
       });
       return flag;
-    }
+    },
   },
   methods: {
     isNumber: function (evt) {
@@ -174,7 +180,7 @@ export default {
 
     arrowkeyEventHandler(e) {
       const inputs = Array.from(
-        document.getElementById("table").querySelectorAll('input[type=text]')
+        document.getElementById("table").querySelectorAll("input[type=text]")
       );
       const index = inputs.indexOf(e.target);
       switch (e.keyCode) {
@@ -213,8 +219,10 @@ export default {
           break;
       }
     },
-    removeRows(){
-      this.productList = this.productList.filter(product => !product.isChecked)
+    removeRows() {
+      this.productList = this.productList.filter(
+        (product) => !product.isChecked
+      );
     },
     generateRows() {
       if (this.productList.length < 90) {
@@ -232,7 +240,7 @@ export default {
             },
             productBarcode: null,
             hasError: false,
-            isChecked: false
+            isChecked: false,
           });
         }
       } else if (
@@ -254,7 +262,7 @@ export default {
             },
             productBarcode: null,
             hasError: false,
-            isChecked: false
+            isChecked: false,
           });
         }
       } else {
@@ -329,7 +337,7 @@ export default {
 }
 
 .table-wrapper {
-  margin-top: 25px;
+  margin-top: 15px;
 }
 
 .mg-top {
@@ -366,7 +374,7 @@ hr:first-of-type {
   flex-direction: column;
   text-align: center;
 
-  p{
+  p {
     margin: 10px 0px;
   }
 }
@@ -378,12 +386,12 @@ hr:first-of-type {
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
   th:nth-of-type(2) {
     text-align: center !important;
   }
 
-   th:nth-of-type(3) {
+  th:nth-of-type(3) {
     text-align: left;
   }
 
@@ -407,7 +415,7 @@ hr:first-of-type {
       &:first-of-type {
         text-align: center;
         padding-left: 15px;
-        input{
+        input {
           cursor: pointer;
         }
       }
@@ -417,13 +425,13 @@ hr:first-of-type {
       }
 
       &:nth-of-type(2) {
-        p{
+        p {
           text-align: center;
         }
       }
 
       &:nth-of-type(3) {
-      text-align: left;
+        text-align: left;
         input {
           text-align: left;
         }

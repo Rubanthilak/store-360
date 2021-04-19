@@ -53,6 +53,7 @@ export default {
   async mounted() {
     await this.$store.dispatch("customer/getCustomerList");
   },
+  
 };
 </script>
 
