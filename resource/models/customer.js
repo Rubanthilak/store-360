@@ -71,7 +71,7 @@ const getCustomers = async function(columnToSort = "id") {
 
 const getCustomerById = async function(id) {
   const customer = await Customer.findByPk(id);
-  return customer;
+  return customer.dataValues;
 };
 
 const createCustomer = async function(obj) {
