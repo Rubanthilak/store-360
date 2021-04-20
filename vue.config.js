@@ -1,5 +1,6 @@
 module.exports = {
   configureWebpack: {
+    devtool: 'source-map',
     externals: {
       sequelize: "require('sequelize')",
     },

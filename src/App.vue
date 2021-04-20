@@ -4,7 +4,7 @@
     <snack-bar></snack-bar>
     <navigation-bar></navigation-bar>
     <side-bar></side-bar>
-    <main class="container">
+    <main>
       <router-view></router-view>
     </main>
   </section>
@@ -17,27 +17,34 @@ export default {
 </script>
 
 <style lang='scss'>
-
-body{
+body {
   margin: 0px 0px 0px 60px;
   padding: 0px;
   background: var(--gray1);
   overflow: hidden;
 }
 
-main{
-  padding-top: 20px !important;
+main {
+  section {
+    padding-top: 20px !important;
+  }
 }
 
-h1,h2,h3,h4,h5,h6{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0px;
 }
 
-p{
+p {
   margin: 0px;
+  font-family: var(--font-regular);
 }
 
-a{
+a {
   text-decoration: none;
   color: var(--gray8);
 }
@@ -52,22 +59,25 @@ hr {
 :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
-    -webkit-user-select: none;
-    user-select: none;
-    // cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+  // cursor: default;
 }
 
-input, button, textarea, :focus {
-    outline: none; // You should add some other style for :focus to help UX/a11y
+input,
+button,
+textarea,
+:focus {
+  outline: none; // You should add some other style for :focus to help UX/a11y
 }
 
-#app{
+#app {
   overflow: auto;
   min-height: calc(100vh - 25px);
   margin-top: 25px;
 }
 
-.container{
+.container {
   min-width: 1280px;
   max-width: 90%;
   margin: 0px auto;
@@ -77,8 +87,7 @@ input, button, textarea, :focus {
   }
 }
 
-.flex{
-  display:flex;
+.flex {
+  display: flex;
 }
-
 </style>

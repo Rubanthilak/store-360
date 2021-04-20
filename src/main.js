@@ -1,3 +1,9 @@
+import devtools from '@vue/devtools'
+
+if (process.env.NODE_ENV === 'development') {
+    devtools.connect()
+}
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
@@ -14,6 +20,7 @@ import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
+import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
@@ -22,7 +29,6 @@ import CrossIcon from './components/UI/Icons/CrossIcon.vue';
 import BrowserIcon from './components/UI/Icons/BrowserIcon.vue';
 import MinusIcon from './components/UI/Icons/MinusIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
-
 
 const app = createApp(App);
 
@@ -47,6 +53,7 @@ app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
 app.component('dropdown-menu',DropdownMenu);
 app.component('snack-bar',SnackBar);
+app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
 
 app.mount('#app');
