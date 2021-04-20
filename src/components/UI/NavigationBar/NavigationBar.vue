@@ -4,9 +4,15 @@
       <div class="wrapper flex">
         <the-logo></the-logo>
         <div class="button-container flex">
-          <the-button label="Min" style="display: inline-block" @click="min"></the-button>
-          <the-button label="Max" color="green" style="display: inline-block" @click="max"></the-button>
-          <the-button label="Close" color="red" style="display: inline-block" @click="close"></the-button>
+          <div @click="min">
+            <minus-icon></minus-icon>
+          </div>
+          <div @click="max">
+            <browser-icon></browser-icon>
+          </div>
+          <div @click="close" class="close-button">
+            <cross-icon></cross-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -24,6 +30,11 @@ export default {
     return {
       window: remote.getCurrentWindow(),
     };
+  },
+  computed: {
+    isMaximized () {
+      return this.window.isMaximized();
+    }
   },
   methods: {
     min() {
@@ -48,13 +59,12 @@ export default {
   position: absolute;
   top: 0px;
   left: 0px;
-  min-width: 1260px;
   width: 100%;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
-  height: 50px;
-  background: var(--gray0);
+  height: 25px;
+  background: #ececec;
   align-items: center;
   z-index: 100;
+  overflow: hidden;
   // The following three lines are added inorder to provide draggable sidebar
   user-select: none;
   -webkit-user-select: none;
@@ -63,13 +73,29 @@ export default {
   .wrapper {
     justify-content: space-between;
     align-items: center;
-    width: calc(100% - 20px);
-    margin: 0px 20px;
+    width: calc(100% - 10px);
+    margin-left: 10px;
 
     .button-container {
+      align-items: center;
       div {
-          margin-left: 10px;
         -webkit-app-region: none;
+        min-height: 28px;
+        min-width: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+          background: var(--gray2);
+        }
+        &:last-child {
+          &:hover {
+            background: var(--red);
+          }
+        }
+        svg {
+          margin: 0px 10px;
+        }
       }
     }
   }

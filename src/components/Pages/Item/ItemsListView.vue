@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section class="container">
     <div class="flex">
       <search-bar @typing="searchProduct" :placeHolder="'Search Items by Name, ID, ...'"></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
@@ -121,7 +121,7 @@
         </tr>
       </template>
     </the-table>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -307,10 +307,6 @@ export default {
   & > div {
     margin-left: 10px;
   }
-}
-
-hr:first-of-type {
-  margin-top: 20px;
 }
 
 .table-editmode {

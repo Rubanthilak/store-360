@@ -1,18 +1,21 @@
 <template>
-  <section>
+  <section class="container">
     <div class="flex">
-      <router-link to="/items">
-        <div class="back-button">
-          <back-icon color="gray8" size="34"></back-icon>
-        </div>
-      </router-link>
+      <div class="flex">
+        <router-link to="/items">
+          <div class="back-button">
+            <back-icon color="gray8" size="34"></back-icon>
+          </div>
+        </router-link>
+        <h1>Add Items</h1>
+      </div>
       <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
         <the-button label="Save" @click="validateProductList"></the-button>
         <the-button label="Add Rows" @click="generateRows"></the-button>
         <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
       </div>
     </div>
-    <hr>
+    <hr />
     <div v-if="isLoading" class="loading-wrapper">
       <loading-spinner></loading-spinner>
       <p class="mg-top">Adding Items ....</p>
@@ -334,6 +337,7 @@ export default {
 <style lang="scss" scoped>
 .flex {
   justify-content: space-between;
+  align-items: center;
 }
 
 .table-wrapper {
@@ -344,8 +348,16 @@ export default {
   margin-top: 10px;
 }
 
-hr:first-of-type {
-  margin-top: 20px;
+
+.back-button {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+h1{
+  font-family: var(--font-semibold);
+  margin: 0px 10px;
 }
 
 .button-container {

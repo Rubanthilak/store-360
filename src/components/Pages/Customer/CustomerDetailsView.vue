@@ -1,5 +1,5 @@
 <template>
-  <section v-if="customer">
+  <section v-if="customer" class="container">
     <div class="flex">
       <div class="flex">
         <router-link to="/customers">
