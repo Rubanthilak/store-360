@@ -309,10 +309,6 @@ export default {
   }
 }
 
-hr:first-of-type {
-  margin-top: 20px;
-}
-
 .table-editmode {
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,

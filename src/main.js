@@ -19,6 +19,8 @@ import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CrossIcon from './components/UI/Icons/CrossIcon.vue';
+import BrowserIcon from './components/UI/Icons/BrowserIcon.vue';
+import MinusIcon from './components/UI/Icons/MinusIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
 
 
@@ -30,6 +32,8 @@ app.use(store);
 app.component('delete-icon',DeleteIcon);
 app.component('warn-icon',WarnIcon);
 app.component('cross-icon',CrossIcon);
+app.component('browser-icon',BrowserIcon);
+app.component('minus-icon',MinusIcon);
 app.component('back-icon',BackIcon);
 
 app.component('navigation-bar',NavigationBar);

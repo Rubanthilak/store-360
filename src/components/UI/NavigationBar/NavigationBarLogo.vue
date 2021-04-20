@@ -4,7 +4,7 @@
 
 <style scoped lang="scss">
     h1{
-        font-size: 18px;
+        font-size: 14px;
         font-family: var(--font-medium);
         color: var(--indigo);
 

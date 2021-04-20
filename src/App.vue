@@ -22,10 +22,11 @@ body{
   margin: 0px 0px 0px 60px;
   padding: 0px;
   background: var(--gray1);
+  overflow: hidden;
 }
 
 main{
-  padding-top: 80px !important;
+  padding-top: 20px !important;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -44,6 +45,7 @@ a{
 hr {
   border: none;
   border-bottom: var(--h-border);
+  margin-top: 15px;
   margin-bottom: 15px;
 }
 
@@ -59,10 +61,20 @@ input, button, textarea, :focus {
     outline: none; // You should add some other style for :focus to help UX/a11y
 }
 
+#app{
+  overflow: auto;
+  min-height: calc(100vh - 25px);
+  margin-top: 25px;
+}
+
 .container{
-  min-width: 1200px;
+  min-width: 1280px;
   max-width: 90%;
   margin: 0px auto;
+
+  @media (max-width: 1280px) {
+    max-width: 1200px;
+  }
 }
 
 .flex{
