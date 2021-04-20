@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="container">
     <div class="flex">
       <div class="flex">
         <router-link to="/items">

@@ -44,7 +44,7 @@ export default {
   left: 0px;
   top: 25px;
   height: calc(100% - 25px);
-  box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.05);
   width: 60px;
   background: var(--gray0);
   align-items: center;

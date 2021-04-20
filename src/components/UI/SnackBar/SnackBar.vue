@@ -1,21 +1,21 @@
 <template>
-  <transition name="snackbar">
-    <div id="snackbar" v-if="isActive">
-      {{text}}
-    </div>
-  </transition>
+  <teleport to="body">
+    <transition name="snackbar">
+      <div id="snackbar" v-if="isActive">{{text}}</div>
+    </transition>
+  </teleport>
 </template>
 
 <script>
 export default {
-  computed : {
-    isActive(){
+  computed: {
+    isActive() {
       return this.$store.state.activeSnackBar.visible;
     },
-    text(){
+    text() {
       return this.$store.state.activeSnackBar.text;
-    }
-  }
+    },
+  },
 };
 </script>
 

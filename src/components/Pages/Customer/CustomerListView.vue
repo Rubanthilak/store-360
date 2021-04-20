@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="container">
     <div class="flex">
       <search-bar @typing="searchCustomer" :placeHolder="'Search Customer by Name, Phone Number, ...'"></search-bar>
       <div class="flex button-container">
@@ -68,7 +68,7 @@ export default {
 .content-wrapper {
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 280px));
+  grid-template-columns: repeat(auto-fit, 280px);
   justify-content: space-evenly;
 }
 
