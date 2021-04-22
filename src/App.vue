@@ -78,7 +78,7 @@ textarea,
 }
 
 .container {
-  min-width: 1280px;
+  min-width: 1200px;
   max-width: 90%;
   margin: 0px auto;
 
