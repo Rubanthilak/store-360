@@ -41,11 +41,13 @@ export default {};
 }
 
 .wrapper {
-  height: calc(100vh - 170px);
+  height: calc(100vh - 180px);
   width: 100%;
   margin: 0px auto;
   overflow-x: hidden;
   overflow-y: auto;
+  background: var(--gray0);
+  border-radius: 4px;
 }
 
 table {
@@ -92,6 +94,11 @@ table {
   }  
 }
 
+.header::v-deep th{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .header::v-deep th:first-child {
   padding-left: 20px;
   padding-right: 0;
@@ -113,13 +120,12 @@ table {
   tr {
     background: var(--gray0);
     padding: 0px 10px;
-    cursor: pointer;
   }
 
-  tr:hover {
-    background: var(--blue);
-    color: var(--gray0);
-  }
+  // tr:hover {
+  //   background: var(--blue);
+  //   color: var(--gray0);
+  // }
 
   td {
     text-align: right;

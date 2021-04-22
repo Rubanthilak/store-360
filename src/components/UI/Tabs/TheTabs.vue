@@ -118,6 +118,7 @@ export default {
 
 <style lang="scss" scoped>
 .tab-wrapper {
+  background: var(--gray2);
   .add-tab {
     display: flex;
     align-items: center;
@@ -133,7 +134,7 @@ export default {
       margin: 0px 10px;
       font-size: 26px;
       font-family: var(--font-medium);
-      color: var(--gray6);
+      color: var(--gray8);
     }
   }
 
@@ -143,14 +144,14 @@ export default {
     min-width: 50px;
     max-width: 200px;
     display: flex;
-    background: var(--gray1);
+    background: var(--gray2);
     align-items: center;
     justify-content: space-between;
     margin-right: 3px;
     transition: all 0.2s;
 
     &.is-active {
-      background: var(--gray0);
+      background: var(--gray1);
     }
 
     p {
