@@ -47,7 +47,8 @@ export default {};
   overflow-x: hidden;
   overflow-y: auto;
   background: var(--gray0);
-  border-radius: 4px;
+  border-radius: 6px;
+  box-shadow: 0px 5px 50px #0000001c;
 }
 
 table {
