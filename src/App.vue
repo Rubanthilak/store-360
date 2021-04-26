@@ -37,6 +37,7 @@ h4,
 h5,
 h6 {
   margin: 0px;
+  font-family: var(--font-semibold);
 }
 
 p {

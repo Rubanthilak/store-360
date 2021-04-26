@@ -78,7 +78,7 @@ input {
   height: 35px;
   border: none;
   outline: none;
-  box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
+  box-shadow: 0px 3px 50px #0000000a;
   border-radius: 4px;
 }
 
