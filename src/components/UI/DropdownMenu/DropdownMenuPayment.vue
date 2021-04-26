@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown" @click="dropped=!dropped">
     <div class="dropdown-active" v-if="active != null">{{options[active]}}</div>
-    <div v-else>Select Payment</div>
+    <div v-else>{{valueToDisplay}}</div>
     <div class="dropdown-container" v-if="dropped">
       <div
         class="dropdown-item"
@@ -15,17 +15,15 @@
 
 <script>
 export default {
+  props: ["valueToDisplay","options","active"],
   data() {
     return {
-      active: null,
-      options: ["Cash", "Card", "UPI",],
       dropped: false,
     };
   },
   methods: {
     optionSelect(index) {
-      this.active = index;
-      this.$emit("optionSelected",this.options[this.active]) 
+      this.$emit("optionSelected",index) 
     },
   },
 };

@@ -58,8 +58,8 @@
             </div>
             <div class="content">
               <div class="paym-wrapper">
-                <dropdown-menu-pay></dropdown-menu-pay>
-                <div class="split-wrapper" v-if="true">
+                <dropdown-menu-pay @option-selected="setPaymentMethod" valueToDisplay="Select Payment" :options="paymentOptions" :active="cartList[activeCartIndex].paymentMethod.method"></dropdown-menu-pay>
+                <div class="split-wrapper" v-if="splitVisible">
                   <input type="number" placeholder="Card" />
                   <input type="number" placeholder="Cash" />
                   <input type="number" placeholder="UPI" />
@@ -111,47 +111,78 @@ export default {
       cartList: [
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
         {
           productList: [],
-          paymentMethod: null,
+          paymentMethod:{
+            method: null,
+            amount: null
+          },
         },
       ],
       columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
       activeCartIndex: 0,
+      paymentOptions: ["Card","Cash","UPI","Split"]
     };
   },
   methods: {
@@ -170,9 +201,16 @@ export default {
     EmptyCart(key) {
       this.cartList[key] = {
         productList: [],
-        paymentMethod: null,
+        paymentMethod:{
+          cash: null,
+          card:null,
+          upi:null,
+        },
       };
     },
+    setPaymentMethod(option){
+      this.cartList[this.activeCartIndex].paymentMethod.method = option;
+    }
   },
   computed: {
     totalPrice() {
@@ -194,6 +232,9 @@ export default {
     billAmount() {
       return this.cgstAmount + this.sgstAmount + this.totalPrice;
     },
+    splitVisible(){
+      return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
+    }
   },
 };
 </script>
