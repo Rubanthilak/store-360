@@ -1,10 +1,13 @@
 <template>
   <section>
-    <the-tabs></the-tabs>
+    <the-tabs @tab-removed="EmptyCart" @tab-switched="switchActiveCart"></the-tabs>
     <div class="tab-body">
       <div class="tab-lhs">
         <div class="flex menu-bar">
-          <search-bar-dropdown place-holder="Search Items by Name, ID, Barcode" @select="test"></search-bar-dropdown>
+          <search-bar-dropdown
+            place-holder="Search Items by Name, ID, Barcode"
+            @select="addProductToActiveCart"
+          ></search-bar-dropdown>
         </div>
         <hr />
         <the-table>
@@ -21,14 +24,14 @@
             </tr>
           </template>
           <template #tbody>
-            <tr v-for="item in cartList" :key="item.id">
-              <td>{{item.id}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.count}}</td>
-              <td>{{item.selling_price.rupee+'.'+item.selling_price.paisa}}</td>
+            <tr v-for="product in cartList[activeCartIndex].productList" :key="product.id">
+              <td>{{product.id}}</td>
+              <td>{{product.name}}</td>
+              <td>{{product.count}}</td>
+              <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
               <td
-                style="font-family:var(--font-semibold)"
-              >{{ ((item.selling_price.rupee+'.'+item.selling_price.paisa)*item.count).toFixed(2) }}</td>
+                style="font-family:var(--font-bold)"
+              >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
             </tr>
           </template>
         </the-table>
@@ -55,12 +58,12 @@
             </div>
             <div class="content">
               <div class="paym-wrapper">
-                  <dropdown-menu-pay></dropdown-menu-pay>
-                  <div class="split-wrapper" v-if="false">
-                    <input type="number" placeholder="Card">
-                    <input type="number" placeholder="Cash">
-                    <input type="number" placeholder="UPI">
-                  </div>
+                <dropdown-menu-pay></dropdown-menu-pay>
+                <div class="split-wrapper" v-if="true">
+                  <input type="number" placeholder="Card" />
+                  <input type="number" placeholder="Cash" />
+                  <input type="number" placeholder="UPI" />
+                </div>
               </div>
             </div>
           </div>
@@ -90,7 +93,7 @@
             </div>
           </div>
           <div class="footer">
-            <the-button label="Checkout"></the-button>
+            <the-button label="Checkout" color="green"></the-button>
           </div>
         </div>
       </div>
@@ -105,25 +108,76 @@ export default {
   },
   data() {
     return {
-      cartList: [],
+      cartList: [
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+        {
+          productList: [],
+          paymentMethod: null,
+        },
+      ],
       columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
+      activeCartIndex: 0,
     };
   },
   methods: {
-    test(obj) {
-      let index = this.cartList.indexOf(obj);
+    addProductToActiveCart(obj) {
+      let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
       if (index !== -1) {
-        this.cartList[index].count++;
+        this.cartList[this.activeCartIndex].productList[index].count++;
       } else {
         obj.count = 1;
-        this.cartList.push(obj);
+        this.cartList[this.activeCartIndex].productList.push(obj);
       }
+    },
+    switchActiveCart(key) {
+      this.activeCartIndex = key;
+    },
+    EmptyCart(key) {
+      this.cartList[key] = {
+        productList: [],
+        paymentMethod: null,
+      };
     },
   },
   computed: {
     totalPrice() {
       let temp = 0;
-      this.cartList.forEach((item) => {
+      this.cartList[this.activeCartIndex].productList.forEach((item) => {
         temp += +(
           (item.selling_price.rupee + "." + item.selling_price.paisa) *
           item.count
@@ -232,38 +286,38 @@ section {
         width: 50px;
         background: var(--blue);
         color: var(--gray0);
-        border-radius:360px;
+        border-radius: 360px;
         font-size: 32px;
         font-family: var(--font-semibold);
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      .details{
-        .name{
+      .details {
+        .name {
           font-family: var(--font-semibold);
         }
-        .phone{
-          color: var(--gray3)
+        .phone {
+          color: var(--gray3);
         }
       }
     }
   }
 
-  .content{
-    .paym-wrapper{
+  .content {
+    .paym-wrapper {
       margin: 20px 0px;
-      .split-wrapper{
+      .split-wrapper {
         margin-top: 20px;
-        display:flex;
-        gap:1rem;
-        input{
+        display: flex;
+        gap: 1rem;
+        input {
           border: 2px solid var(--gray2);
           width: 100%;
           padding: 8px 5px;
-          border-radius:4px;
+          border-radius: 4px;
           font-family: var(--font-regular);
-          font-size:12px;
+          font-size: 12px;
         }
       }
     }

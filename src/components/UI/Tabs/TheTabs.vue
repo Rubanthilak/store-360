@@ -1,7 +1,7 @@
 <template>
   <div class="flex tab-wrapper">
     <div
-      :class="['tab',{'is-active':tab.key === isActive}]"
+      :class="['tab',{'is-active':(tab.key === isActive)}]"
       v-for="tab in tabList"
       :key="tab.key"
       @click="setTab(tab.key)"
@@ -22,13 +22,14 @@ export default {
       tabList: [
         {
           tabName: "Billing Tab 1",
-          key: 1,
+          key: 0,
         },
       ],
       isActive: null,
       count: 1,
       keys: [
-        { key: 1, taken: true },
+        { key: 0, taken: true },
+        { key: 1, taken: false },
         { key: 2, taken: false },
         { key: 3, taken: false },
         { key: 4, taken: false },
@@ -37,7 +38,6 @@ export default {
         { key: 7, taken: false },
         { key: 8, taken: false },
         { key: 9, taken: false },
-        { key: 10, taken: false },
       ],
     };
   },
@@ -108,7 +108,7 @@ export default {
     },
   },
   mounted() {
-    this.isActive = 1;
+    this.isActive = 0;
   },
   updated(){
     this.$emit("tabSwitched",this.isActive)
