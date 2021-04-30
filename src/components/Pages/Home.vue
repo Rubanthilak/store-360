@@ -44,10 +44,11 @@
             </div>
             <div class="content">
               <div class="cust-wrapper">
-                <div class="avatar">R</div>
-                <div class="details">
-                  <p class="name">Ruban Thilak</p>
-                  <p class="phone">9003222817</p>
+                <search-bar-customer place-holder="Search Customer" @select="setCustomerToActiveCart"  v-if="cartList[activeCartIndex].customer === null"></search-bar-customer>
+                <div class="avatar" v-if="cartList[activeCartIndex].customer">{{cartList[activeCartIndex].customer.customerName[0]}}</div>
+                <div class="details"  v-if="cartList[activeCartIndex].customer">
+                  <p class="name">{{cartList[activeCartIndex].customer.customerName}}</p>
+                  <p class="phone">{{cartList[activeCartIndex].customer.customerPhoneNumber}}</p>
                 </div>
               </div>
             </div>
@@ -58,8 +59,8 @@
             </div>
             <div class="content">
               <div class="paym-wrapper">
-                <dropdown-menu-pay @option-selected="setPaymentMethod" valueToDisplay="Select Payment" :options="paymentOptions" :active="cartList[activeCartIndex].paymentMethod.method"></dropdown-menu-pay>
-                <div class="split-wrapper" v-if="splitVisible">
+                <list-box @option-selected="setPaymentMethod" valueToDisplay="Select Payment" :options="paymentOptions" :active="cartList[activeCartIndex].paymentMethod.method"></list-box>
+                <div class="split-wrapper" v-if="splitPaymentInputVisible">
                   <input type="number" placeholder="Card" />
                   <input type="number" placeholder="Cash" />
                   <input type="number" placeholder="UPI" />
@@ -105,6 +106,7 @@
 export default {
   async mounted() {
     await this.$store.dispatch("product/getProductList");
+    await this.$store.dispatch("customer/getCustomerList");
   },
   data() {
     return {
@@ -115,6 +117,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -122,6 +125,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -129,6 +133,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -136,6 +141,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -143,6 +149,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -150,6 +157,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -157,6 +165,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -164,6 +173,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -171,6 +181,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
         {
           productList: [],
@@ -178,6 +189,7 @@ export default {
             method: null,
             amount: null
           },
+          customer: null
         },
       ],
       columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
@@ -202,14 +214,17 @@ export default {
       this.cartList[key] = {
         productList: [],
         paymentMethod:{
-          cash: null,
-          card:null,
-          upi:null,
+          method: null,
+          amount: null
         },
+        customer:null
       };
     },
     setPaymentMethod(option){
       this.cartList[this.activeCartIndex].paymentMethod.method = option;
+    },
+    setCustomerToActiveCart(obj){
+      this.cartList[this.activeCartIndex].customer = obj;
     }
   },
   computed: {
@@ -232,7 +247,7 @@ export default {
     billAmount() {
       return this.cgstAmount + this.sgstAmount + this.totalPrice;
     },
-    splitVisible(){
+    splitPaymentInputVisible(){
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
     }
   },

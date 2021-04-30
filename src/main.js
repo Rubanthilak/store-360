@@ -7,6 +7,7 @@ import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SideBar from './components/UI/SideBar/SideBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
 import SearchBarDropdown from './components/UI/SearchBar/SearchBarDropdown.vue';
+import SearchBarCustomer from './components/UI/SearchBar/SearchBarCustomer.vue';
 import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
@@ -14,7 +15,7 @@ import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
-import DropdownMenuPayment from './components/UI/DropdownMenu/DropdownMenuPayment.vue';
+import ListBox from './components/UI/ListBox/ListBox.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
@@ -42,6 +43,7 @@ app.component('navigation-bar',NavigationBar);
 app.component('side-bar',SideBar);
 app.component('search-bar',SearchBar);
 app.component('search-bar-dropdown',SearchBarDropdown);
+app.component('search-bar-customer',SearchBarCustomer);
 app.component('the-button',TheButton);
 app.component('icon-button',IconButton);
 app.component('the-table',TheTable);
@@ -49,7 +51,7 @@ app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
 app.component('dropdown-menu',DropdownMenu);
-app.component('dropdown-menu-pay',DropdownMenuPayment);
+app.component('list-box',ListBox);
 app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
