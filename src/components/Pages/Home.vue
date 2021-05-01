@@ -1,7 +1,7 @@
 <template>
   <section>
     <the-tabs @tab-removed="EmptyCart" @tab-switched="switchActiveCart"></the-tabs>
-    <div class="tab-body">
+    <div class="tab-body" v-for="cart in filteredCartList" :key="cart">
       <div class="tab-lhs">
         <div class="flex menu-bar">
           <search-bar-dropdown
@@ -24,12 +24,13 @@
             </tr>
           </template>
           <template #tbody>
-            <tr v-for="product in cartList[activeCartIndex].productList" :key="product.id">
+            <tr v-for="product in cart.productList" :key="product.id">
               <td>{{product.id}}</td>
               <td>{{product.name}}</td>
               <td>{{product.count}}</td>
               <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
-              <td style="font-family:var(--font-bold)"
+              <td
+                style="font-family:var(--font-bold)"
               >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
             </tr>
           </template>
@@ -43,11 +44,15 @@
             </div>
             <div class="content">
               <div class="cust-wrapper">
-                <search-bar-customer place-holder="Search Customer" @select="setCustomerToActiveCart"  v-if="cartList[activeCartIndex].customer === null"></search-bar-customer>
-                <div class="avatar" v-if="cartList[activeCartIndex].customer">{{cartList[activeCartIndex].customer.customerName[0]}}</div>
-                <div class="details"  v-if="cartList[activeCartIndex].customer">
-                  <p class="name">{{cartList[activeCartIndex].customer.customerName}}</p>
-                  <p class="phone">{{cartList[activeCartIndex].customer.customerPhoneNumber}}</p>
+                <search-bar-customer
+                  place-holder="Search Customer"
+                  @select="setCustomerToActiveCart"
+                  v-if="cart.customer === null"
+                ></search-bar-customer>
+                <div class="avatar" v-if="cart.customer">{{cart.customer.customerName[0]}}</div>
+                <div class="details" v-if="cart.customer">
+                  <p class="name">{{cart.customer.customerName}}</p>
+                  <p class="phone">{{cart.customer.customerPhoneNumber}}</p>
                 </div>
               </div>
             </div>
@@ -58,7 +63,12 @@
             </div>
             <div class="content">
               <div class="paym-wrapper">
-                <list-box @option-selected="setPaymentMethod" valueToDisplay="Select Payment" :options="paymentOptions" :active="cartList[activeCartIndex].paymentMethod.method"></list-box>
+                <list-box
+                  @option-selected="setPaymentMethod"
+                  valueToDisplay="Select Payment"
+                  :options="paymentOptions"
+                  :active="cart.paymentMethod.method"
+                ></list-box>
                 <div class="split-wrapper" v-if="splitPaymentInputVisible">
                   <input type="number" placeholder="Card" />
                   <input type="number" placeholder="Cash" />
@@ -112,88 +122,88 @@ export default {
       cartList: [
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: null,
           },
-          customer: null
+          customer: null,
         },
       ],
       columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
       activeCartIndex: 0,
-      paymentOptions: ["Card","Cash","UPI","Split"]
+      paymentOptions: ["Card", "Cash", "UPI", "Split"],
     };
   },
   methods: {
@@ -212,19 +222,19 @@ export default {
     EmptyCart(key) {
       this.cartList[key] = {
         productList: [],
-        paymentMethod:{
+        paymentMethod: {
           method: null,
-          amount: null
+          amount: null,
         },
-        customer:null
+        customer: null,
       };
     },
-    setPaymentMethod(option){
+    setPaymentMethod(option) {
       this.cartList[this.activeCartIndex].paymentMethod.method = option;
     },
-    setCustomerToActiveCart(obj){
+    setCustomerToActiveCart(obj) {
       this.cartList[this.activeCartIndex].customer = obj;
-    }
+    },
   },
   computed: {
     totalPrice() {
@@ -246,9 +256,14 @@ export default {
     billAmount() {
       return this.cgstAmount + this.sgstAmount + this.totalPrice;
     },
-    splitPaymentInputVisible(){
+    splitPaymentInputVisible() {
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
-    }
+    },
+    filteredCartList() {
+      return this.cartList.filter((cart, index) => {
+        return index === this.activeCartIndex;
+      });
+    },
   },
 };
 </script>
