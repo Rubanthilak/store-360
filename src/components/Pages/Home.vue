@@ -29,8 +29,7 @@
               <td>{{product.name}}</td>
               <td>{{product.count}}</td>
               <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
-              <td
-                style="font-family:var(--font-bold)"
+              <td style="font-family:var(--font-bold)"
               >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
             </tr>
           </template>
