@@ -1,6 +1,6 @@
 <template>
   <section>
-    <the-tabs @tab-removed="EmptyCart" @tab-switched="switchActiveCart"></the-tabs>
+    <the-tabs @tab-removed="emptyCart" @tab-switched="switchActiveCart"></the-tabs>
     <div class="tab-body" v-for="cart in filteredCartList" :key="cart">
       <div class="tab-lhs">
         <div class="flex menu-bar">
@@ -70,9 +70,9 @@
                   :active="cart.paymentMethod.method"
                 ></list-box>
                 <div class="split-wrapper" v-if="splitPaymentInputVisible">
-                  <input type="number" placeholder="Card" />
-                  <input type="number" placeholder="Cash" />
-                  <input type="number" placeholder="UPI" />
+                  <input type="number" placeholder="Card" v-model="cart.paymentMethod.amount.card"/>
+                  <input type="number" placeholder="Cash"  v-model="cart.paymentMethod.amount.cash"/>
+                  <input type="number" placeholder="UPI" v-model="cart.paymentMethod.amount.upi" />
                 </div>
               </div>
             </div>
@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="footer">
-            <the-button label="Checkout" color="green"></the-button>
+            <the-button label="Checkout" color="green" @click="validateBill"></the-button>
           </div>
         </div>
       </div>
@@ -113,10 +113,6 @@
 
 <script>
 export default {
-  async mounted() {
-    await this.$store.dispatch("product/getProductList");
-    await this.$store.dispatch("customer/getCustomerList");
-  },
   data() {
     return {
       cartList: [
@@ -124,7 +120,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -132,7 +132,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -140,7 +144,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -148,7 +156,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -156,7 +168,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -164,7 +180,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -172,7 +192,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -180,7 +204,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -188,7 +216,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -196,7 +228,11 @@ export default {
           productList: [],
           paymentMethod: {
             method: null,
-            amount: null,
+            amount: {
+              card:null,
+              cash:null,
+              upi:null
+            },
           },
           customer: null,
         },
@@ -219,12 +255,16 @@ export default {
     switchActiveCart(key) {
       this.activeCartIndex = key;
     },
-    EmptyCart(key) {
+    emptyCart(key) {
       this.cartList[key] = {
         productList: [],
         paymentMethod: {
           method: null,
-          amount: null,
+          amount: {
+            card:null,
+            cash:null,
+            upi:null
+          },
         },
         customer: null,
       };
@@ -235,6 +275,10 @@ export default {
     setCustomerToActiveCart(obj) {
       this.cartList[this.activeCartIndex].customer = obj;
     },
+    validateBill(){
+      console.log(this.cartList[this.activeCartIndex]);
+      this.$store.dispatch("sale/postSale",this.cartList[this.activeCartIndex])
+    }
   },
   computed: {
     totalPrice() {

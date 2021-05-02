@@ -27,7 +27,7 @@ export default {
   methods: {
     customerSelected(obj) {
       this.searchKeyword = "";
-      this.$emit("select", obj);
+      this.$emit("select", obj.dataValues);
     },
   },
   data() {

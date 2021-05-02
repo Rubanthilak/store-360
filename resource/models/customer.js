@@ -113,6 +113,7 @@ const updateCustomer = async function(obj, id) {
 };
 
 export default {
+  Customer,
   createTable,
   getCustomers,
   getCustomerById,
