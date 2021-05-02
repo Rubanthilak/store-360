@@ -51,7 +51,6 @@ const getSales = async function(columnToSort = "id") {
   const sales = await Sale.findAll({
     order: [[columnToSort, "ASC"]],
   });
-
   return sales;
 };
 
@@ -71,7 +70,16 @@ const createSale = async function(obj){
         centralTax: obj.centralTax,
         productList: obj.productList,
     });
-    return sale.dataValues;
+   return sale.dataValues;
+}
+
+const deleteSale = async function(id){
+  const res = await Sale.destroy({
+    where: {
+      id: id
+    }
+  });
+  return res === 1 ? true : false;
 }
 
 export default {
@@ -79,5 +87,6 @@ export default {
   createTable,
   getSales,
   getSaleById,
-  createSale
+  createSale,
+  deleteSale
 };
