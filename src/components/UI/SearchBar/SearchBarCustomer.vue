@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <input :placeholder="placeHolder" v-model="searchKeyword" />
+    <input :placeholder="placeHolder" v-model="searchKeyword" class="search"/>
     <div class="dropdown-body" v-if="filteredCustomerList">
       <div v-if="filteredCustomerList.length > 0 ">
         <div
@@ -10,11 +10,15 @@
           @click="customerSelected(customer)"
         >
           <p>{{customer.customerName}}</p>
+          <p>-</p>
           <p>{{customer.customerPhoneNumber}}</p>
         </div>
       </div>
-      <div v-else class="nf-text">
-        <p>Create New Customer</p>
+      <div v-else class="new-cust">
+        <h1>New Customer</h1>
+        <input type="text" placeholder="Customer Name" v-model="customer.customerName" />
+        <input type="number" placeholder="Phone Number" v-model="customer.customerPhoneNumber" maxlength="10"/>
+        <the-button label="Create" @click="validateNewCustomer"></the-button>
       </div>
     </div>
   </div>
@@ -29,10 +33,60 @@ export default {
       this.searchKeyword = "";
       this.$emit("select", obj.dataValues);
     },
+    clearField(){
+      this.searchKeyword = "";
+    },
+    validateNewCustomer() {
+      if (
+        this.customer.customerName.trim() === "" ||
+        this.customer.customerPhoneNumber.trim() === ""
+      ) {
+        this.errorFlag = true;
+      } else if (this.customer.customerPhoneNumber.trim().length !== 10) {
+        this.errorFlag = true;
+        this.errorMessage = "Please, Enter valid Phone Number";
+      } else {
+        this.errorFlag = false;
+        this.createNewCustomer();
+      }
+    },
+    async createNewCustomer() {
+      var res = await this.$store.dispatch(
+        "customer/postCustomer",
+        this.customer
+      );
+      if (!res) {
+        this.errorFlag = true;
+        this.errorMessage = "Phone Number already exist";
+      } else {
+        this.customer.customerName = null;
+        this.customer.customerPhoneNumber = null;
+        this.customer.customerCreditPoint = 0;
+        this.customer.customerUnpaidBalance = 0.0;
+        this.customer.customerDoorNumber = null;
+        this.customer.customerStreetName = null;
+        this.customer.customerCityName = null;
+        this.customer.customerPincode = null;
+        this.searchKeyword = "";
+        this.$emit("select", res);
+      }
+    },
   },
   data() {
     return {
       searchKeyword: "",
+       customer: {
+        customerName: null,
+        customerPhoneNumber: null,
+        customerCreditPoint: 0,
+        customerUnpaidBalance: 0.0,
+        customerDoorNumber: null,
+        customerStreetName: null,
+        customerCityName: null,
+        customerPincode: null,
+      },
+      errorFlag: false,
+      errorMessage: "Please fill all the fields*",
     };
   },
   computed: {
@@ -56,11 +110,23 @@ export default {
       });
     },
   },
+  watch:{
+    searchKeyword() {
+      if(!isNaN(this.searchKeyword)){
+        this.customer.customerName = null;
+        this.customer.customerPhoneNumber = this.searchKeyword;
+      }
+      else{
+        this.customer.customerName = this.searchKeyword;
+        this.customer.customerPhoneNumber = null;
+      }
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
-input {
+.search {
   display: flex;
   width: calc(100% - 24px);
   padding: 0px 10px;
@@ -70,17 +136,39 @@ input {
   border-radius: 4px;
   background: transparent;
   font-family: var(--font-regular);
-  font-size:12px;
+  font-size: 12px;
   color: var(--gray8);
 }
 
-.nf-text {
-  text-align: center;
+.new-cust {
   padding: 20px 0px;
-  p {
-    font-family: var(--font-semibold);
-    font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  h1{
+    margin: 0px 20px;
+    width: calc(100% - 64px);
   }
+  input {
+    margin: 0px 20px;
+    width: calc(100% - 64px);
+    padding: 0px 10px;
+    height: 30px;
+    border: 2px solid var(--gray2);
+    font-family: var(--font-regular);
+    outline: none;
+    border-radius: 4px;
+    background: transparent;
+    font-size: 12px;
+  }
+
+  div {
+    margin: 0px 20px;
+  }
+}
+
+p {
+  font-size: 14px;
 }
 
 .flex {
@@ -97,7 +185,7 @@ input {
   z-index: 1;
   background: var(--gray0);
   box-shadow: 0px 5px 25px #0000001a;
-  width: calc(100% + 4px);
+  width: calc(100% + 0px);
   overflow-y: auto;
   border-radius: 8px;
   max-height: 300px;

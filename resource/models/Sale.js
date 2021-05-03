@@ -10,7 +10,7 @@ const Sale = connection.sequelize.define("Sale", {
   },
   customerId: {
     type: connection.DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   paymentMethod: {
     type: connection.DataTypes.ENUM,
