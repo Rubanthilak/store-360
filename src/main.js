@@ -19,6 +19,7 @@ import ListBox from './components/UI/ListBox/ListBox.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
+import InvoicePreview from './components/UI/Invoice/InvoicePreview.vue'
 
 import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
@@ -55,6 +56,7 @@ app.component('list-box',ListBox);
 app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
+app.component('invoice-preview',InvoicePreview);
 
 app.mount('#app');
 

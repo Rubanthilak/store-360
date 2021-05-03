@@ -117,8 +117,8 @@
           </div>
         </div>
       </div>
-      <div v-else class="print-preview">
-          <h1>print preview</h1>
+      <div v-else>
+            <invoice-preview></invoice-preview>
       </div>
     </div>
   </section>
@@ -354,7 +354,7 @@ export default {
     },
     validateCustomer() {
       if (
-        this.cartList[this.activeCartIndex].customer !== null &&
+        this.cartList[this.activeCartIndex].customer === null &&
         this.cartList[this.activeCartIndex].paymentMethod.method !== 1
       ) {
         this.$store.commit(
@@ -421,12 +421,15 @@ section {
   gap: 20px;
   min-width: 1180px;
   width: 95%;
+  height: calc(100vh - 100px);
+  overflow: auto;
 }
 
 .tab-lhs,
 .tab-rhs {
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 
 .menu-bar {
