@@ -118,7 +118,7 @@
         </div>
       </div>
       <div v-else>
-            <invoice-preview></invoice-preview>
+         <invoice-preview></invoice-preview>
       </div>
     </div>
   </section>
