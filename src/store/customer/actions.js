@@ -1,4 +1,4 @@
-import Database from "../../../resource/Database";
+import Database from "../../../resource/database/Database";
 
 export default {
   async getCustomerList(context, columnToSort) {

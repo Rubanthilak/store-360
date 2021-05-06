@@ -28,7 +28,7 @@ import BrowserIcon from './components/UI/Icons/BrowserIcon.vue';
 import MinusIcon from './components/UI/Icons/MinusIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
 
-import VueHtmlToPaper from '../resource/helperFunctions/vueHtmlToPaper'
+import VueHtmlToPaper from '../resource/plugins/vueHtmlToPaper'
 
 const app = createApp(App);
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -21,13 +21,24 @@ async function createWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      webviewTag: true,
+      nativeWindowOpen:true
     },
     autoHideMenuBar : true,
     frame: false
   });
 
-
+  ipcMain.on('getPrinterDefaultName', (event) => {
+    //Listen to get the default printer name
+    const list = win.webContents.getPrinters();
+    let name = ''
+    for(let item of list){
+      item.isDefault && (name = item.name)
+    }
+    console.log(name)
+    event.returnValue = name;
+  });
   // win.removeMenu();
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -85,3 +96,4 @@ if (isDevelopment) {
     });
   }
 }
+
