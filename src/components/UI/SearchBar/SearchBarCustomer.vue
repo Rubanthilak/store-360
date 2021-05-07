@@ -1,12 +1,12 @@
 <template>
   <div class="flex">
-    <input :placeholder="placeHolder" v-model="searchKeyword" class="search"/>
+    <input :placeholder="placeHolder" v-model="searchKeyword" class="search" v-on:keydown="arrowkeyEventHandler($event)"/>
     <div class="dropdown-body" v-if="filteredCustomerList">
       <div v-if="filteredCustomerList.length > 0 ">
         <div
-          v-for="customer in filteredCustomerList"
+          v-for="(customer,index) in filteredCustomerList"
           :key="customer.id"
-          class="dropdown-customer"
+          :class="['dropdown-customer',{'active' : activeTileIndex===index}]"
           @click="customerSelected(customer)"
         >
           <p>{{customer.customerName}}</p>
@@ -29,6 +29,17 @@ export default {
   props: ["placeHolder"],
   emits: ["select"],
   methods: {
+    arrowkeyEventHandler(event) {
+      if (event.keyCode === 40 && this.activeTileIndex < this.filteredCustomerList.length-1 ) {
+        this.activeTileIndex += 1;
+      }
+      else if (event.keyCode === 38 && this.activeTileIndex > 0){
+        this.activeTileIndex -= 1;
+      }
+      else if (event.keyCode === 13 && this.activeTileIndex !== -1){
+        this.customerSelected(this.filteredCustomerList[this.activeTileIndex]);
+      }
+    },
     customerSelected(obj) {
       this.searchKeyword = "";
       this.$emit("select", obj.dataValues);
@@ -87,6 +98,7 @@ export default {
       },
       errorFlag: false,
       errorMessage: "Please fill all the fields*",
+      activeTileIndex: -1
     };
   },
   computed: {
@@ -111,6 +123,11 @@ export default {
     },
   },
   watch:{
+    filteredCustomerList(curVal,oldVal){
+      if(curVal != oldVal){
+        this.activeTileIndex = -1;
+      }
+    },
     searchKeyword() {
       if(!isNaN(this.searchKeyword)){
         this.customer.customerName = null;
@@ -199,6 +216,11 @@ p {
   border-top: 1px solid var(--gray1);
 
   &:hover {
+    background: var(--blue);
+    color: var(--gray0);
+  }
+  
+  &.active {
     background: var(--blue);
     color: var(--gray0);
   }

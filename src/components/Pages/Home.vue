@@ -50,11 +50,14 @@
                     @select="setCustomerToActiveCart"
                     v-if="cart.customer === null"
                   ></search-bar-customer>
-                  <div class="avatar" v-if="cart.customer">{{cart.customer.customerName[0]}}</div>
-                  <div class="details" v-if="cart.customer">
-                    <p class="name">{{cart.customer.customerName}}</p>
-                    <p class="phone">{{cart.customer.customerPhoneNumber}}</p>
+                  <div class="cust"  v-if="cart.customer">
+                    <div class="avatar">{{cart.customer.customerName[0]}}</div>
+                    <div class="details">
+                      <p class="name">{{cart.customer.customerName}}</p>
+                      <p class="phone">{{cart.customer.customerPhoneNumber}}</p>
+                    </div>
                   </div>
+                  <p v-if="cart.customer" style="color:var(--red);font-size:12px;cursor:pointer;margin-right:10px" @click="removeCustomerFromActiveCart">Remove</p>
                 </div>
               </div>
             </div>
@@ -118,7 +121,7 @@
         </div>
       </div>
       <div v-else>
-         <invoice-preview></invoice-preview>
+        <invoice-preview></invoice-preview>
       </div>
     </div>
   </section>
@@ -140,7 +143,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -153,7 +156,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -166,7 +169,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -179,7 +182,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -192,7 +195,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -205,7 +208,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -218,7 +221,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -231,7 +234,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -244,7 +247,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
         {
           productList: [],
@@ -257,7 +260,7 @@ export default {
             },
           },
           customer: null,
-          printPreview: false
+          printPreview: false,
         },
       ],
       columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
@@ -290,7 +293,7 @@ export default {
           },
         },
         customer: null,
-        printPreview: false
+        printPreview: false,
       };
     },
     setPaymentMethod(option) {
@@ -298,6 +301,9 @@ export default {
     },
     setCustomerToActiveCart(obj) {
       this.cartList[this.activeCartIndex].customer = obj;
+    },
+    removeCustomerFromActiveCart(){
+      this.cartList[this.activeCartIndex].customer = null;
     },
     validateBill() {
       if (this.validatePayment() && this.validateCustomer()) {
@@ -378,10 +384,10 @@ export default {
       return parseFloat(temp);
     },
     cgstAmount() {
-      return parseFloat(this.totalPrice * 0.08);
+      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).centralGST/100);
     },
     sgstAmount() {
-      return parseFloat(this.totalPrice * 0.08);
+      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).stateGST/100);
     },
     billAmount() {
       return (
@@ -430,6 +436,7 @@ section {
   width: 100%;
   height: 100%;
   overflow: auto;
+  background: var(--gray1);
 }
 
 .menu-bar {
@@ -490,8 +497,14 @@ section {
     .cust-wrapper {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
       margin: 20px 0px;
+      .cust {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
       .avatar {
         height: 50px;
         width: 50px;
