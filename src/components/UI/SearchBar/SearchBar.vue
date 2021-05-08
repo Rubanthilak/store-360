@@ -1,14 +1,14 @@
 <template>
-  <input
-    :placeholder="placeHolder"
-    v-model="inputFieldValue"
-    @input="validateInputField($event)"
-  />
+  <div>
+    <input :placeholder="placeHolder" v-model="inputFieldValue" @input="validateInputField($event)" />
+    <svg-icon v-if="typing" @click="clearInputField" class="clear" icon="cross-icon" color="red" size="22"></svg-icon>
+    <svg-icon v-else class="search" icon="search-icon" color="gray2" size="22"></svg-icon>
+  </div>
 </template>
 
 <script>
 export default {
-  props : ["placeHolder"],
+  props: ["placeHolder"],
   emits: ["enter", "typing"],
   data() {
     return {
@@ -23,11 +23,29 @@ export default {
         this.$emit("typing", this.inputFieldValue);
       }
     },
+    clearInputField(){
+      this.inputFieldValue = "";
+    }
   },
+  computed: {
+    typing(){
+      if(this.inputFieldValue === "" || this.inputFieldValue === null){
+        return false;
+      }
+      return true;
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
+
+div{
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
 input {
   display: flex;
   width: 100%;
@@ -38,4 +56,17 @@ input {
   box-shadow: 0px 5px 50px #0000001c;
   border-radius: 4px;
 }
+
+.search,.clear{
+  position: absolute;
+  margin: auto 0px;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+}
+
+.clear{
+  cursor: pointer;
+}
+
 </style>

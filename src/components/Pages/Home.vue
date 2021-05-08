@@ -11,7 +11,7 @@
             ></search-bar-dropdown>
           </div>
           <hr />
-          <the-table>
+          <the-table table-height="calc(100vh - 180px)">
             <template #colgroup>
               <col span="1" style="width: 5%;" />
               <col span="1" style="width: 30%;" />

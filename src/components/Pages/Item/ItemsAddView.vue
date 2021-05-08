@@ -31,7 +31,7 @@
       <the-button label="Click Here" @click="generateRows"></the-button>
     </div>
     <div class="table-wrapper" v-else>
-      <the-table class="table-editmode" id="table">
+      <the-table class="table-editmode" id="table" table-height="calc(100vh - 125px)">
         <template #colgroup>
           <col span="1" style="width: 3%;" />
           <col span="1" style="width: 3%;" />

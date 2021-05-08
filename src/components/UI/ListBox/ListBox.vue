@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown" @click="dropped=!dropped">
     <div class="dropdown-active" v-if="active != null">{{options[active]}}</div>
-    <div v-else>{{valueToDisplay}}</div>
+    <div class="hint" v-else>{{valueToDisplay}}</div>
     <div class="dropdown-container" v-if="dropped">
       <div
         class="dropdown-item"
@@ -35,8 +35,12 @@ export default {
   font-family: var(--font-regular);
   font-size: 12px;
   border-radius: 5px;
-  padding: 8px;
+  padding: 8px 10px;
   position: relative;
+}
+
+.hint{
+  color: var(--gray3);
 }
 
 .dropdown-active {

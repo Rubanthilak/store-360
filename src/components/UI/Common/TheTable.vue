@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :style="'height:'+tableHeight">
     <table>
       <colgroup>
         <slot name="colgroup"></slot>
@@ -15,7 +15,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["tableHeight"]
+};
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +43,7 @@ export default {};
 }
 
 .wrapper {
-  height: calc(100vh - 180px);
+  // height: calc(100vh - 180px);
   width: 100%;
   margin: 0px auto;
   overflow-x: hidden;
