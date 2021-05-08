@@ -7,7 +7,49 @@
   </svg>
 </template>
 
+<script>
+export default {
+  props: {
+    color: {
+      type: String,
+      required: false,
+      validator: function (value) {
+        if (value) {
+          return value;
+        }
+        return "white";
+      },
+    },
+    hoverColor: {
+      type: String,
+      required: false,
+      validator: function (value) {
+        if (value) {
+          return value;
+        }
+      },
+    },
+    size: {
+      type: String,
+      required: true,
+      validator: function (value) {
+        if (value) {
+          return value;
+        }
+        return "24";
+      },
+    },
+  },
+};
+</script>
+
+
 <style lang="scss" scoped>
+svg:hover {
+  path {
+    fill: var(--hoverColor);
+  }
+}
 .router-link-active {
   svg {
     path {

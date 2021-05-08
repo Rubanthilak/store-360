@@ -4,7 +4,7 @@
       <div class="flex">
         <router-link to="/items">
           <div class="back-button">
-            <back-icon color="gray8" size="34"></back-icon>
+            <svg-icon size="34" icon="back-icon"></svg-icon>
           </div>
         </router-link>
         <h1>Add Items</h1>
@@ -53,7 +53,7 @@
             </td>
             <td>
               <div class="sno">
-                <warn-icon v-if="item.hasError"></warn-icon>
+                <svg-icon v-if="item.hasError" size="24" icon="warn-icon" color="red"></svg-icon>
                 <p v-else>{{productList.indexOf(item)+1}}</p>
               </div>
             </td>

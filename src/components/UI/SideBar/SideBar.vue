@@ -4,16 +4,16 @@
       <div class="wrapper flex">
         <div class="links">
           <router-link to="/">
-            <home-icon></home-icon>
+            <svg-icon icon="home-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
           </router-link>
           <router-link to="/items">
-            <box-icon></box-icon>
+            <svg-icon icon="box-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
           </router-link>
           <router-link to="/customers">
-            <users-icon></users-icon>
+            <svg-icon icon="users-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
           </router-link>
           <router-link to="/sales">
-            <tag-icon></tag-icon>
+            <svg-icon icon="tag-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
           </router-link>
         </div>
         <img src="../../../assets/icons/settings.svg" alt="settings_icon" />
@@ -23,19 +23,7 @@
 </template>
 
 <script>
-import UsersIcon from "../Icons/UsersIcon";
-import BoxIcon from "../Icons/BoxIcon";
-import TagIcon from "../Icons/TagIcon";
-import HomeIcon from "../Icons/HomeIcon";
-
-export default {
-  components: {
-    UsersIcon,
-    BoxIcon,
-    TagIcon,
-    HomeIcon,
-  },
-};
+export default {};
 </script>
 
 <style scoped lang="scss">

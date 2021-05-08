@@ -116,7 +116,7 @@
           </td>
           <td>{{item.barcode}}</td>
           <td>
-            <delete-icon @click="triggerDeleteProduct(item.id)"></delete-icon>
+            <svg-icon @click="triggerDeleteProduct(item.id)" size="24" icon="delete-icon" hover-color="red" color="gray2"></svg-icon>
           </td>
         </tr>
       </template>

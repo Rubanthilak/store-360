@@ -4,7 +4,7 @@
       <div class="flex">
         <router-link to="/customers">
           <div class="back-button">
-            <back-icon color="gray8" size="34"></back-icon>
+            <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
           </div>
         </router-link>
         <h1>{{customer.customerName}}</h1>
