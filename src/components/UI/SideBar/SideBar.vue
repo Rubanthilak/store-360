@@ -4,16 +4,16 @@
       <div class="wrapper flex">
         <div class="links">
           <router-link to="/">
-            <svg-icon icon="home-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
+            <svg-icon icon="home-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
           <router-link to="/items">
-            <svg-icon icon="box-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
+            <svg-icon icon="box-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
           <router-link to="/customers">
-            <svg-icon icon="users-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
+            <svg-icon icon="users-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
           <router-link to="/sales">
-            <svg-icon icon="tag-icon" color="gray2" hover-color="blue" size="24"></svg-icon>
+            <svg-icon icon="tag-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
         </div>
         <img src="../../../assets/icons/settings.svg" alt="settings_icon" />
@@ -38,7 +38,6 @@ export default {};
   align-items: center;
   flex-direction: column;
   z-index: 99;
-  
 
   .wrapper {
     flex-direction: column;
