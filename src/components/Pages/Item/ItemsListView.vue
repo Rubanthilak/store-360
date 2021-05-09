@@ -12,7 +12,7 @@
       </div>
     </div>
     <hr />
-    <the-table v-if="!tableEditMode" table-height="calc(100vh - 125px)">
+    <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 45%;" />
@@ -37,7 +37,7 @@
         </tr>
       </template>
     </the-table>
-    <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 125px)">
+    <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 40%;" />

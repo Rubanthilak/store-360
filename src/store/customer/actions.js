@@ -18,7 +18,6 @@ export default {
     return res;
   },
   async updateCustomer(context, obj) {
-    console.log(obj);
     const res = await Database.Model.Customer.updateCustomer(obj, obj.id);
     return res;
   },

@@ -16,8 +16,9 @@
               <col span="1" style="width: 5%;" />
               <col span="1" style="width: 30%;" />
               <col span="1" style="width: 5%;" />
-              <col span="1" style="width: 12%;" />
-              <col span="1" style="width: 12%;" />
+              <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 4%;" />
             </template>
             <template #thead>
               <tr>
@@ -25,7 +26,7 @@
               </tr>
             </template>
             <template #tbody>
-              <tr v-for="product in cart.productList" :key="product.id">
+              <tr v-for="(product,index) in cart.productList" :key="product.id">
                 <td>{{product.id}}</td>
                 <td>{{product.name}}</td>
                 <td>{{product.count}}</td>
@@ -33,6 +34,9 @@
                 <td
                   style="font-family:var(--font-bold)"
                 >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
+                <td style="display:flex;align-items:center;justify-content:center;padding-right:5px;">
+                  <svg-icon color="gray0" size="16" icon="cross-icon" class="remove-icon" @click="removeProductFromActiveCart(index)"></svg-icon>
+                </td>
               </tr>
             </template>
           </the-table>
@@ -263,7 +267,7 @@ export default {
           printPreview: false,
         },
       ],
-      columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
+      columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"," "],
       activeCartIndex: 0,
       paymentOptions: ["Card", "Cash", "UPI", "Split"],
     };
@@ -277,6 +281,9 @@ export default {
         obj.count = 1;
         this.cartList[this.activeCartIndex].productList.push(obj);
       }
+    },
+    removeProductFromActiveCart(index) {
+      this.cartList[this.activeCartIndex].productList.splice(index , 1);
     },
     switchActiveCart(key) {
       this.activeCartIndex = key;
@@ -306,7 +313,7 @@ export default {
       this.cartList[this.activeCartIndex].customer = null;
     },
     validateBill() {
-      if (this.validatePayment() && this.validateCustomer()) {
+      if (this.validatePayment() && this.validateCustomer() && this.cartList[this.activeCartIndex].productList.length > 0) {
         try {
           this.$store.dispatch(
             "sale/postSale",
@@ -431,12 +438,21 @@ section {
   overflow: auto;
 }
 
+.remove-icon{
+  &:hover{
+    background: var(--red);
+  }
+  background: var(--gray2);
+  cursor:pointer;
+  border-radius:360px;
+  padding:2px;
+}
+
 .tab-lhs,
 .tab-rhs {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background: var(--gray1);
 }
 
 .menu-bar {

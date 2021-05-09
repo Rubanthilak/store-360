@@ -7,62 +7,23 @@
             <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
           </div>
         </router-link>
-        <h1>{{customer.customerName}}</h1>
+        <div>
+          <h1>{{customer.customerName}}</h1>
+          <p>{{customer.customerPhoneNumber}}</p>
+        </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Update" @click="triggerUpdateCustomer"></the-button>
-        <the-button label="Delete" color="red" @click="triggerDeleteCustomer"></the-button>
+        <the-button label="Edit User" @click="triggerUpdateCustomer"></the-button>
+        <icon-button icon="delete-icon" background-color="red" @click="triggerDeleteCustomer"></icon-button>
       </div>
     </div>
-    <hr />
-    <div class="person-details">
-      <table>
-        <col span="1" style="width: 50%;" />
-        <col span="1" style="width: 50%;" />
-        <tr>
-          <td>Name</td>
-          <td>
-            <input type="text" v-model="customer.customerName" />
-          </td>
-        </tr>
-        <tr>
-          <td>Phone</td>
-          <td>
-            <input type="text" v-model="customer.customerPhoneNumber" />
-          </td>
-        </tr>
-        <tr>
-          <td>Address</td>
-          <td>
-            <input type="text" v-model="customer.fullAddress" v-if="customer.customerDoorNumber" />
-            <p v-else>Not Available</p>
-          </td>
-        </tr>
-        <tr>
-          <td>Credits</td>
-          <td>
-            <p>{{customer.customerCreditPoint}}</p>
-          </td>
-        </tr>
-        <tr>
-          <td>Unpaid Balance</td>
-          <td>
-            <p>₹ {{customer.customerUnpaidBalance}}</p>
-          </td>
-        </tr>
-        <tr>
-          <td>Joined on</td>
-          <td>
-            <p>{{customer.createdAt}}</p>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <hr/>
   </section>
 </template>
 
 <script>
 export default {
+
   data() {
     return {
       customer: null,
@@ -82,7 +43,6 @@ export default {
       this.$store.commit("setActivePopup", "popup-delete-customer");
     },
     async triggerUpdateCustomer() {
-      console.log(this.customer);
       var res = await this.$store.dispatch("customer/updateCustomer",this.customer);
       if(res){
         this.$store.commit("showSnackBar", "Successfully updated.");
@@ -92,6 +52,7 @@ export default {
       }
     }
   },
+  
 };
 </script>
 
@@ -110,6 +71,13 @@ export default {
 h1 {
   font-family: var(--font-semibold);
   margin: 0px 10px;
+  font-size: 22px;
+}
+
+p{
+  margin: 0px 10px;
+  color: var(--gray4);
+  font-family: var(--font-light);
 }
 
 .back-button {
@@ -118,31 +86,4 @@ h1 {
   display: flex;
 }
 
-.person-details {
-
-  padding: 10px 20px;
-  background: var(--gray0);
-  width: 300px;
-  border-radius: 5px;
-  font-family: var(--font-regular);
-  font-size: 14px;
-
-  input {
-    font-family: var(--font-regular);
-    border: none;
-  }
-
-  tr {
-    td:first-child {
-      font-family: var(--font-semibold);
-      font-size: 14px;
-    }
-  }
-
-  td {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-}
 </style>
