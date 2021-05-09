@@ -1,101 +1,131 @@
 <template>
   <section>
-    <the-tabs @tab-removed="EmptyCart" @tab-switched="switchActiveCart"></the-tabs>
-    <div class="tab-body">
-      <div class="tab-lhs">
-        <div class="flex menu-bar">
-          <search-bar-dropdown
-            place-holder="Search Items by Name, ID, Barcode"
-            @select="addProductToActiveCart"
-          ></search-bar-dropdown>
+    <the-tabs @tab-removed="emptyCart" @tab-switched="switchActiveCart"></the-tabs>
+    <div v-for="cart in filteredCartList" :key="cart">
+      <div class="tab-body" v-if="!cart.printPreview">
+        <div class="tab-lhs">
+          <div class="flex menu-bar">
+            <search-bar-dropdown
+              place-holder="Search Items by Name, ID, Barcode"
+              @select="addProductToActiveCart"
+            ></search-bar-dropdown>
+          </div>
+          <hr />
+          <the-table table-height="calc(100vh - 180px)">
+            <template #colgroup>
+              <col span="1" style="width: 5%;" />
+              <col span="1" style="width: 30%;" />
+              <col span="1" style="width: 5%;" />
+              <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 4%;" />
+            </template>
+            <template #thead>
+              <tr>
+                <th v-for="title in columnName" :key="title">{{title}}</th>
+              </tr>
+            </template>
+            <template #tbody>
+              <tr v-for="(product,index) in cart.productList" :key="product.id">
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.count}}</td>
+                <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
+                <td
+                  style="font-family:var(--font-bold)"
+                >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
+                <td style="display:flex;align-items:center;justify-content:center;padding-right:5px;">
+                  <svg-icon color="gray0" size="16" icon="cross-icon" class="remove-icon" @click="removeProductFromActiveCart(index)"></svg-icon>
+                </td>
+              </tr>
+            </template>
+          </the-table>
         </div>
-        <hr />
-        <the-table>
-          <template #colgroup>
-            <col span="1" style="width: 5%;" />
-            <col span="1" style="width: 30%;" />
-            <col span="1" style="width: 5%;" />
-            <col span="1" style="width: 12%;" />
-            <col span="1" style="width: 12%;" />
-          </template>
-          <template #thead>
-            <tr>
-              <th v-for="title in columnName" :key="title">{{title}}</th>
-            </tr>
-          </template>
-          <template #tbody>
-            <tr v-for="product in cartList[activeCartIndex].productList" :key="product.id">
-              <td>{{product.id}}</td>
-              <td>{{product.name}}</td>
-              <td>{{product.count}}</td>
-              <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
-              <td
-                style="font-family:var(--font-bold)"
-              >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
-            </tr>
-          </template>
-        </the-table>
+        <div class="tab-rhs">
+          <div class="bill-card">
+            <div class="item1">
+              <div class="header">
+                <p>Customer</p>
+              </div>
+              <div class="content">
+                <div class="cust-wrapper">
+                  <search-bar-customer
+                    place-holder="Search Customer"
+                    @select="setCustomerToActiveCart"
+                    v-if="cart.customer === null"
+                  ></search-bar-customer>
+                  <div class="cust"  v-if="cart.customer">
+                    <div class="avatar">{{cart.customer.customerName[0]}}</div>
+                    <div class="details">
+                      <p class="name">{{cart.customer.customerName}}</p>
+                      <p class="phone">{{cart.customer.customerPhoneNumber}}</p>
+                    </div>
+                  </div>
+                  <p v-if="cart.customer" style="color:var(--red);font-size:12px;cursor:pointer;margin-right:10px" @click="removeCustomerFromActiveCart">Remove</p>
+                </div>
+              </div>
+            </div>
+            <div class="item2">
+              <div class="header">
+                <p>Payment Method</p>
+              </div>
+              <div class="content">
+                <div class="paym-wrapper">
+                  <list-box
+                    @option-selected="setPaymentMethod"
+                    valueToDisplay="Select Payment"
+                    :options="paymentOptions"
+                    :active="cart.paymentMethod.method"
+                  ></list-box>
+                  <div class="split-wrapper" v-if="splitPaymentInputVisible">
+                    <input
+                      type="number"
+                      placeholder="Card"
+                      v-model="cart.paymentMethod.amount.card"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Cash"
+                      v-model="cart.paymentMethod.amount.cash"
+                    />
+                    <input type="number" placeholder="UPI" v-model="cart.paymentMethod.amount.upi" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item3">
+              <div class="header">
+                <p>Bill Summary</p>
+              </div>
+              <div class="content">
+                <div class="summ-wrapper">
+                  <div class="flex">
+                    <p>Subtotal</p>
+                    <p>{{totalPrice.toFixed(2)}}</p>
+                  </div>
+                  <div class="flex">
+                    <p>State GST</p>
+                    <p>{{sgstAmount.toFixed(2)}}</p>
+                  </div>
+                  <div class="flex">
+                    <p>Central GST</p>
+                    <p>{{cgstAmount.toFixed(2)}}</p>
+                  </div>
+                  <div class="flex">
+                    <p>Total</p>
+                    <p class="total">₹ {{billAmount.toFixed(2)}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="footer">
+              <the-button label="Checkout" color="green" @click="validateBill"></the-button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="tab-rhs">
-        <div class="bill-card">
-          <div class="item1">
-            <div class="header">
-              <p>Customer</p>
-            </div>
-            <div class="content">
-              <div class="cust-wrapper">
-                <div class="avatar">R</div>
-                <div class="details">
-                  <p class="name">Ruban Thilak</p>
-                  <p class="phone">9003222817</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="item2">
-            <div class="header">
-              <p>Payment Method</p>
-            </div>
-            <div class="content">
-              <div class="paym-wrapper">
-                <dropdown-menu-pay @option-selected="setPaymentMethod" valueToDisplay="Select Payment" :options="paymentOptions" :active="cartList[activeCartIndex].paymentMethod.method"></dropdown-menu-pay>
-                <div class="split-wrapper" v-if="splitVisible">
-                  <input type="number" placeholder="Card" />
-                  <input type="number" placeholder="Cash" />
-                  <input type="number" placeholder="UPI" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="item3">
-            <div class="header">
-              <p>Bill Summary</p>
-            </div>
-            <div class="content">
-              <div class="summ-wrapper">
-                <div class="flex">
-                  <p>Subtotal</p>
-                  <p>{{totalPrice.toFixed(2)}}</p>
-                </div>
-                <div class="flex">
-                  <p>State GST</p>
-                  <p>{{sgstAmount.toFixed(2)}}</p>
-                </div>
-                <div class="flex">
-                  <p>Central GST</p>
-                  <p>{{cgstAmount.toFixed(2)}}</p>
-                </div>
-                <div class="flex">
-                  <p>Total</p>
-                  <p class="total">₹ {{billAmount.toFixed(2)}}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <the-button label="Checkout" color="green"></the-button>
-          </div>
-        </div>
+      <div v-else style="height:100vh;overflow:auto;">
+        <invoice-preview style="margin-bottom:100px;"></invoice-preview>
       </div>
     </div>
   </section>
@@ -103,86 +133,143 @@
 
 <script>
 export default {
-  async mounted() {
-    await this.$store.dispatch("product/getProductList");
-  },
   data() {
     return {
       cartList: [
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
         {
           productList: [],
-          paymentMethod:{
+          paymentMethod: {
             method: null,
-            amount: null
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
           },
+          customer: null,
+          printPreview: false,
         },
       ],
-      columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"],
+      columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"," "],
       activeCartIndex: 0,
-      paymentOptions: ["Card","Cash","UPI","Split"]
+      paymentOptions: ["Card", "Cash", "UPI", "Split"],
     };
   },
   methods: {
@@ -195,22 +282,102 @@ export default {
         this.cartList[this.activeCartIndex].productList.push(obj);
       }
     },
+    removeProductFromActiveCart(index) {
+      this.cartList[this.activeCartIndex].productList.splice(index , 1);
+    },
     switchActiveCart(key) {
       this.activeCartIndex = key;
     },
-    EmptyCart(key) {
+    emptyCart(key) {
       this.cartList[key] = {
         productList: [],
-        paymentMethod:{
-          cash: null,
-          card:null,
-          upi:null,
+        paymentMethod: {
+          method: null,
+          amount: {
+            card: null,
+            cash: null,
+            upi: null,
+          },
         },
+        customer: null,
+        printPreview: false,
       };
     },
-    setPaymentMethod(option){
+    setPaymentMethod(option) {
       this.cartList[this.activeCartIndex].paymentMethod.method = option;
-    }
+    },
+    setCustomerToActiveCart(obj) {
+      this.cartList[this.activeCartIndex].customer = obj;
+    },
+    removeCustomerFromActiveCart(){
+      this.cartList[this.activeCartIndex].customer = null;
+    },
+    validateBill() {
+      if (this.validatePayment() && this.validateCustomer() && this.cartList[this.activeCartIndex].productList.length > 0) {
+        try {
+          this.$store.dispatch(
+            "sale/postSale",
+            this.cartList[this.activeCartIndex]
+          );
+          this.cartList[this.activeCartIndex].printPreview = true;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+    validatePayment() {
+      switch (this.cartList[this.activeCartIndex].paymentMethod.method) {
+        case 0:
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.card = this.billAmount;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
+          break;
+        case 1:
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.cash = this.billAmount;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
+          break;
+        case 2:
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.upi = this.billAmount;
+          break;
+        case 3:
+          if (
+            +this.cartList[this.activeCartIndex].paymentMethod.amount.card +
+              this.cartList[this.activeCartIndex].paymentMethod.amount.cash +
+              this.cartList[this.activeCartIndex].paymentMethod.amount.upi !==
+            this.billAmount
+          ) {
+            this.$store.commit(
+              "showSnackBar",
+              "Please, Enter correct payment values"
+            );
+            return false;
+          }
+          break;
+      }
+      return true;
+    },
+    validateCustomer() {
+      if (
+        this.cartList[this.activeCartIndex].customer === null &&
+        this.cartList[this.activeCartIndex].paymentMethod.method !== 1
+      ) {
+        this.$store.commit(
+          "showSnackBar",
+          "Please, Select customer for cashless payment"
+        );
+        return false;
+      }
+      return true;
+    },
   },
   computed: {
     totalPrice() {
@@ -224,22 +391,36 @@ export default {
       return parseFloat(temp);
     },
     cgstAmount() {
-      return parseFloat(this.totalPrice * 0.08);
+      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).centralGST/100);
     },
     sgstAmount() {
-      return parseFloat(this.totalPrice * 0.08);
+      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).stateGST/100);
     },
     billAmount() {
-      return this.cgstAmount + this.sgstAmount + this.totalPrice;
+      return (
+        Math.round(
+          (this.cgstAmount +
+            this.sgstAmount +
+            this.totalPrice +
+            Number.EPSILON) *
+            100
+        ) / 100
+      );
     },
-    splitVisible(){
+    splitPaymentInputVisible() {
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
-    }
+    },
+    filteredCartList() {
+      return this.cartList.filter((cart, index) => {
+        return index === this.activeCartIndex;
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -254,12 +435,25 @@ section {
   gap: 20px;
   min-width: 1180px;
   width: 95%;
+  height: calc(100vh - 100px);
+  overflow: auto;
+}
+
+.remove-icon{
+  &:hover{
+    background: var(--red);
+  }
+  background: var(--gray2);
+  cursor:pointer;
+  border-radius:360px;
+  padding:2px;
 }
 
 .tab-lhs,
 .tab-rhs {
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 
 .menu-bar {
@@ -320,8 +514,14 @@ section {
     .cust-wrapper {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
       margin: 20px 0px;
+      .cust {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
       .avatar {
         height: 50px;
         width: 50px;

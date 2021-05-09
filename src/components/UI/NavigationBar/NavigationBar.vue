@@ -5,13 +5,13 @@
         <the-logo></the-logo>
         <div class="button-container flex">
           <div @click="min">
-            <minus-icon></minus-icon>
+            <svg-icon icon="minus-icon" color="gray8" size="20"></svg-icon>
           </div>
           <div @click="max">
-            <browser-icon></browser-icon>
+            <svg-icon icon="browser-icon" color="gray8" size="16"></svg-icon>
           </div>
           <div @click="close" class="close-button">
-            <cross-icon></cross-icon>
+            <svg-icon icon="cross-icon" color="gray8" hover-color="gray0" size="20"></svg-icon>
           </div>
         </div>
       </div>

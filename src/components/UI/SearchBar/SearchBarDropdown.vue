@@ -1,6 +1,10 @@
 <template>
-  <div class="flex">
-    <input :placeholder="placeHolder" v-model="searchKeyword" />
+  <div class="flex" id="item-sb-dd">
+    <input
+      :placeholder="placeHolder"
+      v-model="searchKeyword"
+      v-on:keydown="arrowkeyEventHandler($event)"
+    />
     <div class="dropdown-body" v-if="filteredProductList">
       <div v-if="filteredProductList.length > 0 ">
         <div class="dropdown-header">
@@ -9,9 +13,9 @@
           <p>BARCODE</p>
         </div>
         <div
-          v-for="item in filteredProductList"
+          v-for="(item,index) in filteredProductList"
           :key="item.id"
-          class="dropdown-item"
+          :class="['dropdown-item',{'active' : activeTileIndex===index}]"
           @click="itemSelected(item)"
         >
           <p>{{item.id}}</p>
@@ -35,11 +39,23 @@ export default {
       this.searchKeyword = "";
       this.$emit("select", obj);
     },
+    arrowkeyEventHandler(event) {
+      if (event.keyCode === 40 && this.activeTileIndex < this.filteredProductList.length-1 ) {
+        this.activeTileIndex += 1;
+      }
+      else if (event.keyCode === 38 && this.activeTileIndex > 0){
+        this.activeTileIndex -= 1;
+      }
+      else if (event.keyCode === 13 && this.activeTileIndex !== -1){
+        this.itemSelected(this.filteredProductList[this.activeTileIndex]);
+      }
+    },
   },
   data() {
     return {
       columnName: ["ID", "ITEM NAME", "BAR CODE"],
       searchKeyword: "",
+      activeTileIndex: -1
     };
   },
   computed: {
@@ -67,6 +83,13 @@ export default {
       });
     },
   },
+  watch:{
+    filteredProductList(curVal,oldVal){
+      if(curVal != oldVal){
+        this.activeTileIndex = -1;
+      }
+    }
+  }
 };
 </script>
 
@@ -101,13 +124,13 @@ input {
 
 .dropdown-body {
   position: absolute;
-  top: 36px;
+  top: 42px;
   z-index: 1;
   background: var(--gray0);
   box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
   overflow-y: auto;
-  border-radius: 0px 0px 8px 8px;
+  border-radius:8px;
   max-height: 300px;
 }
 
@@ -120,6 +143,11 @@ input {
   border-top: 1px solid var(--gray1);
 
   &:hover {
+    background: var(--blue);
+    color: var(--gray0);
+  }
+
+  &.active {
     background: var(--blue);
     color: var(--gray0);
   }

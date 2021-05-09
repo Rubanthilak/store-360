@@ -1,4 +1,4 @@
-import Database from "../../../resource/Database";
+import Database from "../../../resource/database/Database";
 
 export default {
   async getCustomerList(context, columnToSort) {
@@ -18,7 +18,6 @@ export default {
     return res;
   },
   async updateCustomer(context, obj) {
-    console.log(obj);
     const res = await Database.Model.Customer.updateCustomer(obj, obj.id);
     return res;
   },

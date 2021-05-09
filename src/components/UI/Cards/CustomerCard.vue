@@ -10,11 +10,11 @@
       </div>
       <div class="flex details-2">
         <div class="flex credit">
-          <badge-icon size="18" color="green"></badge-icon>
+          <svg-icon size="18" color="green" icon="badge-icon"></svg-icon>
           <p>{{customer.customerCreditPoint}}</p>
         </div>
         <div class="flex unpaid" v-if="customer.customerUnpaidBalance > 0">
-          <wallet-icon size="16" color="red"></wallet-icon>
+          <svg-icon size="16" color="red"></svg-icon>
           <p>₹ {{customer.customerUnpaidBalance}}</p>
         </div>
       </div>
@@ -23,14 +23,8 @@
 </template>
 
 <script>
-import BadgeIcon from "../Icons/BadgeIcon";
-import WalletIcon from "../Icons/WalletIcon";
 export default {
   props: ["customer"],
-  components: {
-    BadgeIcon,
-    WalletIcon,
-  },
   computed: {
     getBackgroundColor() {
       const color = ["957DAD", "FFC618" , "C74BA3" , "3E45AA" ,];

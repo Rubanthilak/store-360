@@ -7,6 +7,7 @@ import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SideBar from './components/UI/SideBar/SideBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
 import SearchBarDropdown from './components/UI/SearchBar/SearchBarDropdown.vue';
+import SearchBarCustomer from './components/UI/SearchBar/SearchBarCustomer.vue';
 import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
@@ -14,34 +15,56 @@ import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
-import DropdownMenuPayment from './components/UI/DropdownMenu/DropdownMenuPayment.vue';
+import ListBox from './components/UI/ListBox/ListBox.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
+import InvoicePreview from './components/UI/Invoice/InvoicePreview.vue'
 
-import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
-import WarnIcon from './components/UI/Icons/WarnIcon.vue';
-import CrossIcon from './components/UI/Icons/CrossIcon.vue';
-import BrowserIcon from './components/UI/Icons/BrowserIcon.vue';
-import MinusIcon from './components/UI/Icons/MinusIcon.vue';
+import SvgIcon from './components/UI/Icons/SvgIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
+import BadgeIcon from './components/UI/Icons/BadgeIcon.vue';
+import BoxIcon from './components/UI/Icons/BoxIcon.vue';
+import BrowserIcon from './components/UI/Icons/BrowserIcon.vue';
+import CrossIcon from './components/UI/Icons/CrossIcon.vue';
+import DeleteIcon from './components/UI/Icons/DeleteIcon.vue';
+import HomeIcon from './components/UI/Icons/HomeIcon.vue';
+import MinusIcon from './components/UI/Icons/MinusIcon.vue';
+import SearchIcon from './components/UI/Icons/SearchIcon.vue';
+import TagIcon from './components/UI/Icons/TagIcon.vue';
+import UsersIcon from './components/UI/Icons/UsersIcon.vue';
+import WalletIcon from './components/UI/Icons/WalletIcon.vue';
+import WarnIcon from './components/UI/Icons/WarnIcon.vue';
+
+import VueHtmlToPaper from '../resource/plugins/vueHtmlToPaper'
 
 const app = createApp(App);
 
 app.use(router);
 app.use(store);
+app.use(VueHtmlToPaper);
 
-app.component('delete-icon',DeleteIcon);
-app.component('warn-icon',WarnIcon);
-app.component('cross-icon',CrossIcon);
-app.component('browser-icon',BrowserIcon);
-app.component('minus-icon',MinusIcon);
+app.component('svg-icon',SvgIcon);
+
 app.component('back-icon',BackIcon);
+app.component('badge-icon',BadgeIcon);
+app.component('box-icon',BoxIcon);
+app.component('browser-icon',BrowserIcon);
+app.component('cross-icon',CrossIcon);
+app.component('delete-icon',DeleteIcon);
+app.component('home-icon',HomeIcon);
+app.component('minus-icon',MinusIcon);
+app.component('search-icon',SearchIcon);
+app.component('tag-icon',TagIcon);
+app.component('users-icon',UsersIcon);
+app.component('wallet-icon',WalletIcon);
+app.component('warn-icon',WarnIcon);
 
 app.component('navigation-bar',NavigationBar);
 app.component('side-bar',SideBar);
 app.component('search-bar',SearchBar);
 app.component('search-bar-dropdown',SearchBarDropdown);
+app.component('search-bar-customer',SearchBarCustomer);
 app.component('the-button',TheButton);
 app.component('icon-button',IconButton);
 app.component('the-table',TheTable);
@@ -49,10 +72,11 @@ app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
 app.component('dropdown-menu',DropdownMenu);
-app.component('dropdown-menu-pay',DropdownMenuPayment);
+app.component('list-box',ListBox);
 app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
+app.component('invoice-preview',InvoicePreview);
 
 app.mount('#app');
 

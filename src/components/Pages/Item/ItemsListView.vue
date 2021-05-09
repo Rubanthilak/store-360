@@ -12,7 +12,7 @@
       </div>
     </div>
     <hr />
-    <the-table v-if="!tableEditMode">
+    <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 45%;" />
@@ -37,7 +37,7 @@
         </tr>
       </template>
     </the-table>
-    <the-table v-else class="table-editmode" id="table-in-editmode">
+    <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 40%;" />
@@ -116,7 +116,7 @@
           </td>
           <td>{{item.barcode}}</td>
           <td>
-            <delete-icon @click="triggerDeleteProduct(item.id)"></delete-icon>
+            <svg-icon @click="triggerDeleteProduct(item.id)" size="24" icon="delete-icon" hover-color="red" color="gray2"></svg-icon>
           </td>
         </tr>
       </template>

@@ -31,7 +31,7 @@
 <script>
 export default {
   methods: {
-    async sortColumn(columnToSort,closeDropdownMenu) {
+    async sortColumn(columnToSort, closeDropdownMenu) {
       closeDropdownMenu();
       await this.$store.dispatch("product/getProductList", columnToSort);
     },
@@ -40,28 +40,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.dropdown-subs{
-  padding : 2px 0px;
+.dropdown-subs {
+  padding: 2px 0px;
   margin: 0px 20px 5px 20px;
-  font-family: var(--font-semibold);
-  color: var(--gray3);
   border-bottom: 1px solid var(--gray2);
-  font-size: 15px;
+  P {
+    font-size: 15px;
+    font-family: var(--font-bold);
+    color: var(--gray4);
+  }
 }
 
-.dropdown-option{
-  padding : 5px 20px;
-  font-size: 14px;
+.dropdown-option {
+  padding: 5px 20px;
   cursor: pointer;
-  font-family: var(--font-medium);
-  color: var(--gray3);
 
+  p {
+    font-size: 14px;
+    font-family: var(--font-medium);
+    color: var(--gray6);
+  }
 
-
-  &:hover{
+  &:hover {
     background: var(--blue);
-    color: var(--gray0);
+    P{
+      color: var(--gray0);
+    }
   }
 }
 </style>

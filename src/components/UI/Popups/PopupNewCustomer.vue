@@ -28,13 +28,13 @@ export default {
   data() {
     return {
       customer: {
-        customerName: "",
+        customerName: null,
         customerPhoneNumber: null,
         customerCreditPoint: 0,
         customerUnpaidBalance: 0.0,
-        customerDoorNumber: "",
-        customerStreetName: "",
-        customerCityName: "",
+        customerDoorNumber: null,
+        customerStreetName: null,
+        customerCityName: null,
         customerPincode: null,
       },
       errorFlag: false,

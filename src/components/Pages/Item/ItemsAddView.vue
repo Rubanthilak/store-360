@@ -4,7 +4,7 @@
       <div class="flex">
         <router-link to="/items">
           <div class="back-button">
-            <back-icon color="gray8" size="34"></back-icon>
+            <svg-icon size="34" icon="back-icon"></svg-icon>
           </div>
         </router-link>
         <h1>Add Items</h1>
@@ -31,7 +31,7 @@
       <the-button label="Click Here" @click="generateRows"></the-button>
     </div>
     <div class="table-wrapper" v-else>
-      <the-table class="table-editmode" id="table">
+      <the-table class="table-editmode" id="table" table-height="calc(100vh - 135px)">
         <template #colgroup>
           <col span="1" style="width: 3%;" />
           <col span="1" style="width: 3%;" />
@@ -53,7 +53,7 @@
             </td>
             <td>
               <div class="sno">
-                <warn-icon v-if="item.hasError"></warn-icon>
+                <svg-icon v-if="item.hasError" size="24" icon="warn-icon" color="red"></svg-icon>
                 <p v-else>{{productList.indexOf(item)+1}}</p>
               </div>
             </td>
