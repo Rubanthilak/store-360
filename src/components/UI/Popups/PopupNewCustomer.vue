@@ -9,6 +9,10 @@
       <div class="flex input-container">
         <input type="text" placeholder="Name" v-model="customer.customerName" />
         <input type="number" placeholder="Phone" v-model="customer.customerPhoneNumber" />
+        <input type="text" placeholder="Door No" v-model="customer.customerDoorNumber" />
+        <input type="text" placeholder="Street" v-model="customer.customerStreetName" />
+        <input type="text" placeholder="City" v-model="customer.customerCityName" />
+        <input type="number" placeholder="Pincode" v-model="customer.customerPincode" max="6"/>
         <p class="error-text" v-if="errorFlag">{{errorMessage}}</p>
       </div>
     </template>
@@ -38,7 +42,7 @@ export default {
         customerPincode: null,
       },
       errorFlag: false,
-      errorMessage: "Please fill all the fields*",
+      errorMessage: "Please atleast fill customer name and phone number",
     };
   },
   methods: {
@@ -54,6 +58,7 @@ export default {
         this.customer.customerPhoneNumber.trim() === ""
       ) {
         this.errorFlag = true;
+        this.errorMessage = "Please fill customer name and phone number";
       } else if (this.customer.customerPhoneNumber.trim().length !== 10) {
         this.errorFlag = true;
         this.errorMessage = "Please, Enter valid Phone Number";

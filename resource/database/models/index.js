@@ -1,6 +1,6 @@
-import Product from "./Product"
-import Customer from "./Customer"
-import Sale from "./Sale"
+import Product from "./Product.js"
+import Customer from "./Customer.js"
+import Sale from "./Sale.js"
 
 export default {
     Product,

@@ -1,4 +1,4 @@
-import connection from "../helperFunctions/getConnection";
+import connection from "../helperFunctions/getConnection.js";
 
 const Customer = connection.sequelize.define("Customer", {
   id: {

@@ -1,4 +1,4 @@
-import connection from "../helperFunctions/getConnection";
+import connection from "../helperFunctions/getConnection.js";
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -59,6 +59,18 @@ const getSaleById = async function(id) {
     return sale.dataValues;
 };
 
+
+const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
+  const sales = await Sale.findAll({
+    order: [[columnToSort, "ASC"]],
+    where: {
+      customerId: cust_id,
+    },
+    limit:limit
+  });
+  return sales;
+};
+
 const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
@@ -87,6 +99,9 @@ export default {
   createTable,
   getSales,
   getSaleById,
+  getSalesCustomerId,
   createSale,
   deleteSale
 };
+
+

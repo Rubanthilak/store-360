@@ -2,6 +2,9 @@ import Database from "../../../resource/database/Database";
 
 export default {
     async getProductList(context,columnToSort) {
+      // await Database.Model.Product.createTable()
+      // await Database.Model.Customer.createTable()
+      // await Database.Model.Sale.createTable()
       const list = await Database.Model.Product.getProducts(columnToSort);
       context.commit("setProductList", { list });
     },
