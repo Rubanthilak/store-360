@@ -9,7 +9,6 @@
         </router-link>
         <div>
           <h1>{{customer.customerName}}</h1>
-          <p>{{customer.customerPhoneNumber}}</p>
         </div>
       </div>
       <div class="flex button-container">
@@ -18,6 +17,33 @@
       </div>
     </div>
     <hr/>
+    <div>
+      <div class="user-summary">
+        <div class="title">
+          <p>User Summary</p>
+        </div>
+        <div class="content">
+          <div>
+            <svg-icon icon="badge-icon" size="24" color="gray3" hover-color="green"></svg-icon>
+            <p class="subs">Credit Score</p>
+            <p class="value">{{customer.customerCreditPoint}}</p>
+          </div>
+          <div>
+            <svg-icon icon="wallet-icon" size="24" color="gray3" hover-color="red"></svg-icon>
+            <p class="subs">Unpaid Balance</p>
+            <p class="value">{{customer.customerUnpaidBalance}}</p>
+          </div>
+          <div>
+            <svg-icon icon="box-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
+            <p class="subs">Joined on</p>
+            <p class="value">{{customer.createdAt}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="user-contact">
+
+      </div>
+    </div>
   </section>
 </template>
 
@@ -57,6 +83,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .flex {
   justify-content: space-between;
   align-items: center;
@@ -84,6 +111,17 @@ p{
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+.user-summary{
+  .title{
+    p{
+
+    }
+  }
+  .content{
+    display: flex;
+  }
 }
 
 </style>

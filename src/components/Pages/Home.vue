@@ -124,8 +124,8 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <invoice-preview></invoice-preview>
+      <div v-else style="height:100vh;overflow:auto;">
+        <invoice-preview style="margin-bottom:100px;"></invoice-preview>
       </div>
     </div>
   </section>
@@ -420,6 +420,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 0px !important;
   min-width: 1200px;
