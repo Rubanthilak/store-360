@@ -95,4 +95,9 @@ textarea,
 .flex {
   display: flex;
 }
+
+.bold {
+  font-family: var(--font-semibold);
+}
+
 </style>

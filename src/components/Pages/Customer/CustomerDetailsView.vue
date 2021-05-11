@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Edit User" @click="triggerUpdateCustomer"></the-button>
+        <the-button label="Edit User"></the-button>
         <icon-button icon="delete-icon" background-color="red" @click="triggerDeleteCustomer"></icon-button>
       </div>
     </div>
@@ -31,7 +31,7 @@
           <div>
             <svg-icon icon="wallet-icon" size="24" color="gray3" hover-color="red"></svg-icon>
             <p class="subs">Unpaid Balance</p>
-            <p class="value" style="color:var(--red)">₹ {{customer.customerUnpaidBalance}}</p>
+            <p class="value" style="color:var(--red)">₹ {{customer.customerUnpaidBalance.toFixed(2)}}</p>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
           <p>Contact</p>
         </div>
         <div class="content">
-          <div>
+          <div v-if="customer.customerCityName">
             <svg-icon icon="home-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
             <p class="subs">Address</p>
             <p class="value">{{customer.customerCityName}}</p>
@@ -59,14 +59,16 @@
       </div>
     </div>
     <div class="sales-body">
-      <div>
+      <div class="title">
         <p>Last Purchases</p>
+        <the-button label="View All"></the-button>
       </div>
-      <div>
-        <div v-for="sale in customer.sales" :key="sale.id">
-          <p>{{sale.id}}</p>
-          <p>{{sale.createdAt}}</p>
+      <div class="sale-list">
+        <div v-for="sale in customer.sales" :key="sale.id" class="sale-tile">
+          <p class="bold">Bill Number #{{sale.id}}</p>
+          <p>{{sale.createdAt.toDateString()}}</p>
           <p>{{sale.paymentMethod}}</p>
+          <p>{{(sale.cashAmount+sale.cardAmount+sale.upiAmount).toFixed(2)}}</p>
         </div>
       </div>
     </div>
@@ -86,9 +88,11 @@ export default {
       "customer/getCustomerById",
       this.$route.params.id
     );
-    this.customer.sales = await this.$store.dispatch("sale/getSalesByCustomerId",{
-        cust_id : this.$route.params.id,
-        limit : 5
+    this.customer.sales = await this.$store.dispatch(
+      "sale/getSalesByCustomerId",
+      {
+        cust_id: this.$route.params.id,
+        limit: 5,
       }
     );
   },
@@ -154,14 +158,21 @@ export default {
   gap: 3rem;
 }
 
-.user-summary {
-  .title {
-    p {
-      font-family: var(--font-semibold);
-      color: var(--gray3);
-      margin: 0px;
-    }
+.sales-body{
+  margin-top: 25px;
+}
+
+.title {
+  display:flex;
+    justify-content: space-between;
+  p {
+    font-family: var(--font-semibold);
+    color: var(--gray3);
+    margin: 0px;
   }
+}
+
+.user-summary {
   .content {
     display: flex;
     gap: 4rem;
@@ -184,5 +195,29 @@ export default {
       font-size: 18px;
     }
   }
+}
+
+.sale-list {
+  margin-top: 15px;
+
+  .sale-tile {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    justify-content: space-between;
+    background: var(--gray0);
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.01);
+    margin-bottom: 3px;
+    cursor: pointer;
+
+    P{
+      font-size: 16px;
+      &:nth-last-child(1),&:nth-last-child(2){
+        text-align: right;
+      }
+    }
+  }
+
 }
 </style>

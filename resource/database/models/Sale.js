@@ -14,7 +14,7 @@ const Sale = connection.sequelize.define("Sale", {
   },
   paymentMethod: {
     type: connection.DataTypes.ENUM,
-    values: ["Card", "Cash", "UPI", "Split"],
+    values: ["Card", "Cash", "UPI", "Split","Unpaid"],
     allowNull: false,
   },
   cashAmount: {
