@@ -24,9 +24,8 @@ async function createWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
       webviewTag: true,
-      nativeWindowOpen:true
+      webSecurity: false,
     },
-    autoHideMenuBar : true,
     frame: false
   });
   

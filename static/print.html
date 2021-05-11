@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Print Preview</title>
+    <style>
+      @page {
+        margin: 0px;
+      }
+    </style>
+     <script defer>
+      const ipcRenderer = require("electron").ipcRenderer;
+      ipcRenderer.on("webview-print-render", (event, data) => {
+        console.log('webview-print-render');
+        document.getElementById("printMe").innerHTML = data;
+        ipcRenderer.sendToHost("webview-print-do");
+      });
+    </script>
+  </head>
+  <body id="printMe"></body>
+  </html>

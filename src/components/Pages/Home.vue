@@ -137,17 +137,18 @@
         </div>
       </div>
       <div v-else class="flex print-preview">
-        <div style="height:91vh;overflow:auto;width:75%;background:white">
+        <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
+        <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
           <invoice-preview style="margin-bottom:10px;"></invoice-preview>
         </div>
         <div style="height:90vh;">
-            <div class="side-card">
-              <h1>Total</h1>
-              <h1>336.27</h1>
-              <div class="flex">
-                <the-button label="Print"></the-button>
-              </div>
+          <div class="side-card">
+            <h1>Total</h1>
+            <h1>336.27</h1>
+            <div class="flex">
+              <the-button label="Print" @click="printInvoice"></the-button>
             </div>
+          </div>
         </div>
       </div>
     </div>
@@ -303,6 +304,19 @@ export default {
     };
   },
   methods: {
+    printInvoice() {
+      const webview = this.$refs.printwebview;
+      webview.send("webview-print-render", this.$refs.invoice.innerHTML);
+      webview.addEventListener("ipc-message", (event) => {
+        if (event.channel === "webview-print-do") {
+          webview.print({
+            silent: true,
+            printbackground: true,
+            devicename: "EPSON L360 Series",
+          });
+        }
+      });
+    },
     addProductToActiveCart(obj) {
       let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
       if (index !== -1) {
