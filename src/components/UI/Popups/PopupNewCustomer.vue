@@ -9,9 +9,11 @@
       <div class="flex input-container">
         <input type="text" placeholder="Name" v-model="customer.customerName" />
         <input type="number" placeholder="Phone" v-model="customer.customerPhoneNumber" />
+        <input type="text" placeholder="GSTIN" v-model="customer.customerGstinNumber" />
         <input type="text" placeholder="Door No" v-model="customer.customerDoorNumber" />
         <input type="text" placeholder="Street" v-model="customer.customerStreetName" />
         <input type="text" placeholder="City" v-model="customer.customerCityName" />
+        <input type="text" placeholder="State" v-model="customer.customerStateName" />
         <input type="number" placeholder="Pincode" v-model="customer.customerPincode" max="6"/>
         <p class="error-text" v-if="errorFlag">{{errorMessage}}</p>
       </div>
@@ -30,7 +32,7 @@ export default {
   props: ["open"],
   emits: ["close"],
   data() {
-    return {
+    return { 
       customer: {
         customerName: null,
         customerPhoneNumber: null,
@@ -39,7 +41,9 @@ export default {
         customerDoorNumber: null,
         customerStreetName: null,
         customerCityName: null,
+        customerStateName: null,
         customerPincode: null,
+        customerGstinNumber: null,
       },
       errorFlag: false,
       errorMessage: "Please atleast fill customer name and phone number",
@@ -83,7 +87,9 @@ export default {
         this.customer.customerDoorNumber = "";
         this.customer.customerStreetName = "";
         this.customer.customerCityName = "";
+        this.customerStateName = "",
         this.customer.customerPincode = null;
+        this.customer.customerGstinNumber= null,
         this.close();
       }
     },
@@ -95,6 +101,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -130,6 +137,7 @@ h2 {
     }
   }
 }
+
 .button-container {
   width: 100%;
   margin-top: 5px;

@@ -2,7 +2,7 @@
   <section>
     <the-tabs @tab-removed="emptyCart" @tab-switched="switchActiveCart"></the-tabs>
     <div v-for="cart in filteredCartList" :key="cart">
-      <div class="tab-body" v-if="cart.printPreview">
+      <div class="tab-body" v-if="!cart.printPreview">
         <div class="tab-lhs">
           <div class="flex menu-bar">
             <search-bar-dropdown
@@ -139,7 +139,7 @@
       <div v-else class="flex print-preview">
         <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
         <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
-          <invoice-preview style="margin-bottom:10px;"></invoice-preview>
+          <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>
         <div style="height:90vh;">
           <div class="side-card">
@@ -300,7 +300,7 @@ export default {
         " ",
       ],
       activeCartIndex: 0,
-      paymentOptions: ["Card", "Cash", "UPI", "Split"],
+      paymentOptions: ["Card", "Cash", "UPI", "Split","Unpaid"],
     };
   },
   methods: {
@@ -363,10 +363,10 @@ export default {
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
-          this.$store.dispatch(
-            "sale/postSale",
-            this.cartList[this.activeCartIndex]
-          );
+          // this.$store.dispatch(
+          //   "sale/postSale",
+          //   this.cartList[this.activeCartIndex]
+          // );
           this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);

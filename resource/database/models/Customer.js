@@ -37,8 +37,16 @@ const Customer = connection.sequelize.define("Customer", {
     type: connection.DataTypes.STRING,
     allowNull: true,
   },
+  customerStateName: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
   customerPincode: {
     type: connection.DataTypes.NUMBER,
+    allowNull: true,
+  },
+  customerGstinNumber: {
+    type: connection.DataTypes.STRING,
     allowNull: true,
   },
   customerArchived: {
@@ -84,7 +92,9 @@ const createCustomer = async function(obj) {
       customerDoorNumber: obj.customerDoorNumber,
       customerStreetName: obj.customerStreetName,
       customerCityName: obj.customerCityName,
+      customerStateName: obj.customerStateName,
       customerPincode: obj.customerPincode,
+      customerGstinNumber: obj.customerGstinNumber,
     });
     return customer.dataValues;
   } catch (err) {

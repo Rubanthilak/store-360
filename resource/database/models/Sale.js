@@ -29,18 +29,50 @@ const Sale = connection.sequelize.define("Sale", {
     type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
-  stateTax: {
-    type: connection.DataTypes.NUMBER,
-    allowNull: true,
-  },
-  centralTax: {
-    type: connection.DataTypes.NUMBER,
+  unpaidAmount: {
+    type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
   productList: {
     type: connection.DataTypes.JSON,
     allowNull: false,
   },
+  billingAddress: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  shippingAddress: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  placeOfSupply: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  poNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  poDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  },
+  dcNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  dcDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  },
+  drNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  drDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  }
 });
 
 const createTable = async function() {

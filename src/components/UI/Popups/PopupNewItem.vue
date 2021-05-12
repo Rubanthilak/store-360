@@ -8,7 +8,7 @@
         <template #content>
             <div class="flex input-container">
                 <input type="text" placeholder="Name" v-model="product.productName">
-                <input type="number" placeholder="Quantity" v-model="product.productQuantity">
+                <input type="text" placeholder="Quantity" v-model="product.productQuantity">
                 <input type="number" placeholder="MRP Price" v-model="product.productMrpPrice">
                 <input type="number" placeholder="Selling Price" v-model="product.productSellingPrice">
                 <input type="number" placeholder="Barcode" v-model="product.productBarcode">
@@ -31,7 +31,7 @@ export default {
     data(){
         return {
             product : {
-                productName: "",
+                productName: null,
                 productQuantity: null,
                 productMrpPrice: null,
                 productSellingPrice: null,
