@@ -1,4 +1,4 @@
-import connection from '../helperFunctions/getConnection';
+import connection from '../helperFunctions/getConnection.js';
 
 const Product = connection.sequelize.define('Product', {
   id: {
@@ -12,9 +12,26 @@ const Product = connection.sequelize.define('Product', {
     type: connection.DataTypes.STRING,
     allowNull: false
   },
-  productQuantity: {
+  productHscNumber: {
     type: connection.DataTypes.NUMBER,
-    allowNull: false
+    allowNull: true
+  },
+  productQuantity: {
+    type: connection.DataTypes.STRING,
+    allowNull: true
+  },
+  productSubQuantity: {
+    type: connection.DataTypes.STRING,
+    allowNull: true
+  },
+  taxType: {
+    type: connection.DataTypes.ENUM,
+    values: ["GST", "IGST"],
+    allowNull: true,
+  },
+  taxPercentage: {
+    type: connection.DataTypes.FLOAT,
+    allowNull: true,
   },
   productMrpPrice: {
     type: connection.DataTypes.FLOAT,
@@ -26,7 +43,7 @@ const Product = connection.sequelize.define('Product', {
   },
   productBarcode: {
     type: connection.DataTypes.NUMBER,
-    allowNull: false
+    allowNull: true
   },
   productArchived: {
     type: connection.DataTypes.BOOLEAN,
@@ -34,7 +51,6 @@ const Product = connection.sequelize.define('Product', {
     allowNull: true
   }
 });
-
 const createTable = async function(){
   await Product.sync()
 }

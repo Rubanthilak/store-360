@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "./components/Pages/Home.vue";
 import Sales from "./components/Pages/Sales.vue";
+import Profile from "./components/Pages/Profile.vue";
 
 import ItemsView from "./components/Pages/Item/ItemsView.vue";
 import ItemsAddView from "./components/Pages/Item/ItemsAddView.vue";
@@ -30,6 +31,7 @@ const routes = [
     ]
   },
   { path: "/sales", component: Sales },
+  { path: "/profile", component: Profile },
 ];
 
 const router = createRouter({

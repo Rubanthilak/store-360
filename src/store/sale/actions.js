@@ -3,8 +3,11 @@ import Database from "../../../resource/database/Database";
 const paymentOptions = ["Card", "Cash", "UPI", "Split"];
 
 export default { 
+  async getSalesByCustomerId(context,obj){
+    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
+    return sales;
+  },
   async postSale(context, obj) {
-    await Database.Model.Sale.createTable();
     const sale = await Database.Model.Sale.createSale({
       customerId : obj.customer.id,
       paymentMethod : paymentOptions[obj.paymentMethod.method],

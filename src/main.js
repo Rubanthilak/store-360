@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router';
 import store from './store/index.js';
 
+import moshaToast from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
+
 import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SideBar from './components/UI/SideBar/SideBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
@@ -43,6 +46,7 @@ const app = createApp(App);
 app.use(router);
 app.use(store);
 app.use(VueHtmlToPaper);
+app.use(moshaToast);
 
 app.component('svg-icon',SvgIcon);
 

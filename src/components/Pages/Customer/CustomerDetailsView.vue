@@ -1,7 +1,7 @@
 <template>
   <section v-if="customer" class="container">
     <div class="flex">
-      <div class="flex">
+      <div class="flex header">
         <router-link to="/customers">
           <div class="back-button">
             <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
@@ -12,12 +12,12 @@
         </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Edit User" @click="triggerUpdateCustomer"></the-button>
+        <the-button label="Edit User"></the-button>
         <icon-button icon="delete-icon" background-color="red" @click="triggerDeleteCustomer"></icon-button>
       </div>
     </div>
-    <hr/>
-    <div>
+    <hr />
+    <div class="cust-body">
       <div class="user-summary">
         <div class="title">
           <p>User Summary</p>
@@ -26,22 +26,50 @@
           <div>
             <svg-icon icon="badge-icon" size="24" color="gray3" hover-color="green"></svg-icon>
             <p class="subs">Credit Score</p>
-            <p class="value">{{customer.customerCreditPoint}}</p>
+            <p class="value" style="color:var(--green)">{{customer.customerCreditPoint}}</p>
           </div>
           <div>
             <svg-icon icon="wallet-icon" size="24" color="gray3" hover-color="red"></svg-icon>
             <p class="subs">Unpaid Balance</p>
-            <p class="value">{{customer.customerUnpaidBalance}}</p>
+            <p class="value" style="color:var(--red)">₹ {{customer.customerUnpaidBalance.toFixed(2)}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="user-summary">
+        <div class="title">
+          <p>Contact</p>
+        </div>
+        <div class="content">
+          <div v-if="customer.customerCityName">
+            <svg-icon icon="home-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
+            <p class="subs">Address</p>
+            <p class="value">{{customer.customerCityName}}</p>
+          </div>
+          <div>
+            <svg-icon icon="browser-icon" size="24" color="gray3" hover-color="red"></svg-icon>
+            <p class="subs">Phone Number</p>
+            <p class="value">{{customer.customerPhoneNumber}}</p>
           </div>
           <div>
             <svg-icon icon="box-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
             <p class="subs">Joined on</p>
-            <p class="value">{{customer.createdAt}}</p>
+            <p class="value">{{customer.createdAt.toDateString()}}</p>
           </div>
         </div>
       </div>
-      <div class="user-contact">
-
+    </div>
+    <div class="sales-body">
+      <div class="title">
+        <p>Last Purchases</p>
+        <the-button label="View All"></the-button>
+      </div>
+      <div class="sale-list">
+        <div v-for="sale in customer.sales" :key="sale.id" class="sale-tile">
+          <p class="bold">Bill Number #{{sale.id}}</p>
+          <p>{{sale.createdAt.toDateString()}}</p>
+          <p>{{sale.paymentMethod}}</p>
+          <p>{{(sale.cashAmount+sale.cardAmount+sale.upiAmount).toFixed(2)}}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -49,7 +77,6 @@
 
 <script>
 export default {
-
   data() {
     return {
       customer: null,
@@ -61,6 +88,13 @@ export default {
       "customer/getCustomerById",
       this.$route.params.id
     );
+    this.customer.sales = await this.$store.dispatch(
+      "sale/getSalesByCustomerId",
+      {
+        cust_id: this.$route.params.id,
+        limit: 5,
+      }
+    );
   },
 
   methods: {
@@ -69,21 +103,24 @@ export default {
       this.$store.commit("setActivePopup", "popup-delete-customer");
     },
     async triggerUpdateCustomer() {
-      var res = await this.$store.dispatch("customer/updateCustomer",this.customer);
-      if(res){
+      var res = await this.$store.dispatch(
+        "customer/updateCustomer",
+        this.customer
+      );
+      if (res) {
         this.$store.commit("showSnackBar", "Successfully updated.");
+      } else {
+        this.$store.commit(
+          "showSnackBar",
+          "Unable to update the customer record"
+        );
       }
-      else {
-        this.$store.commit("showSnackBar", "Unable to update the customer record");
-      }
-    }
+    },
   },
-  
 };
 </script>
 
 <style lang="scss" scoped>
-
 .flex {
   justify-content: space-between;
   align-items: center;
@@ -95,16 +132,18 @@ export default {
   }
 }
 
-h1 {
-  font-family: var(--font-semibold);
-  margin: 0px 10px;
-  font-size: 22px;
-}
+.header {
+  h1 {
+    font-family: var(--font-semibold);
+    margin: 0px 10px;
+    font-size: 22px;
+  }
 
-p{
-  margin: 0px 10px;
-  color: var(--gray4);
-  font-family: var(--font-light);
+  p {
+    margin: 0px 10px;
+    color: var(--gray4);
+    font-family: var(--font-light);
+  }
 }
 
 .back-button {
@@ -113,15 +152,72 @@ p{
   display: flex;
 }
 
-.user-summary{
-  .title{
-    p{
+.cust-body {
+  margin-top: 25px;
+  display: flex;
+  gap: 3rem;
+}
 
-    }
-  }
-  .content{
-    display: flex;
+.sales-body{
+  margin-top: 25px;
+}
+
+.title {
+  display:flex;
+    justify-content: space-between;
+  p {
+    font-family: var(--font-semibold);
+    color: var(--gray3);
+    margin: 0px;
   }
 }
 
+.user-summary {
+  .content {
+    display: flex;
+    gap: 4rem;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.01);
+    border-radius: 5px;
+    padding: 40px;
+    background: var(--gray0);
+    margin-top: 15px;
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .subs {
+      color: var(--gray3);
+      font-size: 14px;
+    }
+    .value {
+      font-family: var(--font-semibold);
+      font-size: 18px;
+    }
+  }
+}
+
+.sale-list {
+  margin-top: 15px;
+
+  .sale-tile {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    justify-content: space-between;
+    background: var(--gray0);
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.01);
+    margin-bottom: 3px;
+    cursor: pointer;
+
+    P{
+      font-size: 16px;
+      &:nth-last-child(1),&:nth-last-child(2){
+        text-align: right;
+      }
+    }
+  }
+
+}
 </style>

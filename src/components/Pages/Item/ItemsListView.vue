@@ -14,8 +14,11 @@
     <hr />
     <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
+        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 20%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 45%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
         <col span="1" style="width: 5%;" />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 15%;" />
@@ -31,6 +34,9 @@
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>{{item.unit}}</td>
+          <td>{{item.unit}}</td>
+          <td>{{item.unit}}</td>
+          <td>{{item.unit}}</td>
           <td>{{item.mrp_price.rupee+'.'+item.mrp_price.paisa}}</td>
           <td>{{item.selling_price.rupee+'.'+item.selling_price.paisa}}</td>
           <td>{{item.barcode}}</td>
@@ -39,13 +45,16 @@
     </the-table>
     <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 135px)">
       <template #colgroup>
+        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 17%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 40%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
         <col span="1" style="width: 5%;" />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 15%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 3%;" />
       </template>
       <template #thead>
         <tr>
@@ -135,9 +144,12 @@ export default {
       columnName: [
         "ID",
         "ITEM NAME",
-        "STOCK",
-        "MRP PRICE (in ₹)",
-        "SELLING PRICE (in ₹)",
+        "HSC CODE",
+        "QUANTITY",
+        "TAX TYPE",
+        "TAX %",
+        "MRP PRICE",
+        "SELLING PRICE",
         "BAR CODE",
       ],
       tableEditMode: false,

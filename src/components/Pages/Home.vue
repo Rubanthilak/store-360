@@ -34,8 +34,16 @@
                 <td
                   style="font-family:var(--font-bold)"
                 >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
-                <td style="display:flex;align-items:center;justify-content:center;padding-right:5px;">
-                  <svg-icon color="gray0" size="16" icon="cross-icon" class="remove-icon" @click="removeProductFromActiveCart(index)"></svg-icon>
+                <td
+                  style="display:flex;align-items:center;justify-content:center;padding-right:5px;"
+                >
+                  <svg-icon
+                    color="gray0"
+                    size="16"
+                    icon="cross-icon"
+                    class="remove-icon"
+                    @click="removeProductFromActiveCart(index)"
+                  ></svg-icon>
                 </td>
               </tr>
             </template>
@@ -54,14 +62,18 @@
                     @select="setCustomerToActiveCart"
                     v-if="cart.customer === null"
                   ></search-bar-customer>
-                  <div class="cust"  v-if="cart.customer">
+                  <div class="cust" v-if="cart.customer">
                     <div class="avatar">{{cart.customer.customerName[0]}}</div>
                     <div class="details">
                       <p class="name">{{cart.customer.customerName}}</p>
                       <p class="phone">{{cart.customer.customerPhoneNumber}}</p>
                     </div>
                   </div>
-                  <p v-if="cart.customer" style="color:var(--red);font-size:12px;cursor:pointer;margin-right:10px" @click="removeCustomerFromActiveCart">Remove</p>
+                  <p
+                    v-if="cart.customer"
+                    style="color:var(--red);font-size:12px;cursor:pointer;margin-right:10px"
+                    @click="removeCustomerFromActiveCart"
+                  >Remove</p>
                 </div>
               </div>
             </div>
@@ -124,8 +136,20 @@
           </div>
         </div>
       </div>
-      <div v-else style="height:100vh;overflow:auto;">
-        <invoice-preview style="margin-bottom:100px;"></invoice-preview>
+      <div v-else class="flex print-preview">
+        <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
+        <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
+          <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
+        </div>
+        <div style="height:90vh;">
+          <div class="side-card">
+            <h1>Total</h1>
+            <h1>336.27</h1>
+            <div class="flex">
+              <the-button label="Print" @click="printInvoice"></the-button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -267,12 +291,32 @@ export default {
           printPreview: false,
         },
       ],
-      columnName: ["ID", "ITEM NAME", "UNIT", "SELLING PRICE", "TOTAL PRICE"," "],
+      columnName: [
+        "ID",
+        "ITEM NAME",
+        "UNIT",
+        "SELLING PRICE",
+        "TOTAL PRICE",
+        " ",
+      ],
       activeCartIndex: 0,
-      paymentOptions: ["Card", "Cash", "UPI", "Split"],
+      paymentOptions: ["Card", "Cash", "UPI", "Split","Unpaid"],
     };
   },
   methods: {
+    printInvoice() {
+      const webview = this.$refs.printwebview;
+      webview.send("webview-print-render", this.$refs.invoice.innerHTML);
+      webview.addEventListener("ipc-message", (event) => {
+        if (event.channel === "webview-print-do") {
+          webview.print({
+            silent: true,
+            printbackground: true,
+            devicename: "EPSON L360 Series",
+          });
+        }
+      });
+    },
     addProductToActiveCart(obj) {
       let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
       if (index !== -1) {
@@ -283,7 +327,7 @@ export default {
       }
     },
     removeProductFromActiveCart(index) {
-      this.cartList[this.activeCartIndex].productList.splice(index , 1);
+      this.cartList[this.activeCartIndex].productList.splice(index, 1);
     },
     switchActiveCart(key) {
       this.activeCartIndex = key;
@@ -309,16 +353,20 @@ export default {
     setCustomerToActiveCart(obj) {
       this.cartList[this.activeCartIndex].customer = obj;
     },
-    removeCustomerFromActiveCart(){
+    removeCustomerFromActiveCart() {
       this.cartList[this.activeCartIndex].customer = null;
     },
     validateBill() {
-      if (this.validatePayment() && this.validateCustomer() && this.cartList[this.activeCartIndex].productList.length > 0) {
+      if (
+        this.validatePayment() &&
+        this.validateCustomer() &&
+        this.cartList[this.activeCartIndex].productList.length > 0
+      ) {
         try {
-          this.$store.dispatch(
-            "sale/postSale",
-            this.cartList[this.activeCartIndex]
-          );
+          // this.$store.dispatch(
+          //   "sale/postSale",
+          //   this.cartList[this.activeCartIndex]
+          // );
           this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
@@ -355,10 +403,12 @@ export default {
               this.cartList[this.activeCartIndex].paymentMethod.amount.upi !==
             this.billAmount
           ) {
-            this.$store.commit(
-              "showSnackBar",
-              "Please, Enter correct payment values"
-            );
+            this.$moshaToast("Please, Enter correct payment values", {
+              type: "danger",
+              hideProgressBar: "true",
+              position: "bottom-right",
+              transition: "bounce",
+            });
             return false;
           }
           break;
@@ -370,10 +420,12 @@ export default {
         this.cartList[this.activeCartIndex].customer === null &&
         this.cartList[this.activeCartIndex].paymentMethod.method !== 1
       ) {
-        this.$store.commit(
-          "showSnackBar",
-          "Please, Select customer for cashless payment"
-        );
+        this.$moshaToast("Please, Select customer for cashless payment", {
+          type: "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
         return false;
       }
       return true;
@@ -391,10 +443,18 @@ export default {
       return parseFloat(temp);
     },
     cgstAmount() {
-      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).centralGST/100);
+      return parseFloat(
+        (this.totalPrice *
+          JSON.parse(localStorage.getItem("userSettings")).centralGST) /
+          100
+      );
     },
     sgstAmount() {
-      return parseFloat(this.totalPrice * JSON.parse(localStorage.getItem('userSettings')).stateGST/100);
+      return parseFloat(
+        (this.totalPrice *
+          JSON.parse(localStorage.getItem("userSettings")).stateGST) /
+          100
+      );
     },
     billAmount() {
       return (
@@ -420,7 +480,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -439,14 +498,14 @@ section {
   overflow: auto;
 }
 
-.remove-icon{
-  &:hover{
+.remove-icon {
+  &:hover {
     background: var(--red);
   }
   background: var(--gray2);
-  cursor:pointer;
-  border-radius:360px;
-  padding:2px;
+  cursor: pointer;
+  border-radius: 360px;
+  padding: 2px;
 }
 
 .tab-lhs,

@@ -1,4 +1,4 @@
-import connection from "../helperFunctions/getConnection";
+import connection from "../helperFunctions/getConnection.js";
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -14,7 +14,7 @@ const Sale = connection.sequelize.define("Sale", {
   },
   paymentMethod: {
     type: connection.DataTypes.ENUM,
-    values: ["Card", "Cash", "UPI", "Split"],
+    values: ["Card", "Cash", "UPI", "Split","Unpaid"],
     allowNull: false,
   },
   cashAmount: {
@@ -29,18 +29,50 @@ const Sale = connection.sequelize.define("Sale", {
     type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
-  stateTax: {
-    type: connection.DataTypes.NUMBER,
-    allowNull: true,
-  },
-  centralTax: {
-    type: connection.DataTypes.NUMBER,
+  unpaidAmount: {
+    type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
   productList: {
     type: connection.DataTypes.JSON,
     allowNull: false,
   },
+  billingAddress: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  shippingAddress: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  placeOfSupply: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  poNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  poDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  },
+  dcNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  dcDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  },
+  drNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  drDate: {
+    type: connection.DataTypes.DATEONLY,
+    allowNull: true,
+  }
 });
 
 const createTable = async function() {
@@ -57,6 +89,18 @@ const getSales = async function(columnToSort = "id") {
 const getSaleById = async function(id) {
     const sale = await Sale.findByPk(id);
     return sale.dataValues;
+};
+
+
+const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
+  const sales = await Sale.findAll({
+    order: [[columnToSort, "ASC"]],
+    where: {
+      customerId: cust_id,
+    },
+    limit:limit
+  });
+  return sales;
 };
 
 const createSale = async function(obj){
@@ -87,6 +131,9 @@ export default {
   createTable,
   getSales,
   getSaleById,
+  getSalesCustomerId,
   createSale,
   deleteSale
 };
+
+
