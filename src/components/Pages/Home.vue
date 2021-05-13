@@ -14,9 +14,10 @@
           <the-table table-height="calc(100vh - 180px)">
             <template #colgroup>
               <col span="1" style="width: 5%;" />
-              <col span="1" style="width: 30%;" />
+              <col span="1" style="width: 20%;" />
               <col span="1" style="width: 5%;" />
               <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 5%;" />
               <col span="1" style="width: 10%;" />
               <col span="1" style="width: 4%;" />
             </template>
@@ -31,9 +32,10 @@
                 <td>{{product.productName}}</td>
                 <td>{{product.productCount}}</td>
                 <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
+                <td>{{product.productTaxPercentage}} %</td>
                 <td
                   style="font-family:var(--font-bold)"
-                >{{ ((product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa)*product.productCount).toFixed(2) }}</td>
+                >{{ (((product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa)*product.productCount)*((100+product.productTaxPercentage)/100)).toFixed(2) }}</td>
                 <td
                   style="display:flex;align-items:center;justify-content:center;padding-right:5px;"
                 >
@@ -118,7 +120,7 @@
               </div>
               <div class="content">
                 <div class="summ-wrapper">
-                  <div class="flex">
+                  <!-- <div class="flex">
                     <p>Subtotal</p>
                     <p>{{totalPrice.toFixed(2)}}</p>
                   </div>
@@ -129,10 +131,10 @@
                   <div class="flex">
                     <p>Central GST</p>
                     <p>{{cgstAmount.toFixed(2)}}</p>
-                  </div>
+                  </div> -->
                   <div class="flex">
                     <p>Total</p>
-                    <p class="total">₹ {{billAmount.toFixed(2)}}</p>
+                    <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
                   </div>
                 </div>
               </div>
@@ -318,6 +320,7 @@ export default {
         "ITEM NAME",
         "COUNT",
         "SELLING PRICE",
+        "TAX",
         "TOTAL PRICE",
         " ",
       ],
@@ -401,7 +404,7 @@ export default {
         case 0:
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.card = this.billAmount;
+          ].paymentMethod.amount.card = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
           this.cartList[
@@ -412,7 +415,7 @@ export default {
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.cash = this.billAmount;
+          ].paymentMethod.amount.cash = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
           this.cartList[
             this.activeCartIndex
@@ -423,14 +426,13 @@ export default {
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.upi = this.billAmount;
+          ].paymentMethod.amount.upi = this.totalPrice;
           this.cartList[
             this.activeCartIndex
           ].paymentMethod.amount.unpaid = null;
           break;
         case 3:
-          console.log(this.splitTotal);
-          if (this.splitTotal !== this.billAmount) {
+          if (this.splitTotal !== this.totalPrice) {
             this.$moshaToast("Please, Enter correct payment values", {
               type: "danger",
               hideProgressBar: "true",
@@ -446,7 +448,7 @@ export default {
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.unpaid = this.billAmount;
+          ].paymentMethod.amount.unpaid = this.totalPrice;
           break;
       }
       return true;
@@ -471,31 +473,11 @@ export default {
     totalPrice() {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
-        temp += +(
-          (item.productSellingPrice.rupee +
-            "." +
-            item.productSellingPrice.paisa) *
-          item.productCount
-        ).toFixed(2);
+        var priceWithoutTax = (item.productSellingPrice.rupee + "." + item.productSellingPrice.paisa) * item.productCount;
+        var Tax = priceWithoutTax * item.productTaxPercentage /100;
+        temp += + (priceWithoutTax + Tax).toFixed(2);
       });
       return parseFloat(temp);
-    },
-    cgstAmount() {
-      return parseFloat(
-        (this.totalPrice *
-          JSON.parse(localStorage.getItem("userSettings")).centralGST) /
-          100
-      );
-    },
-    sgstAmount() {
-      return parseFloat(
-        (this.totalPrice *
-          JSON.parse(localStorage.getItem("userSettings")).stateGST) /
-          100
-      );
-    },
-    billAmount() {
-      return this.cgstAmount + this.sgstAmount + this.totalPrice;
     },
     splitPaymentInputVisible() {
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
@@ -546,6 +528,19 @@ section {
   padding-top: 0px !important;
   min-width: 1200px;
   width: 100%;
+}
+
+th{
+  &:nth-of-type(1),&:nth-of-type(2){
+    text-align: left !important;
+  }
+}
+
+
+td{
+  &:nth-of-type(1),&:nth-of-type(2){
+    text-align: left !important;
+  }
 }
 
 .tab-body {

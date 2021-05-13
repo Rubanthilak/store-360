@@ -110,8 +110,7 @@ const createSale = async function(obj){
         cashAmount: obj.cashAmount,
         cardAmount: obj.cardAmount,
         upiAmount: obj.upiAmount,
-        stateTax: obj.stateTax,
-        centralTax: obj.centralTax,
+        unpaidAmount: obj.unpaidAmount,
         productList: obj.productList,
     });
    return sale.dataValues;
