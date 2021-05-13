@@ -28,12 +28,12 @@
             <template #tbody>
               <tr v-for="(product,index) in cart.productList" :key="product.id">
                 <td>{{product.id}}</td>
-                <td>{{product.name}}</td>
-                <td>{{product.count}}</td>
-                <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
+                <td>{{product.productName}}</td>
+                <td>{{product.productCount}}</td>
+                <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
                 <td
                   style="font-family:var(--font-bold)"
-                >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
+                >{{ ((product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa)*product.productCount).toFixed(2) }}</td>
                 <td
                   style="display:flex;align-items:center;justify-content:center;padding-right:5px;"
                 >
@@ -137,7 +137,12 @@
         </div>
       </div>
       <div v-else class="flex print-preview">
-        <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
+        <webview
+          style="height:0px;width:0px;"
+          ref="printwebview"
+          src="./print.html"
+          nodeintegration
+        ></webview>
         <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
           <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>
@@ -168,6 +173,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -181,6 +187,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -194,6 +201,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -207,6 +215,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -220,6 +229,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -233,6 +243,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -246,6 +257,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -259,6 +271,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -272,6 +285,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -285,6 +299,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null
             },
           },
           customer: null,
@@ -294,13 +309,13 @@ export default {
       columnName: [
         "ID",
         "ITEM NAME",
-        "UNIT",
+        "COUNT",
         "SELLING PRICE",
         "TOTAL PRICE",
         " ",
       ],
       activeCartIndex: 0,
-      paymentOptions: ["Card", "Cash", "UPI", "Split","Unpaid"],
+      paymentOptions: ["Card", "Cash", "UPI", "Split", "Unpaid"],
     };
   },
   methods: {
@@ -320,9 +335,9 @@ export default {
     addProductToActiveCart(obj) {
       let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
       if (index !== -1) {
-        this.cartList[this.activeCartIndex].productList[index].count++;
+        this.cartList[this.activeCartIndex].productList[index].productCount++;
       } else {
-        obj.count = 1;
+        obj.productCount = 1;
         this.cartList[this.activeCartIndex].productList.push(obj);
       }
     },
@@ -341,6 +356,7 @@ export default {
             card: null,
             cash: null,
             upi: null,
+            unpaid: null
           },
         },
         customer: null,
@@ -363,10 +379,10 @@ export default {
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
-          // this.$store.dispatch(
-          //   "sale/postSale",
-          //   this.cartList[this.activeCartIndex]
-          // );
+          this.$store.dispatch(
+            "sale/postSale",
+            this.cartList[this.activeCartIndex]
+          );
           this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
@@ -397,12 +413,8 @@ export default {
           ].paymentMethod.amount.upi = this.billAmount;
           break;
         case 3:
-          if (
-            +this.cartList[this.activeCartIndex].paymentMethod.amount.card +
-              this.cartList[this.activeCartIndex].paymentMethod.amount.cash +
-              this.cartList[this.activeCartIndex].paymentMethod.amount.upi !==
-            this.billAmount
-          ) {
+          console.log(this.splitTotal);
+          if (this.splitTotal !== this.billAmount) {
             this.$moshaToast("Please, Enter correct payment values", {
               type: "danger",
               hideProgressBar: "true",
@@ -436,8 +448,8 @@ export default {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
         temp += +(
-          (item.selling_price.rupee + "." + item.selling_price.paisa) *
-          item.count
+          (item.productSellingPrice.rupee + "." + item.productSellingPrice.paisa) *
+          item.productCount
         ).toFixed(2);
       });
       return parseFloat(temp);
@@ -457,15 +469,7 @@ export default {
       );
     },
     billAmount() {
-      return (
-        Math.round(
-          (this.cgstAmount +
-            this.sgstAmount +
-            this.totalPrice +
-            Number.EPSILON) *
-            100
-        ) / 100
-      );
+      return this.cgstAmount + this.sgstAmount + this.totalPrice;
     },
     splitPaymentInputVisible() {
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
@@ -474,6 +478,19 @@ export default {
       return this.cartList.filter((cart, index) => {
         return index === this.activeCartIndex;
       });
+    },
+    splitTotal() {
+      var total = 0;
+      if(this.cartList[this.activeCartIndex].paymentMethod.amount.card !== null){
+        total +=parseFloat(this.cartList[this.activeCartIndex].paymentMethod.amount.card)
+      }
+      if(this.cartList[this.activeCartIndex].paymentMethod.amount.cash !== null){
+        total +=parseFloat(this.cartList[this.activeCartIndex].paymentMethod.amount.cash)
+      }
+      if(this.cartList[this.activeCartIndex].paymentMethod.amount.upi !== null){
+        total +=parseFloat(this.cartList[this.activeCartIndex].paymentMethod.amount.upi)
+      }
+      return total;
     },
   },
 };

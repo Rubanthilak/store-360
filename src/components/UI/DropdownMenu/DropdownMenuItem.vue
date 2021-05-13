@@ -10,7 +10,7 @@
       <div @click="sortColumn('productName',slotProps.closeTrigger)" class="dropdown-option">
         <p>Name</p>
       </div>
-      <div @click="sortColumn('productQuantity',slotProps.closeTrigger)" class="dropdown-option">
+      <div @click="sortColumn('productStock',slotProps.closeTrigger)" class="dropdown-option">
         <p>Stock</p>
       </div>
       <div @click="sortColumn('productMrpPrice',slotProps.closeTrigger)" class="dropdown-option">

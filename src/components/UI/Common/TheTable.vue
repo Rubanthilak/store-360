@@ -54,7 +54,7 @@ export default {
 
 table {
   width: 100%;
-  // border-collapse: collapse;
+  border-collapse: collapse;
   position: relative;
 }
 
@@ -87,22 +87,24 @@ table {
 .header::v-deep th{
   padding-left: 0px;
   padding-right: 0px;
-  text-align: center;
+  
+  &:first-child {
+    padding-left: 20px;
+    padding-right: 0;
+  }
+
+  &:last-child {
+    padding-left: 0px;
+    padding-right: 20px;
+  }
 }
 
 // Inorder to apply sccs to the slot, We include v-deep
 .content::v-deep {
 
-
   tr {
     background: var(--gray0);
-    padding: 0px 10px;
   }
-
-  // tr:hover {
-  //   background: var(--blue);
-  //   color: var(--gray0);
-  // }
 
   td {
     text-align: right;
@@ -122,9 +124,5 @@ table {
     padding-right: 20px;
   }
 
-  td:nth-of-type(1),
-  td:nth-of-type(2) {
-    text-align: left;
-  }
 }
 </style>

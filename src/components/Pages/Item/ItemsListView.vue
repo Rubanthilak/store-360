@@ -15,44 +15,49 @@
     <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 20%;" />
+        <col span="1" style="width: 25%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 15%;" />
-        <col span="1" style="width: 15%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
       </template>
-      <template #thead>
+      <template #thead> 
         <tr>
           <th v-for="title in columnName" :key="title">{{title}}</th>
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in filteredProductList" :key="item.id">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.mrp_price.rupee+'.'+item.mrp_price.paisa}}</td>
-          <td>{{item.selling_price.rupee+'.'+item.selling_price.paisa}}</td>
-          <td>{{item.barcode}}</td>
+        <tr v-for="product in filteredProductList" :key="product.id">
+          <td>{{product.id}}</td>
+          <td>{{product.productName}}</td>
+          <td>{{product.productHscNumber}}</td>
+          <td>{{product.productTaxType}}</td>
+          <td>{{(product.productTaxPercentage*100).toFixed(0)}} %</td>
+          <td>{{product.productStock}}</td>
+          <td>{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
+          <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
+          <td>{{product.productBarcode}}</td>
         </tr>
       </template>
     </the-table>
-    <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 135px)">
+    <the-table
+      v-else
+      class="table-editmode"
+      id="table-in-editmode"
+      table-height="calc(100vh - 135px)"
+    >
       <template #colgroup>
         <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 17%;" />
+        <col span="1" style="width: 20%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 9%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 15%;" />
-        <col span="1" style="width: 15%;" />
+        <col span="1" style="width: 14%;" />
+        <col span="1" style="width: 14%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 3%;" />
       </template>
@@ -63,18 +68,21 @@
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in filteredProductList" :key="item.id">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
+        <tr v-for="product in filteredProductList" :key="product.id">
+          <td>{{product.id}}</td>
+          <td>{{product.productName}}</td>
+          <td>{{product.productHscNumber}}</td>
+          <td>{{product.productTaxType}}</td>
+          <td>{{product.productTaxPercentage}}</td>
           <td>
             <input
               type="text"
-              v-model="item.unit"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productStock"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               placeholder="Stock"
               class="max-wd"
               maxlength="6"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="unit"
               @keypress="isNumber($event)"
             />
@@ -82,21 +90,21 @@
           <td>
             <input
               type="text"
-              v-model="item.mrp_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productMrpPrice.rupee"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="mrp_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
-              v-model="item.mrp_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productMrpPrice.paisa"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="mrp_paisa"
               @keypress="isNumber($event)"
             />
@@ -104,28 +112,34 @@
           <td>
             <input
               type="text"
-              v-model="item.selling_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productSellingPrice.rupee"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="sell_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
-              v-model="item.selling_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productSellingPrice.paisa"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="sell_paisa"
               @keypress="isNumber($event)"
             />
           </td>
-          <td>{{item.barcode}}</td>
+          <td>{{product.productBarcode}}</td>
           <td>
-            <svg-icon @click="triggerDeleteProduct(item.id)" size="24" icon="delete-icon" hover-color="red" color="gray2"></svg-icon>
+            <svg-icon
+              @click="triggerDeleteProduct(product.id)"
+              size="24"
+              icon="delete-icon"
+              hover-color="red"
+              color="gray2"
+            ></svg-icon>
           </td>
         </tr>
       </template>
@@ -145,9 +159,9 @@ export default {
         "ID",
         "ITEM NAME",
         "HSC CODE",
-        "QUANTITY",
         "TAX TYPE",
         "TAX %",
+        "STOCK",
         "MRP PRICE",
         "SELLING PRICE",
         "BAR CODE",
@@ -164,7 +178,7 @@ export default {
     filteredProductList() {
       return this.productList.filter((product) => {
         return (
-          product.name
+          product.productName
             .toLowerCase()
             .includes(this.searchKeyword.toLowerCase()) ||
           product.id
@@ -176,11 +190,13 @@ export default {
     },
   },
   methods: {
-      
-    isNumber: function(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) || charCode === 46) {
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        (charCode > 31 && (charCode < 48 || charCode > 57)) ||
+        charCode === 46
+      ) {
         evt.preventDefault();
       } else {
         return true;
@@ -214,24 +230,24 @@ export default {
     async validateInputField(e, id = null) {
       if (e.target.value === "") {
         e.target.classList.remove("error-border");
-        const item = await this.$store.dispatch("product/getProductById", {
+        const product = await this.$store.dispatch("product/getProductById", {
           id,
         });
         switch (e.target.getAttribute("field")) {
           case "unit":
-            e.target.value = item.unit;
+            e.target.value = product.productStock;
             break;
           case "mrp_rupee":
-            e.target.value = item.mrp_price.rupee;
+            e.target.value = product.productMrpPrice.rupee;
             break;
           case "mrp_paisa":
-            e.target.value = item.mrp_price.paisa;
+            e.target.value = product.productMrpPrice.paisa;
             break;
           case "sell_rupee":
-            e.target.value = item.selling_price.rupee;
+            e.target.value = product.productSellingPrice.rupee;
             break;
           case "sell_paisa":
-            e.target.value = item.selling_price.paisa;
+            e.target.value = product.productSellingPrice.paisa;
             break;
         }
       } else {
@@ -318,6 +334,23 @@ export default {
 .button-container {
   & > div {
     margin-left: 10px;
+  }
+}
+
+th {
+  text-align: right;
+  &:nth-child(1),
+  &:nth-child(2) {
+    text-align: left !important;
+  }
+}
+
+tr {
+  td {
+    &:nth-of-type(1),
+    &:nth-of-type(2) {
+      text-align: left !important;
+    }
   }
 }
 
