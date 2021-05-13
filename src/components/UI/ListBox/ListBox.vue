@@ -1,6 +1,6 @@
 <template>
-  <div class="dropdown" @click="dropped=!dropped">
-    <div class="dropdown-active" v-if="active != null">{{options[active]}}</div>
+  <div class="dropdown" @click="dropped=!dropped" :style=" boxLength ? 'width:'+ boxLength : ''">
+    <div class="dropdown-active" v-if="active > -1 && active !== null">{{options[active]}}</div>
     <div class="hint" v-else>{{valueToDisplay}}</div>
     <div class="dropdown-container" v-if="dropped">
       <div
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  props: ["valueToDisplay","options","active"],
+  props: ["valueToDisplay","options","active","boxLength"],
   data() {
     return {
       dropped: false,
@@ -50,12 +50,12 @@ export default {
 
 .dropdown-container {
   background: var(--gray0);
-  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.068);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 35px;
+  top: 42px;
   left: 0px;
   width: 100%;
-  border-radius: 0px 0px 8px 8px;
+  border-radius: 8px;
   overflow: hidden;
 
   .dropdown-item {

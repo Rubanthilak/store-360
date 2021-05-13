@@ -35,7 +35,7 @@
           <td>{{product.productName}}</td>
           <td>{{product.productHscNumber}}</td>
           <td>{{product.productTaxType}}</td>
-          <td>{{(product.productTaxPercentage*100).toFixed(0)}} %</td>
+          <td>{{product.productTaxPercentage}} %</td>
           <td>{{product.productStock}}</td>
           <td>{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
           <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
@@ -80,7 +80,7 @@
               v-model="product.productStock"
               v-on:keydown="arrowkeyEventHandler($event,product.id)"
               placeholder="Stock"
-              class="max-wd"
+              class="max-sm-wd"
               maxlength="6"
               @blur="validateInputField($event,product.id)"
               field="unit"
@@ -362,11 +362,6 @@ tr {
     margin: 0;
   }
 
-  th:last-child {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-  }
-
   tr {
     background: var(--gray0);
     padding: 0px 10px;
@@ -393,6 +388,10 @@ tr {
 
         &.max-wd {
           width: 85%;
+        }
+
+        &.max-sm-wd {
+          width: 75%;
         }
 
         &.mid-wd {

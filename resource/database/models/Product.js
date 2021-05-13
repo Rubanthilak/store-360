@@ -41,7 +41,7 @@ const Product = connection.sequelize.define('Product', {
   productTaxPercentage: {
     type: connection.DataTypes.FLOAT,
     allowNull: true,
-    defaultValue: 0.18
+    defaultValue: 18
   },
   productMrpPrice: {
     type: connection.DataTypes.FLOAT,
@@ -84,6 +84,7 @@ const createProduct = async function(obj){
       productName: obj.productName,
       productBaseUnit : obj.productBaseUnit,
       productSecondaryUnit : obj.productSecondaryUnit,
+      productUnitRatio : obj.productUnitRatio,
       productMrpPrice : obj.productMrpPrice,
       productSellingPrice : obj.productSellingPrice,
       productBarcode: obj.productBarcode,

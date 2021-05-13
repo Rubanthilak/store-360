@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  props: ["tableHeight"]
+  props: ["tableHeight"],
 };
 </script>
 
@@ -66,6 +66,7 @@ table {
   text-align: right;
   padding: 15px 10px;
   font-size: 14px;
+  background: var(--gray0);
   color: var(--gray3);
   font-family: var(--font-semibold);
   position: sticky;
@@ -80,14 +81,13 @@ table {
     bottom: 5px;
     z-index: 2;
     left: 0px;
-  }  
-
+  }
 }
 
-.header::v-deep th{
+.header::v-deep th {
   padding-left: 0px;
   padding-right: 0px;
-  
+
   &:first-child {
     padding-left: 20px;
     padding-right: 0;
@@ -101,9 +101,8 @@ table {
 
 // Inorder to apply sccs to the slot, We include v-deep
 .content::v-deep {
-
   tr {
-    background: var(--gray0);
+      background: var(--gray0);
   }
 
   td {
@@ -123,6 +122,5 @@ table {
     padding-left: 0px;
     padding-right: 20px;
   }
-
 }
 </style>
