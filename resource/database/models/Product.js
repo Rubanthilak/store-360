@@ -40,7 +40,6 @@ const Product = connection.sequelize.define('Product', {
   },
   productTaxPercentage: {
     type: connection.DataTypes.FLOAT,
-    allowNull: true,
     defaultValue: 18
   },
   productMrpPrice: {

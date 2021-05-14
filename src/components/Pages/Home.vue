@@ -382,18 +382,15 @@ export default {
     removeCustomerFromActiveCart() {
       this.cartList[this.activeCartIndex].customer = null;
     },
-    validateBill() {
+    async validateBill() {
       if (
         this.validatePayment() &&
         this.validateCustomer() &&
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
-          this.$store.dispatch(
-            "sale/postSale",
-            this.cartList[this.activeCartIndex]
-          );
-          this.cartList[this.activeCartIndex].printPreview = true;
+         this.cartList[this.activeCartIndex] = await this.$store.dispatch("sale/postSale",this.cartList[this.activeCartIndex]);
+         this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
         }

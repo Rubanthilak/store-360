@@ -15,10 +15,10 @@
           <input type="number" placeholder="HSC Number" v-model="product.productHscNumber" />
           <input type="number" placeholder="Barcode" v-model="product.productBarcode" />
         </div>
-        <div class="flex input-container">
+        <!-- <div class="flex input-container">
           <input type="text" placeholder="Base Unit" v-model="product.productBaseUnit" />
           <input type="text" placeholder="Secondary Unit" v-model="product.productSecondaryUnit" />
-        </div>
+        </div> -->
         <div class="flex input-container" v-if="product.productSecondaryUnit">
           <input type="text" :placeholder="'1 ' + product.productBaseUnit + ' = How many ' + product.productSecondaryUnit + ' ?'" v-model="product.productUnitRatio" />
         </div>
@@ -88,8 +88,7 @@ export default {
       if (
         this.product.productName === "" ||
         this.product.productMrpPrice === null ||
-        this.product.productSellingPrice === null ||
-        this.product.productBarcode === null
+        this.product.productSellingPrice === null 
       ) {
         this.errorFlag = true;
       } else {
@@ -98,6 +97,9 @@ export default {
       }
     },
     async createNewItem() {
+      if( this.product.productTaxPercentage === null){
+        this.product.productTaxPercentage = 18
+      }
       await this.$store.dispatch("product/postProduct", this.product);
       this.close();
     },

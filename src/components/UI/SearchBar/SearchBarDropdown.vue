@@ -74,11 +74,7 @@ export default {
           product.id
             .toString()
             .toLowerCase()
-            .includes(this.searchKeyword.toLowerCase()) ||
-          product.productBarcode
-            .toString()
-            .toLowerCase()
-            .includes(this.searchKeyword.toLowerCase())
+            .includes(this.searchKeyword.toLowerCase()) 
         );
       });
     },

@@ -339,8 +339,7 @@ export default {
           product.productName === "" ||
           product.productStock === null ||
           product.productMrpPrice.rupee === null ||
-          product.productSellingPrice.rupee === null ||
-          product.productBarcode === null
+          product.productSellingPrice.rupee === null
         ) {
           product.hasError = true;
           errorFlag = true;
@@ -355,7 +354,7 @@ export default {
           var tempProduct = {
             productName: product.productName,
             productHscNumber:  product.productHscNumber,
-            productTaxPercentage:  product.productTaxPercentage,
+            productTaxPercentage:  product.productTaxPercentage ? product.productTaxPercentage : 18,
             productStock: product.productStock,
             productBarcode: product.productBarcode,
             productMrpPrice: parseFloat(
