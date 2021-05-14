@@ -536,7 +536,6 @@ th{
   }
 }
 
-
 td{
   &:nth-of-type(1),&:nth-of-type(2){
     text-align: left !important;
