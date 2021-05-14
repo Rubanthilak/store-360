@@ -24,22 +24,30 @@
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
       </template>
-      <template #thead> 
+      <template #thead>
         <tr>
-          <th v-for="title in columnName" :key="title">{{title}}</th>
+          <th v-if="columnProps.id.visible">{{columnProps.id.name}}</th>
+          <th v-if="columnProps.item_name.visible">{{columnProps.item_name.name}}</th>
+          <th v-if="columnProps.hsc_code.visible">{{columnProps.hsc_code.name}}</th>
+          <th v-if="columnProps.tax_type.visible">{{columnProps.tax_type.name}}</th>
+          <th v-if="columnProps.tax_percent.visible">{{columnProps.tax_percent.name}}</th>
+          <th v-if="columnProps.stock.visible">{{columnProps.stock.name}}</th>
+          <th v-if="columnProps.mrp_price.visible">{{columnProps.mrp_price.name}}</th>
+          <th v-if="columnProps.selling_price.visible">{{columnProps.selling_price.name}}</th>
+          <th v-if="columnProps.bar_code.visible">{{columnProps.bar_code.name}}</th>
         </tr>
       </template>
       <template #tbody>
         <tr v-for="product in filteredProductList" :key="product.id">
-          <td>{{product.id}}</td>
-          <td>{{product.productName}}</td>
-          <td>{{product.productHscNumber}}</td>
-          <td>{{product.productTaxType}}</td>
-          <td>{{product.productTaxPercentage}} %</td>
-          <td>{{product.productStock}}</td>
-          <td>{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
-          <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
-          <td>{{product.productBarcode}}</td>
+          <td v-if="columnProps.id.visible">{{product.id}}</td>
+          <td v-if="columnProps.item_name.visible">{{product.productName}}</td>
+          <td v-if="columnProps.hsc_code.visible">{{product.productHscNumber}}</td>
+          <td v-if="columnProps.tax_type.visible">{{product.productTaxType}}</td>
+          <td v-if="columnProps.tax_percent.visible">{{product.productTaxPercentage}} %</td>
+          <td v-if="columnProps.stock.visible">{{product.productStock}}</td>
+          <td v-if="columnProps.mrp_price.visible">{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
+          <td v-if="columnProps.selling_price.visible">{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
+          <td v-if="columnProps.bar_code.visible">{{product.productBarcode}}</td>
         </tr>
       </template>
     </the-table>
@@ -63,7 +71,7 @@
       </template>
       <template #thead>
         <tr>
-          <th v-for="title in columnName" :key="title">{{title}}</th>
+          <th v-for="column in columnProps" :key="column">{{column.name}}</th>
           <th></th>
         </tr>
       </template>
@@ -73,7 +81,7 @@
           <td>{{product.productName}}</td>
           <td>{{product.productHscNumber}}</td>
           <td>{{product.productTaxType}}</td>
-          <td>{{product.productTaxPercentage}}</td>
+          <td>{{product.productTaxPercentage}} %</td>
           <td>
             <input
               type="text"
@@ -155,20 +163,47 @@ export default {
   },
   data() {
     return {
-      columnName: [
-        "ID",
-        "ITEM NAME",
-        "HSC CODE",
-        "TAX TYPE",
-        "TAX %",
-        "STOCK",
-        "MRP PRICE",
-        "SELLING PRICE",
-        "BAR CODE",
-      ],
       tableEditMode: false,
       ItemDeleteIdProp: null,
       searchKeyword: "",
+      columnProps: {
+        id: {
+          name: "ID",
+          visible: true,
+        },
+        item_name: {
+          name: "ITEM NAME",
+          visible: true,
+        },
+        hsc_code: {
+          name: "HSC CODE",
+          visible: true,
+        },
+        tax_type: {
+          name: "TAX TYPE",
+          visible: true,
+        },
+        tax_percent: {
+          name: "TAX %",
+          visible: true,
+        },
+        stock: {
+          name: "STOCK",
+          visible: true,
+        },
+        mrp_price: {
+          name: "MRP PRICE",
+          visible: true,
+        },
+        selling_price: {
+          name: "SELLING PRICE",
+          visible: true,
+        },
+        bar_code: {
+          name: "BAR CODE",
+          visible: false,
+        },
+      },
     };
   },
   computed: {
