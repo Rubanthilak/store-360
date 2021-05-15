@@ -110,11 +110,20 @@ const createSale = async function(obj){
         cashAmount: obj.cashAmount,
         cardAmount: obj.cardAmount,
         upiAmount: obj.upiAmount,
-        stateTax: obj.stateTax,
-        centralTax: obj.centralTax,
+        unpaidAmount: obj.unpaidAmount,
         productList: obj.productList,
     });
    return sale.dataValues;
+}
+
+
+const updateSale = async function(obj,id){
+  const res = await Sale.update(obj,{
+    where: {
+      id: id
+    }
+  });
+  return res[0] === 1 ? true : false;
 }
 
 const deleteSale = async function(id){
@@ -133,6 +142,7 @@ export default {
   getSaleById,
   getSalesCustomerId,
   createSale,
+  updateSale,
   deleteSale
 };
 

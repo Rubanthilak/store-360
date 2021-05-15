@@ -19,8 +19,8 @@
           @click="itemSelected(item)"
         >
           <p>{{item.id}}</p>
-          <p>{{item.name}}</p>
-          <p>{{item.barcode}}</p>
+          <p>{{item.productName}}</p>
+          <p>{{item.productBarcode}}</p>
         </div>
       </div>
       <div v-else class="nf-text">
@@ -68,17 +68,13 @@ export default {
       }
       return this.productList.filter((product) => {
         return (
-          product.name
+          product.productName
             .toLowerCase()
             .includes(this.searchKeyword.toLowerCase()) ||
           product.id
             .toString()
             .toLowerCase()
-            .includes(this.searchKeyword.toLowerCase()) ||
-          product.barcode
-            .toString()
-            .toLowerCase()
-            .includes(this.searchKeyword.toLowerCase())
+            .includes(this.searchKeyword.toLowerCase()) 
         );
       });
     },

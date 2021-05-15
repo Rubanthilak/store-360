@@ -29,6 +29,8 @@ body {
 }
 
 main {
+  overflow: auto;
+  height: 100vh;
   section {
     padding-top: 20px !important;
   }

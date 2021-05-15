@@ -11,7 +11,7 @@
       </div>
       <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
         <the-button label="Save" @click="validateProductList"></the-button>
-        <the-button label="Add Rows" @click="generateRows"></the-button>
+        <the-button label="Add Rows" @click="addRows"></the-button>
         <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
       </div>
     </div>
@@ -28,18 +28,23 @@
         The List is empty 📄.
         <br />Please add items by clicking the button below.
       </p>
-      <the-button label="Click Here" @click="generateRows"></the-button>
+      <div class="flex" style="gap:1rem">
+          <input type="text" placeholder="No. of Items" style="padding:8px;border:2px solid var(--gray2);border-radius:4px" v-model="rowsToBeAdded">
+          <the-button label="Add Row" @click="generateRows"></the-button>
+      </div>
     </div>
     <div class="table-wrapper" v-else>
       <the-table class="table-editmode" id="table" table-height="calc(100vh - 135px)">
         <template #colgroup>
-          <col span="1" style="width: 3%;" />
-          <col span="1" style="width: 3%;" />
-          <col span="1" style="width: 35%;" />
-          <col span="1" style="width: 14%;" />
-          <col span="1" style="width: 15%;" />
-          <col span="1" style="width: 15%;" />
-          <col span="1" style="width: 12%;" />
+        <col span="1" style="width: 3%;" />
+        <col span="1" style="width: 3%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 5%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
         </template>
         <template #thead>
           <tr>
@@ -62,14 +67,34 @@
                 type="text"
                 v-model="item.productName"
                 placeholder="Enter Name"
-                class="max-wd"
+                class="max-sm-wd"
                 v-on:keydown="arrowkeyEventHandler($event)"
               />
             </td>
             <td>
               <input
                 type="text"
-                v-model="item.productQuantity"
+                v-model="item.productHscNumber"
+                placeholder="HSC"
+                class="max-sm-wd"
+                v-on:keydown="arrowkeyEventHandler($event)"
+                @keypress="isNumber($event)"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                v-model="item.productTaxPercentage"
+                placeholder="Tax"
+                class="mid-wd"
+                v-on:keydown="arrowkeyEventHandler($event)"
+                @keypress="isNumber($event)"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                v-model="item.productStock"
                 placeholder="Enter Stock"
                 class="max-sm-wd"
                 maxlength="6"
@@ -140,14 +165,17 @@ export default {
         " ",
         "S.NO",
         "ITEM NAME",
+        "HSC CODE",
+        "TAX %",
         "STOCK",
-        "MRP PRICE (in ₹)",
-        "SELLING PRICE (in ₹)",
+        "MRP PRICE",
+        "SELLING PRICE",
         "BAR CODE",
       ],
       productList: [],
       isLoading: false,
       isSuccess: false,
+      rowsToBeAdded: null
     };
   },
   computed: {
@@ -196,8 +224,8 @@ export default {
         case 38:
           // "Up Key pressed!"
           e.preventDefault();
-          if (index - 7 >= 0) {
-            inputs[index - 7].focus();
+          if (index - 9 >= 0) {
+            inputs[index - 9].focus();
           }
           break;
         case 39:
@@ -212,8 +240,8 @@ export default {
         case 40:
           // "Down Key pressed!"
           e.preventDefault();
-          if (index + 7 < inputs.length) {
-            inputs[index + 7].focus();
+          if (index + 9 < inputs.length) {
+            inputs[index + 9].focus();
           }
           break;
         case 46:
@@ -227,12 +255,14 @@ export default {
         (product) => !product.isChecked
       );
     },
-    generateRows() {
+    addRows() {
       if (this.productList.length < 90) {
         for (var i = 0; i < 10; i++) {
           this.productList.push({
             productName: "",
-            productQuantity: null,
+            productHscNumber: null,
+            productTaxPercentage: null,
+            productStock: null,
             productMrpPrice: {
               rupee: null,
               paisa: null,
@@ -254,7 +284,9 @@ export default {
         for (var j = 0; j < len; j++) {
           this.productList.push({
             productName: "",
-            productQuantity: null,
+            productHscNumber: null,
+            productTaxPercentage: null,
+            productStock: null,
             productMrpPrice: {
               rupee: null,
               paisa: null,
@@ -272,6 +304,32 @@ export default {
         this.$store.commit("showSnackBar", "You can only add 100 rows.");
       }
     },
+    generateRows(){
+      if(this.rowsToBeAdded<100 && this.rowsToBeAdded > 0 && this.rowsToBeAdded !== null){
+        for (var i = 0; i < this.rowsToBeAdded; i++) {
+          this.productList.push({
+            productName: "",
+            productHscNumber: null,
+            productTaxPercentage: null,
+            productStock: null,
+            productMrpPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productSellingPrice: {
+              rupee: null,
+              paisa: null,
+            },
+            productBarcode: null,
+            hasError: false,
+            isChecked: false,
+          });
+        }
+      }
+      else{
+        this.$store.commit("showSnackBar", "You can only add 100 rows.");
+      }
+    },
     async validateProductList() {
       var errorFlag = false;
       this.isLoading = true;
@@ -279,10 +337,9 @@ export default {
       this.productList.forEach((product) => {
         if (
           product.productName === "" ||
-          product.productQuantity === null ||
+          product.productStock === null ||
           product.productMrpPrice.rupee === null ||
-          product.productSellingPrice.rupee === null ||
-          product.productBarcode === null
+          product.productSellingPrice.rupee === null
         ) {
           product.hasError = true;
           errorFlag = true;
@@ -296,7 +353,9 @@ export default {
         this.productList.forEach((product) => {
           var tempProduct = {
             productName: product.productName,
-            productQuantity: product.productQuantity,
+            productHscNumber:  product.productHscNumber,
+            productTaxPercentage:  product.productTaxPercentage ? product.productTaxPercentage : 18,
+            productStock: product.productStock,
             productBarcode: product.productBarcode,
             productMrpPrice: parseFloat(
               product.productMrpPrice.rupee +
@@ -326,9 +385,6 @@ export default {
         this.isLoading = false;
       }, 3000);
     },
-  },
-  mounted() {
-    this.generateRows();
   },
 };
 </script>

@@ -1,159 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Print Preview</title>
-     <script defer>
-      const ipcRenderer = require("electron").ipcRenderer;
-      ipcRenderer.on("webview-print-render", (event, data) => {
-        document.getElementById("printMe").innerHTML = data;
-        ipcRenderer.sendToHost("webview-print-do");
-      });
-    </script>
-    <style>
-      .pdfTransactionHTMLView {
-        display: block;
-        padding: 20px 30px;
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Print Preview</title>
+
+  <style>
+    .pdfTransactionHTMLView {
+      display: block;
+      padding: 20px 30px;
+    }
+
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
       }
-      @media print {
-        body {
-          -webkit-print-color-adjust: exact;
-        }
-      }
-      .txnItemTableForPrint table {
-        page-break-after: auto;
-      }
-      .txnItemTableForPrint tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
-      }
-      .txnItemTableForPrint td {
-        page-break-inside: avoid;
-        page-break-after: auto;
-      }
-      .txnItemTableForPrint thead {
-        display: table-header-group;
-      }
-      .pdfTransactionHTMLView table {
-        border-collapse: collapse;
-      }
-      .pdfTransactionHTMLView td,
-      .pdfTransactionHTMLView th {
-        padding: 3.2000000000000006px;
-        font-size: 10.240000000000002px;
-      }
-      .pdfTransactionHTMLView .borderBottomForTxn {
-        border-bottom: 1px solid;
-        border-color: gray;
-      }
-      .pdfTransactionHTMLView .borderTopForTxn {
-        border-top: 1px solid;
-        border-color: gray;
-      }
-      .pdfTransactionHTMLView .borderLeftForTxn {
-        border-left: 1px solid;
-        border-color: gray;
-      }
-      .pdfTransactionHTMLView .borderRightForTxn {
-        border-right: 1px solid;
-        border-color: gray;
-      }
-      .pdfTransactionHTMLView .borderColorGrey {
-        border-color: gray;
-      }
-      .pdfTransactionHTMLView p {
-        margin: 0;
-        padding: 1.2800000000000002px;
-        font-size: 10.240000000000002px;
-      }
-      .pdfTransactionHTMLView .paddingLeft {
-        padding-left: 3.2000000000000006px;
-      }
-      .pdfTransactionHTMLView .paddingRight {
-        padding-right: 3.2000000000000006px;
-      }
-      .pdfTransactionHTMLView .discountTaxTable {
-        border-bottom: 0px;
-        border-color: white;
-      }
-      .pdfTransactionHTMLView .boldText {
-        font-weight: bold;
-      }
-      .pdfTransactionHTMLView .copyPrintNumberClass {
-        padding: 1.6000000000000003px;
-        padding-right: 0px;
-        font-size: 6.400000000000001px;
-      }
-      .pdfTransactionHTMLView .copyPrintNumberCheckBoxClass {
-        padding: 0px;
-        font-size: 9.600000000000001px;
-      }
-      .pdfTransactionHTMLView .normalTextSize {
-        font-size: 8.320000000000002px;
-      }
-      .pdfTransactionHTMLView .bigTextSize {
-        font-size: 9.600000000000001px;
-      }
-      .pdfTransactionHTMLView .largerTextSize {
-        font-size: 11.520000000000003px;
-      }
-      .pdfTransactionHTMLView .biggerTextSize {
-        font-size: 13.440000000000003px;
-      }
-      .pdfTransactionHTMLView .extraLargeTextSize {
-        font-size: 15.360000000000003px;
-      }
-      .pdfTransactionHTMLView .noTopPadding {
-        padding-top: 0px;
-      }
-      .pdfTransactionHTMLView .noBottomPadding {
-        padding-bottom: 0px;
-      }
-      .pdfTransactionHTMLView .noPadding {
-        padding: 0px;
-      }
-      .pdfTransactionHTMLView .topPadding {
-        padding-top: 3.2000000000000006px;
-      }
-      .pdfTransactionHTMLView .partyAddressPadding {
-        margin: 0;
-        padding: 1.9200000000000004px 32.00000000000001px;
-      }
-      .pdfTransactionHTMLView .vAlignTop {
-        vertical-align: top;
-      }
-      .pdfTransactionHTMLView .vAlignBottom {
-        vertical-align: bottom;
-      }
-      .pdfTransactionHTMLView {
-        font-family: Segoe, "Segoe UI", Calibri, Candara, Optima, Arial, sans-serif;
-      }
-      .page-break {
-        page-break-after: always;
-      }
-      .pay-online-upi {
-        cursor: default;
-        clear: both;
-        float: left;
-        background-color: #28db89;
-        padding: 1px;
-      }
-      .pay-online-upi .upi-image {
-        display: inline-block;
-        padding: 2px;
-        background-color: white;
-      }
-      .pay-online-upi .pay-now-text {
-        border-radius: 0 2px 2px 0;
-        display: inline-block;
-        padding: 3px 2px 3px 2px;
-        color: white;
-      }
-      </style>
-  </head>
-  <body id="printMe">
-    <h1>rubi</h1>
-  </body>
-  </html>
+    }
+
+    .txnItemTableForPrint table {
+      page-break-after: auto;
+    }
+
+    .txnItemTableForPrint tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    .txnItemTableForPrint td {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    .txnItemTableForPrint thead {
+      display: table-header-group;
+    }
+
+    .pdfTransactionHTMLView table {
+      border-collapse: collapse;
+    }
+
+    .pdfTransactionHTMLView td,
+    .pdfTransactionHTMLView th {
+      padding: 3.2000000000000006px;
+      font-size: 10.240000000000002px;
+    }
+
+    .pdfTransactionHTMLView .borderBottomForTxn {
+      border-bottom: 1px solid;
+      border-color: gray;
+    }
+
+    .pdfTransactionHTMLView .borderTopForTxn {
+      border-top: 1px solid;
+      border-color: gray;
+    }
+
+    .pdfTransactionHTMLView .borderLeftForTxn {
+      border-left: 1px solid;
+      border-color: gray;
+    }
+
+    .pdfTransactionHTMLView .borderRightForTxn {
+      border-right: 1px solid;
+      border-color: gray;
+    }
+
+    .pdfTransactionHTMLView .borderColorGrey {
+      border-color: gray;
+    }
+
+    .pdfTransactionHTMLView p {
+      margin: 0;
+      padding: 1.2800000000000002px;
+      font-size: 10.240000000000002px;
+    }
+
+    .pdfTransactionHTMLView .paddingLeft {
+      padding-left: 3.2000000000000006px;
+    }
+
+    .pdfTransactionHTMLView .paddingRight {
+      padding-right: 3.2000000000000006px;
+    }
+
+    .pdfTransactionHTMLView .discountTaxTable {
+      border-bottom: 0px;
+      border-color: white;
+    }
+
+    .pdfTransactionHTMLView .boldText {
+      font-weight: bold;
+    }
+
+    .pdfTransactionHTMLView .copyPrintNumberClass {
+      padding: 1.6000000000000003px;
+      padding-right: 0px;
+      font-size: 6.400000000000001px;
+    }
+
+    .pdfTransactionHTMLView .copyPrintNumberCheckBoxClass {
+      padding: 0px;
+      font-size: 9.600000000000001px;
+    }
+
+    .pdfTransactionHTMLView .normalTextSize {
+      font-size: 8.320000000000002px;
+    }
+
+    .pdfTransactionHTMLView .bigTextSize {
+      font-size: 9.600000000000001px;
+    }
+
+    .pdfTransactionHTMLView .largerTextSize {
+      font-size: 11.520000000000003px;
+    }
+
+    .pdfTransactionHTMLView .biggerTextSize {
+      font-size: 13.440000000000003px;
+    }
+
+    .pdfTransactionHTMLView .extraLargeTextSize {
+      font-size: 15.360000000000003px;
+    }
+
+    .pdfTransactionHTMLView .noTopPadding {
+      padding-top: 0px;
+    }
+
+    .pdfTransactionHTMLView .noBottomPadding {
+      padding-bottom: 0px;
+    }
+
+    .pdfTransactionHTMLView .noPadding {
+      padding: 0px;
+    }
+
+    .pdfTransactionHTMLView .topPadding {
+      padding-top: 3.2000000000000006px;
+    }
+
+    .pdfTransactionHTMLView .partyAddressPadding {
+      margin: 0;
+      padding: 1.9200000000000004px 32.00000000000001px;
+    }
+
+    .pdfTransactionHTMLView .vAlignTop {
+      vertical-align: top;
+    }
+
+    .pdfTransactionHTMLView .vAlignBottom {
+      vertical-align: bottom;
+    }
+
+    .pdfTransactionHTMLView {
+      font-family: Segoe, "Segoe UI", Calibri, Candara, Optima, Arial, sans-serif;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .pay-online-upi {
+      cursor: default;
+      clear: both;
+      float: left;
+      background-color: #28db89;
+      padding: 1px;
+    }
+
+    .pay-online-upi .upi-image {
+      display: inline-block;
+      padding: 2px;
+      background-color: white;
+    }
+
+    .pay-online-upi .pay-now-text {
+      border-radius: 0 2px 2px 0;
+      display: inline-block;
+      padding: 3px 2px 3px 2px;
+      color: white;
+    }
+  </style>
+  <script defer>
+    const ipcRenderer = require("electron").ipcRenderer;
+    ipcRenderer.on("webview-print-render", (event, data) => {
+      document.getElementById("printMe").innerHTML = data;
+      ipcRenderer.sendToHost("webview-print-do");
+    });
+    ipcRenderer.on("webview-pdf-render", (event, data) => {
+      document.getElementById("printMe").innerHTML = data;
+      ipcRenderer.sendToHost("webview-pdf-do");
+    });
+  </script>
+</head>
+
+<body id="printMe"></body>
+
+</html>

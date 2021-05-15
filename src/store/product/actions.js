@@ -12,23 +12,28 @@ export default {
       const product = await Database.Model.Product.getProductById(obj.id);
       var tempProduct = {
         id: product.id,
-        name: product.productName,
-        unit: product.productQuantity,
-        mrp_price: {
+        productName: product.productName,
+        productHscNumber: product.productHscNumber,
+        productTaxType: product.productTaxType,
+        productTaxPercentage: product.productTaxPercentage,
+        productQuantity: product.productQuantity,
+        productSubQuantity: product.productSubQuantity,
+        productStock: product.productStock,
+        productMrpPrice: {
           rupee: Math.floor(product.productMrpPrice),
           paisa:
             Math.round((product.productMrpPrice % 1) * 100) < 10
               ? "0" + Math.round((product.productMrpPrice % 1) * 100)
               : Math.round((product.productMrpPrice % 1) * 100),
         },
-        selling_price: {
+        productSellingPrice: {
           rupee: Math.floor(product.productSellingPrice),
           paisa:
             Math.round((product.productSellingPrice % 1) * 100) < 10
               ? "0" + Math.round((product.productSellingPrice % 1) * 100)
               : Math.round((product.productSellingPrice % 1) * 100),
         },
-        barcode: product.productBarcode,
+        productBarcode: product.productBarcode,
       };
       return tempProduct;
     },
@@ -43,12 +48,12 @@ export default {
     async updateProduct(context, obj) {
       const res = await Database.Model.Product.updateProduct(
         {
-          productQuantity: obj.unit,
+          productStock: obj.productStock,
           productMrpPrice: parseFloat(
-            obj.mrp_price.rupee + "." + obj.mrp_price.paisa
+            obj.productMrpPrice.rupee + "." + obj.productMrpPrice.paisa
           ),
           productSellingPrice: parseFloat(
-            obj.selling_price.rupee + "." + obj.selling_price.paisa
+            obj.productSellingPrice.rupee + "." + obj.productSellingPrice.paisa
           ),
         },
         obj.id

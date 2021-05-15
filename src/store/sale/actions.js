@@ -14,11 +14,14 @@ export default {
       cashAmount: obj.paymentMethod.amount.cash,
       cardAmount: obj.paymentMethod.amount.card,
       upiAmount: obj.paymentMethod.amount.upi,
-      stateTax: 8,
-      centralTax: 8, //in future read from settings.json
+      unpaidAmount: obj.paymentMethod.amount.unpaid,
       productList: obj.productList,
     });
     return sale;         
+  },
+  async updateSale(context, obj) {
+    const res = await Database.Model.Sale.updateSale(obj,obj.id);
+    return res;         
   },
 };
   

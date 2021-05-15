@@ -7,14 +7,25 @@
     </template>
     <template #content>
       <div class="flex input-container">
-        <input type="text" placeholder="Name" v-model="customer.customerName" />
-        <input type="number" placeholder="Phone" v-model="customer.customerPhoneNumber" />
-        <input type="text" placeholder="GSTIN" v-model="customer.customerGstinNumber" />
-        <input type="text" placeholder="Door No" v-model="customer.customerDoorNumber" />
-        <input type="text" placeholder="Street" v-model="customer.customerStreetName" />
-        <input type="text" placeholder="City" v-model="customer.customerCityName" />
-        <input type="text" placeholder="State" v-model="customer.customerStateName" />
-        <input type="number" placeholder="Pincode" v-model="customer.customerPincode" max="6"/>
+        <div>
+          <input type="text" placeholder="Name" v-model="customer.customerName" />
+          <input type="number" placeholder="Phone" v-model="customer.customerPhoneNumber" />
+        </div>
+        <div>
+          <input type="text" placeholder="GSTIN" v-model="customer.customerGstinNumber" />
+        </div>
+        <h1 style="margin-bottom:20px">Address</h1> 
+        <div>
+          <input type="text" placeholder="Door No" v-model="customer.customerDoorNumber" />
+          <input type="text" placeholder="Street" v-model="customer.customerStreetName" />
+        </div>
+        <div>
+          <input type="text" placeholder="City" v-model="customer.customerCityName" />
+          <input type="text" placeholder="State" v-model="customer.customerStateName" />
+        </div>
+        <div>
+          <input type="number" placeholder="Pincode" v-model="customer.customerPincode" max="6" />
+        </div>
         <p class="error-text" v-if="errorFlag">{{errorMessage}}</p>
       </div>
     </template>
@@ -32,7 +43,7 @@ export default {
   props: ["open"],
   emits: ["close"],
   data() {
-    return { 
+    return {
       customer: {
         customerName: null,
         customerPhoneNumber: null,
@@ -87,21 +98,18 @@ export default {
         this.customer.customerDoorNumber = "";
         this.customer.customerStreetName = "";
         this.customer.customerCityName = "";
-        this.customerStateName = "",
-        this.customer.customerPincode = null;
-        this.customer.customerGstinNumber= null,
-        this.close();
+        (this.customerStateName = ""), (this.customer.customerPincode = null);
+        (this.customer.customerGstinNumber = null), this.close();
       }
     },
   },
-  async updated(){
+  async updated() {
     await this.$store.dispatch("customer/getCustomerList");
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -120,8 +128,13 @@ h2 {
 }
 
 .input-container {
-  flex-direction: column;
   margin-top: 15px;
+  flex-direction: column;
+
+  div {
+    display: flex;
+    gap: 1.5rem;
+  }
 
   input {
     margin-bottom: 20px;
@@ -139,8 +152,9 @@ h2 {
 }
 
 .button-container {
-  width: 100%;
+  width: 40%;
   margin-top: 5px;
+  float:right;
 
   div {
     width: 100%;

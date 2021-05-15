@@ -54,7 +54,7 @@ dialog {
   font-family: var(--font-regular);
   min-width: 250px;
   padding: 20px 25px;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .overlay-enter-active,

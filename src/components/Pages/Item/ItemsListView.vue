@@ -15,66 +15,82 @@
     <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 20%;" />
+        <col span="1" style="width: 25%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 15%;" />
-        <col span="1" style="width: 15%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
       </template>
       <template #thead>
         <tr>
-          <th v-for="title in columnName" :key="title">{{title}}</th>
+          <th v-if="columnProps.id.visible">{{columnProps.id.name}}</th>
+          <th v-if="columnProps.item_name.visible">{{columnProps.item_name.name}}</th>
+          <th v-if="columnProps.hsc_code.visible">{{columnProps.hsc_code.name}}</th>
+          <th v-if="columnProps.tax_type.visible">{{columnProps.tax_type.name}}</th>
+          <th v-if="columnProps.tax_percent.visible">{{columnProps.tax_percent.name}}</th>
+          <th v-if="columnProps.stock.visible">{{columnProps.stock.name}}</th>
+          <th v-if="columnProps.mrp_price.visible">{{columnProps.mrp_price.name}}</th>
+          <th v-if="columnProps.selling_price.visible">{{columnProps.selling_price.name}}</th>
+          <th v-if="columnProps.bar_code.visible">{{columnProps.bar_code.name}}</th>
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in filteredProductList" :key="item.id">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.mrp_price.rupee+'.'+item.mrp_price.paisa}}</td>
-          <td>{{item.selling_price.rupee+'.'+item.selling_price.paisa}}</td>
-          <td>{{item.barcode}}</td>
+        <tr v-for="product in filteredProductList" :key="product.id">
+          <td v-if="columnProps.id.visible">{{product.id}}</td>
+          <td v-if="columnProps.item_name.visible">{{product.productName}}</td>
+          <td v-if="columnProps.hsc_code.visible">{{product.productHscNumber}}</td>
+          <td v-if="columnProps.tax_type.visible">{{product.productTaxType}}</td>
+          <td v-if="columnProps.tax_percent.visible">{{product.productTaxPercentage}} %</td>
+          <td v-if="columnProps.stock.visible">{{product.productStock}}</td>
+          <td v-if="columnProps.mrp_price.visible">{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
+          <td v-if="columnProps.selling_price.visible">{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
+          <td v-if="columnProps.bar_code.visible">{{product.productBarcode}}</td>
         </tr>
       </template>
     </the-table>
-    <the-table v-else class="table-editmode" id="table-in-editmode" table-height="calc(100vh - 135px)">
+    <the-table
+      v-else
+      class="table-editmode"
+      id="table-in-editmode"
+      table-height="calc(100vh - 135px)"
+    >
       <template #colgroup>
         <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 17%;" />
+        <col span="1" style="width: 20%;" />
+        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 9%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 15%;" />
-        <col span="1" style="width: 15%;" />
+        <col span="1" style="width: 14%;" />
+        <col span="1" style="width: 14%;" />
         <col span="1" style="width: 10%;" />
         <col span="1" style="width: 3%;" />
       </template>
       <template #thead>
         <tr>
-          <th v-for="title in columnName" :key="title">{{title}}</th>
+          <th v-for="column in columnProps" :key="column">{{column.name}}</th>
           <th></th>
         </tr>
       </template>
       <template #tbody>
-        <tr v-for="item in filteredProductList" :key="item.id">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
+        <tr v-for="product in filteredProductList" :key="product.id">
+          <td>{{product.id}}</td>
+          <td>{{product.productName}}</td>
+          <td>{{product.productHscNumber}}</td>
+          <td>{{product.productTaxType}}</td>
+          <td>{{product.productTaxPercentage}} %</td>
           <td>
             <input
               type="text"
-              v-model="item.unit"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productStock"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               placeholder="Stock"
-              class="max-wd"
+              class="max-sm-wd"
               maxlength="6"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="unit"
               @keypress="isNumber($event)"
             />
@@ -82,21 +98,21 @@
           <td>
             <input
               type="text"
-              v-model="item.mrp_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productMrpPrice.rupee"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="mrp_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
-              v-model="item.mrp_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productMrpPrice.paisa"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="mrp_paisa"
               @keypress="isNumber($event)"
             />
@@ -104,28 +120,34 @@
           <td>
             <input
               type="text"
-              v-model="item.selling_price.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productSellingPrice.rupee"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="sell_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
-              v-model="item.selling_price.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,item.id)"
+              v-model="product.productSellingPrice.paisa"
+              v-on:keydown="arrowkeyEventHandler($event,product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,item.id)"
+              @blur="validateInputField($event,product.id)"
               field="sell_paisa"
               @keypress="isNumber($event)"
             />
           </td>
-          <td>{{item.barcode}}</td>
+          <td>{{product.productBarcode}}</td>
           <td>
-            <svg-icon @click="triggerDeleteProduct(item.id)" size="24" icon="delete-icon" hover-color="red" color="gray2"></svg-icon>
+            <svg-icon
+              @click="triggerDeleteProduct(product.id)"
+              size="24"
+              icon="delete-icon"
+              hover-color="red"
+              color="gray2"
+            ></svg-icon>
           </td>
         </tr>
       </template>
@@ -141,20 +163,47 @@ export default {
   },
   data() {
     return {
-      columnName: [
-        "ID",
-        "ITEM NAME",
-        "HSC CODE",
-        "QUANTITY",
-        "TAX TYPE",
-        "TAX %",
-        "MRP PRICE",
-        "SELLING PRICE",
-        "BAR CODE",
-      ],
       tableEditMode: false,
       ItemDeleteIdProp: null,
       searchKeyword: "",
+      columnProps: {
+        id: {
+          name: "ID",
+          visible: true,
+        },
+        item_name: {
+          name: "ITEM NAME",
+          visible: true,
+        },
+        hsc_code: {
+          name: "HSC CODE",
+          visible: true,
+        },
+        tax_type: {
+          name: "TAX TYPE",
+          visible: true,
+        },
+        tax_percent: {
+          name: "TAX %",
+          visible: true,
+        },
+        stock: {
+          name: "STOCK",
+          visible: true,
+        },
+        mrp_price: {
+          name: "MRP PRICE",
+          visible: true,
+        },
+        selling_price: {
+          name: "SELLING PRICE",
+          visible: true,
+        },
+        bar_code: {
+          name: "BAR CODE",
+          visible: false,
+        },
+      },
     };
   },
   computed: {
@@ -164,7 +213,7 @@ export default {
     filteredProductList() {
       return this.productList.filter((product) => {
         return (
-          product.name
+          product.productName
             .toLowerCase()
             .includes(this.searchKeyword.toLowerCase()) ||
           product.id
@@ -176,11 +225,13 @@ export default {
     },
   },
   methods: {
-      
-    isNumber: function(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) || charCode === 46) {
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        (charCode > 31 && (charCode < 48 || charCode > 57)) ||
+        charCode === 46
+      ) {
         evt.preventDefault();
       } else {
         return true;
@@ -214,24 +265,24 @@ export default {
     async validateInputField(e, id = null) {
       if (e.target.value === "") {
         e.target.classList.remove("error-border");
-        const item = await this.$store.dispatch("product/getProductById", {
+        const product = await this.$store.dispatch("product/getProductById", {
           id,
         });
         switch (e.target.getAttribute("field")) {
           case "unit":
-            e.target.value = item.unit;
+            e.target.value = product.productStock;
             break;
           case "mrp_rupee":
-            e.target.value = item.mrp_price.rupee;
+            e.target.value = product.productMrpPrice.rupee;
             break;
           case "mrp_paisa":
-            e.target.value = item.mrp_price.paisa;
+            e.target.value = product.productMrpPrice.paisa;
             break;
           case "sell_rupee":
-            e.target.value = item.selling_price.rupee;
+            e.target.value = product.productSellingPrice.rupee;
             break;
           case "sell_paisa":
-            e.target.value = item.selling_price.paisa;
+            e.target.value = product.productSellingPrice.paisa;
             break;
         }
       } else {
@@ -321,17 +372,29 @@ export default {
   }
 }
 
+th {
+  text-align: right;
+  &:nth-child(1),
+  &:nth-child(2) {
+    text-align: left !important;
+  }
+}
+
+tr {
+  td {
+    &:nth-of-type(1),
+    &:nth-of-type(2) {
+      text-align: left !important;
+    }
+  }
+}
+
 .table-editmode {
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-  }
-
-  th:last-child {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
   }
 
   tr {
@@ -360,6 +423,10 @@ export default {
 
         &.max-wd {
           width: 85%;
+        }
+
+        &.max-sm-wd {
+          width: 75%;
         }
 
         &.mid-wd {

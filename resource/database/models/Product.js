@@ -16,26 +16,35 @@ const Product = connection.sequelize.define('Product', {
     type: connection.DataTypes.NUMBER,
     allowNull: true
   },
-  productQuantity: {
+  productBaseUnit: {
     type: connection.DataTypes.STRING,
     allowNull: true
   },
-  productSubQuantity: {
+  productSecondaryUnit: {
     type: connection.DataTypes.STRING,
     allowNull: true
   },
-  taxType: {
+  productUnitRatio: {
+    type: connection.DataTypes.NUMBER,
+    allowNull: true
+  },
+  productStock: {
+    type: connection.DataTypes.NUMBER,
+    allowNull: true
+  },
+  productTaxType: {
     type: connection.DataTypes.ENUM,
     values: ["GST", "IGST"],
     allowNull: true,
+    defaultValue: 'GST'
   },
-  taxPercentage: {
+  productTaxPercentage: {
     type: connection.DataTypes.FLOAT,
-    allowNull: true,
+    defaultValue: 18
   },
   productMrpPrice: {
     type: connection.DataTypes.FLOAT,
-    allowNull: false
+    allowNull: false,
   },
   productSellingPrice: {
     type: connection.DataTypes.FLOAT,
@@ -51,6 +60,7 @@ const Product = connection.sequelize.define('Product', {
     allowNull: true
   }
 });
+
 const createTable = async function(){
   await Product.sync()
 }
@@ -71,10 +81,16 @@ const getProductById = async function(id){
 const createProduct = async function(obj){
     const product = await Product.create({
       productName: obj.productName,
-      productQuantity : obj.productQuantity,
+      productBaseUnit : obj.productBaseUnit,
+      productSecondaryUnit : obj.productSecondaryUnit,
+      productUnitRatio : obj.productUnitRatio,
       productMrpPrice : obj.productMrpPrice,
       productSellingPrice : obj.productSellingPrice,
-      productBarcode: obj.productBarcode
+      productBarcode: obj.productBarcode,
+      productHscNumber: obj.productHscNumber,
+      productTaxType: obj.productTaxType,
+      productTaxPercentage: obj.productTaxPercentage,
+      productStock: obj.productStock,
   });
   return product.dataValues;
 }

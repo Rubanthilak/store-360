@@ -14,9 +14,10 @@
           <the-table table-height="calc(100vh - 180px)">
             <template #colgroup>
               <col span="1" style="width: 5%;" />
-              <col span="1" style="width: 30%;" />
+              <col span="1" style="width: 20%;" />
               <col span="1" style="width: 5%;" />
               <col span="1" style="width: 10%;" />
+              <col span="1" style="width: 5%;" />
               <col span="1" style="width: 10%;" />
               <col span="1" style="width: 4%;" />
             </template>
@@ -28,12 +29,13 @@
             <template #tbody>
               <tr v-for="(product,index) in cart.productList" :key="product.id">
                 <td>{{product.id}}</td>
-                <td>{{product.name}}</td>
-                <td>{{product.count}}</td>
-                <td>{{product.selling_price.rupee+'.'+product.selling_price.paisa}}</td>
+                <td>{{product.productName}}</td>
+                <td>{{product.productCount}}</td>
+                <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
+                <td>{{product.productTaxPercentage}} %</td>
                 <td
                   style="font-family:var(--font-bold)"
-                >{{ ((product.selling_price.rupee+'.'+product.selling_price.paisa)*product.count).toFixed(2) }}</td>
+                >{{ (((product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa)*product.productCount)*((100+product.productTaxPercentage)/100)).toFixed(2) }}</td>
                 <td
                   style="display:flex;align-items:center;justify-content:center;padding-right:5px;"
                 >
@@ -85,7 +87,7 @@
                 <div class="paym-wrapper">
                   <list-box
                     @option-selected="setPaymentMethod"
-                    valueToDisplay="Select Payment"
+                    value-to-display="Select Payment"
                     :options="paymentOptions"
                     :active="cart.paymentMethod.method"
                   ></list-box>
@@ -100,7 +102,14 @@
                       placeholder="Cash"
                       v-model="cart.paymentMethod.amount.cash"
                     />
+                  </div>
+                  <div class="split-wrapper" v-if="splitPaymentInputVisible">
                     <input type="number" placeholder="UPI" v-model="cart.paymentMethod.amount.upi" />
+                    <input
+                      type="number"
+                      placeholder="Balance"
+                      v-model="cart.paymentMethod.amount.unpaid"
+                    />
                   </div>
                 </div>
               </div>
@@ -111,7 +120,7 @@
               </div>
               <div class="content">
                 <div class="summ-wrapper">
-                  <div class="flex">
+                  <!-- <div class="flex">
                     <p>Subtotal</p>
                     <p>{{totalPrice.toFixed(2)}}</p>
                   </div>
@@ -122,10 +131,10 @@
                   <div class="flex">
                     <p>Central GST</p>
                     <p>{{cgstAmount.toFixed(2)}}</p>
-                  </div>
+                  </div>-->
                   <div class="flex">
                     <p>Total</p>
-                    <p class="total">₹ {{billAmount.toFixed(2)}}</p>
+                    <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
                   </div>
                 </div>
               </div>
@@ -137,25 +146,48 @@
         </div>
       </div>
       <div v-else class="flex print-preview">
-        <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
-        <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
+        <div
+          ref="invoice"
+          style="height:85vh;overflow:auto;width:75%;background:white;margin:25px 0px;border-radius:5px"
+        >
           <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>
-        <div style="height:90vh;">
+        <div style="height:90vh; width:350px">
           <div class="side-card">
-            <h1>Total</h1>
-            <h1>336.27</h1>
-            <div class="flex">
+            <div class="price-card">
+              <h1>Additional Details</h1>
+              <div class="flex apart">
+                <input type="text" placeholder="PO Number" v-model="cart.poNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.poDate" />
+              </div>
+              <div class="flex apart">
+                <input type="text" placeholder="DC Number" v-model="cart.dcNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.dcDate" />
+              </div>
+              <div class="flex apart">
+                <input type="text" placeholder="DR Number" v-model="cart.drNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.drDate" />
+              </div>
+              <!-- <the-button label="Save" @click="updateBill"></the-button> -->
+            </div>
+            <div class="price-card">
+              <div class="flex apart">
+                <h1>Total</h1>
+                <h1>₹ {{totalPrice.toFixed(2)}}</h1>
+              </div>
               <the-button label="Print" @click="printInvoice"></the-button>
+              <the-button label="Save as PDF" color="green" @click="printToPDF"></the-button>
             </div>
           </div>
         </div>
       </div>
+      <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
     </div>
   </section>
 </template>
 
 <script>
+const ipcRenderer = require("electron").ipcRenderer;
 export default {
   data() {
     return {
@@ -168,6 +200,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -181,6 +214,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -194,6 +228,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -207,6 +242,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -220,6 +256,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -233,6 +270,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -246,6 +284,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -259,6 +298,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -272,6 +312,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -285,6 +326,7 @@ export default {
               card: null,
               cash: null,
               upi: null,
+              unpaid: null,
             },
           },
           customer: null,
@@ -294,35 +336,48 @@ export default {
       columnName: [
         "ID",
         "ITEM NAME",
-        "UNIT",
+        "COUNT",
         "SELLING PRICE",
+        "TAX",
         "TOTAL PRICE",
         " ",
       ],
       activeCartIndex: 0,
-      paymentOptions: ["Card", "Cash", "UPI", "Split","Unpaid"],
+      paymentOptions: ["Card", "Cash", "UPI", "Split", "Unpaid"],
     };
   },
   methods: {
+    intArrayToArrayBuffer(array) {
+      return array.buffer.slice(
+        array.byteOffset,
+        array.byteLength + array.byteOffset
+      );
+    },
+    saveByteArray(reportName, byte) {
+      var blob = new Blob([byte], { type: "application/pdf" });
+      var link = document.createElement("a");
+      link.style = "display:none";
+      link.href = window.URL.createObjectURL(blob);
+      var fileName = reportName;
+      link.download = fileName;
+      link.click();
+    },
     printInvoice() {
+      this.updateBill();
       const webview = this.$refs.printwebview;
       webview.send("webview-print-render", this.$refs.invoice.innerHTML);
-      webview.addEventListener("ipc-message", (event) => {
-        if (event.channel === "webview-print-do") {
-          webview.print({
-            silent: true,
-            printbackground: true,
-            devicename: "EPSON L360 Series",
-          });
-        }
-      });
+    },
+    printToPDF() {
+      this.updateBill();
+      const webview = this.$refs.printwebview;
+      webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
     },
     addProductToActiveCart(obj) {
       let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
       if (index !== -1) {
-        this.cartList[this.activeCartIndex].productList[index].count++;
+        this.cartList[this.activeCartIndex].productList[index].productCount++;
       } else {
-        obj.count = 1;
+        obj.productCount = 1;
         this.cartList[this.activeCartIndex].productList.push(obj);
       }
     },
@@ -341,6 +396,7 @@ export default {
             card: null,
             cash: null,
             upi: null,
+            unpaid: null,
           },
         },
         customer: null,
@@ -356,17 +412,32 @@ export default {
     removeCustomerFromActiveCart() {
       this.cartList[this.activeCartIndex].customer = null;
     },
-    validateBill() {
+    async updateBill() {
+      try {
+        await this.$store.dispatch(
+          "sale/updateSale",
+          this.cartList[this.activeCartIndex]
+        );
+      } catch (error) {
+        this.$moshaToast(error, {
+          type: "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
+      }
+    },
+    async validateBill() {
       if (
         this.validatePayment() &&
         this.validateCustomer() &&
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
-          // this.$store.dispatch(
-          //   "sale/postSale",
-          //   this.cartList[this.activeCartIndex]
-          // );
+          this.cartList[this.activeCartIndex] = await this.$store.dispatch(
+            "sale/postSale",
+            this.cartList[this.activeCartIndex]
+          );
           this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
@@ -378,31 +449,35 @@ export default {
         case 0:
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.card = this.billAmount;
+          ].paymentMethod.amount.card = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.unpaid = null;
           break;
         case 1:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.cash = this.billAmount;
+          ].paymentMethod.amount.cash = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.unpaid = null;
           break;
         case 2:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[
             this.activeCartIndex
-          ].paymentMethod.amount.upi = this.billAmount;
+          ].paymentMethod.amount.upi = this.totalPrice;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.unpaid = null;
           break;
         case 3:
-          if (
-            +this.cartList[this.activeCartIndex].paymentMethod.amount.card +
-              this.cartList[this.activeCartIndex].paymentMethod.amount.cash +
-              this.cartList[this.activeCartIndex].paymentMethod.amount.upi !==
-            this.billAmount
-          ) {
+          if (this.splitTotal !== this.totalPrice) {
             this.$moshaToast("Please, Enter correct payment values", {
               type: "danger",
               hideProgressBar: "true",
@@ -411,6 +486,14 @@ export default {
             });
             return false;
           }
+          break;
+        case 4:
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
+          this.cartList[
+            this.activeCartIndex
+          ].paymentMethod.amount.unpaid = this.totalPrice;
           break;
       }
       return true;
@@ -432,40 +515,26 @@ export default {
     },
   },
   computed: {
+    defaultPrinter() {
+      var printer = "";
+      ipcRenderer.send("getDefaultPrinter");
+      ipcRenderer.once("getDefaultPrinter", (event, data) => {
+        printer = data;
+      });
+      return printer;
+    },
     totalPrice() {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
-        temp += +(
-          (item.selling_price.rupee + "." + item.selling_price.paisa) *
-          item.count
-        ).toFixed(2);
+        var priceWithoutTax =
+          (item.productSellingPrice.rupee +
+            "." +
+            item.productSellingPrice.paisa) *
+          item.productCount;
+        var Tax = (priceWithoutTax * item.productTaxPercentage) / 100;
+        temp += +(priceWithoutTax + Tax).toFixed(2);
       });
       return parseFloat(temp);
-    },
-    cgstAmount() {
-      return parseFloat(
-        (this.totalPrice *
-          JSON.parse(localStorage.getItem("userSettings")).centralGST) /
-          100
-      );
-    },
-    sgstAmount() {
-      return parseFloat(
-        (this.totalPrice *
-          JSON.parse(localStorage.getItem("userSettings")).stateGST) /
-          100
-      );
-    },
-    billAmount() {
-      return (
-        Math.round(
-          (this.cgstAmount +
-            this.sgstAmount +
-            this.totalPrice +
-            Number.EPSILON) *
-            100
-        ) / 100
-      );
     },
     splitPaymentInputVisible() {
       return this.cartList[this.activeCartIndex].paymentMethod.method === 3;
@@ -475,6 +544,67 @@ export default {
         return index === this.activeCartIndex;
       });
     },
+    splitTotal() {
+      var total = 0;
+      if (
+        this.cartList[this.activeCartIndex].paymentMethod.amount.card !== null
+      ) {
+        total += parseFloat(
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card
+        );
+      }
+      if (
+        this.cartList[this.activeCartIndex].paymentMethod.amount.cash !== null
+      ) {
+        total += parseFloat(
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash
+        );
+      }
+      if (
+        this.cartList[this.activeCartIndex].paymentMethod.amount.upi !== null
+      ) {
+        total += parseFloat(
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi
+        );
+      }
+      if (
+        this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid !== null
+      ) {
+        total += parseFloat(
+          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid
+        );
+      }
+      return total;
+    },
+  },
+  updated() {
+    this.$refs.printwebview.addEventListener("ipc-message", (event) => {
+      if (event.channel === "webview-print-do") {
+        this.$refs.printwebview.print({
+          silent: true,
+          printbackground: true,
+          devicename: this.defaultPrinter,
+          pageSize: "A4",
+        });
+      } 
+      else if (event.channel === "webview-pdf-do") {
+       this.$refs.printwebview
+          .printToPDF({
+            printbackground: true,
+            pageSize: "A4",
+          })
+          .then((pdfDataArray) => {
+            var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
+            this.saveByteArray(
+              this.cartList[this.activeCartIndex].id +
+                " " +
+                this.cartList[this.activeCartIndex].createdAt.toDateString() +
+                " Invoice",
+              arrBuffer
+            );
+          });
+      }
+    });
   },
 };
 </script>
@@ -484,6 +614,20 @@ section {
   padding-top: 0px !important;
   min-width: 1200px;
   width: 100%;
+}
+
+th {
+  &:nth-of-type(1),
+  &:nth-of-type(2) {
+    text-align: left !important;
+  }
+}
+
+td {
+  &:nth-of-type(1),
+  &:nth-of-type(2) {
+    text-align: left !important;
+  }
 }
 
 .tab-body {
@@ -556,7 +700,7 @@ section {
         align-items: center;
 
         &:last-child {
-          border-top: 2px dashed #dbdbdb;
+          // border-top: 2px dashed #dbdbdb;
           padding-top: 10px;
         }
       }
@@ -619,6 +763,49 @@ section {
           font-family: var(--font-regular);
           font-size: 12px;
         }
+      }
+    }
+  }
+}
+
+.print-preview {
+  margin: 0px auto;
+  width: 95%;
+  justify-content: space-between;
+  gap: 2rem;
+
+  .side-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin: 25px 0px;
+
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 25px;
+      background: var(--gray0);
+      border-radius: 4px;
+      box-shadow: 0px 3px 15px #0000000e;
+
+      input {
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 2px solid var(--gray2);
+        font-family: var(--font-regular);
+        width: 100%;
+
+        &:focus {
+          border: 2px solid var(--blue);
+          outline: none;
+        }
+      }
+      .apart {
+        justify-content: space-between;
+        gap: 1rem;
       }
     }
   }
