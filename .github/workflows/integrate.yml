@@ -13,3 +13,5 @@ jobs:
           node-version: 12
       - run: npm install
       - run: npm run electron:build --publish never
+        env: 
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
