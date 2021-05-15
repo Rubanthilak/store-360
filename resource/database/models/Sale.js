@@ -116,6 +116,16 @@ const createSale = async function(obj){
    return sale.dataValues;
 }
 
+
+const updateSale = async function(obj,id){
+  const res = await Sale.update(obj,{
+    where: {
+      id: id
+    }
+  });
+  return res[0] === 1 ? true : false;
+}
+
 const deleteSale = async function(id){
   const res = await Sale.destroy({
     where: {
@@ -132,6 +142,7 @@ export default {
   getSaleById,
   getSalesCustomerId,
   createSale,
+  updateSale,
   deleteSale
 };
 

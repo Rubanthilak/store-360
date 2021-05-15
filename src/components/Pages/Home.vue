@@ -131,7 +131,7 @@
                   <div class="flex">
                     <p>Central GST</p>
                     <p>{{cgstAmount.toFixed(2)}}</p>
-                  </div> -->
+                  </div>-->
                   <div class="flex">
                     <p>Total</p>
                     <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
@@ -146,25 +146,42 @@
         </div>
       </div>
       <div v-else class="flex print-preview">
-        <webview
-          style="height:0px;width:0px;"
-          ref="printwebview"
-          src="./print.html"
-          nodeintegration
-        ></webview>
-        <div ref="invoice" style="height:91vh;overflow:auto;width:75%;background:white">
+        <div
+          ref="invoice"
+          style="height:85vh;overflow:auto;width:75%;background:white;margin:25px 0px;border-radius:5px"
+        >
           <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>
-        <div style="height:90vh;">
+        <div style="height:90vh; width:350px">
           <div class="side-card">
-            <h1>Total</h1>
-            <h1>336.27</h1>
-            <div class="flex">
+            <div class="price-card">
+              <h1>Additional Details</h1>
+              <div class="flex apart">
+                <input type="text" placeholder="PO Number" v-model="cart.poNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.poDate" />
+              </div>
+              <div class="flex apart">
+                <input type="text" placeholder="DC Number" v-model="cart.dcNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.dcDate" />
+              </div>
+              <div class="flex apart">
+                <input type="text" placeholder="DR Number" v-model="cart.drNumber" />
+                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.drDate" />
+              </div>
+              <!-- <the-button label="Save" @click="updateBill"></the-button> -->
+            </div>
+            <div class="price-card">
+              <div class="flex apart">
+                <h1>Total</h1>
+                <h1>₹ {{totalPrice.toFixed(2)}}</h1>
+              </div>
               <the-button label="Print" @click="printInvoice"></the-button>
+              <the-button label="Save as PDF" color="green" @click="printInvoice"></the-button>
             </div>
           </div>
         </div>
       </div>
+      <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
     </div>
   </section>
 </template>
@@ -330,6 +347,7 @@ export default {
   },
   methods: {
     printInvoice() {
+      this.updateBill();
       const webview = this.$refs.printwebview;
       webview.send("webview-print-render", this.$refs.invoice.innerHTML);
       webview.addEventListener("ipc-message", (event) => {
@@ -382,6 +400,27 @@ export default {
     removeCustomerFromActiveCart() {
       this.cartList[this.activeCartIndex].customer = null;
     },
+    async updateBill() {
+      try {
+        await this.$store.dispatch(
+          "sale/updateSale",
+          this.cartList[this.activeCartIndex]
+        );
+        this.$moshaToast("Save Successfully", {
+          type: "success",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
+      } catch (error) {
+        this.$moshaToast(error, {
+          type: "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
+      }
+    },
     async validateBill() {
       if (
         this.validatePayment() &&
@@ -389,8 +428,11 @@ export default {
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
-         this.cartList[this.activeCartIndex] = await this.$store.dispatch("sale/postSale",this.cartList[this.activeCartIndex]);
-         this.cartList[this.activeCartIndex].printPreview = true;
+          this.cartList[this.activeCartIndex] = await this.$store.dispatch(
+            "sale/postSale",
+            this.cartList[this.activeCartIndex]
+          );
+          this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
         }
@@ -470,9 +512,13 @@ export default {
     totalPrice() {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
-        var priceWithoutTax = (item.productSellingPrice.rupee + "." + item.productSellingPrice.paisa) * item.productCount;
-        var Tax = priceWithoutTax * item.productTaxPercentage /100;
-        temp += + (priceWithoutTax + Tax).toFixed(2);
+        var priceWithoutTax =
+          (item.productSellingPrice.rupee +
+            "." +
+            item.productSellingPrice.paisa) *
+          item.productCount;
+        var Tax = (priceWithoutTax * item.productTaxPercentage) / 100;
+        temp += +(priceWithoutTax + Tax).toFixed(2);
       });
       return parseFloat(temp);
     },
@@ -527,14 +573,16 @@ section {
   width: 100%;
 }
 
-th{
-  &:nth-of-type(1),&:nth-of-type(2){
+th {
+  &:nth-of-type(1),
+  &:nth-of-type(2) {
     text-align: left !important;
   }
 }
 
-td{
-  &:nth-of-type(1),&:nth-of-type(2){
+td {
+  &:nth-of-type(1),
+  &:nth-of-type(2) {
     text-align: left !important;
   }
 }
@@ -609,7 +657,7 @@ td{
         align-items: center;
 
         &:last-child {
-          border-top: 2px dashed #dbdbdb;
+          // border-top: 2px dashed #dbdbdb;
           padding-top: 10px;
         }
       }
@@ -672,6 +720,49 @@ td{
           font-family: var(--font-regular);
           font-size: 12px;
         }
+      }
+    }
+  }
+}
+
+.print-preview {
+  margin: 0px auto;
+  width: 95%;
+  justify-content: space-between;
+  gap: 2rem;
+
+  .side-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin: 25px 0px;
+
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 25px;
+      background: var(--gray0);
+      border-radius: 4px;
+      box-shadow: 0px 3px 15px #0000000e;
+
+      input {
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 2px solid var(--gray2);
+        font-family: var(--font-regular);
+        width: 100%;
+
+        &:focus {
+          border: 2px solid var(--blue);
+          outline: none;
+        }
+      }
+      .apart {
+        justify-content: space-between;
+        gap: 1rem;
       }
     }
   }

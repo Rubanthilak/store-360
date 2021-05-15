@@ -135,40 +135,40 @@
                 <b>{{invoice.createdAt.toDateString()}}</b>
               </td>
             </tr>
-            <tr>
+            <tr v-if="invoice.poNumber">
               <td width="50%" class="borderBottomForTxn borderRightForTxn">
                 PO date
                 <br />
-                <b>20-02-2018</b>
+                <b>{{invoice.poDate}}</b>
               </td>
               <td width="50%" class="borderBottomForTxn">
                 PO number
                 <br />
-                <b>56</b>
+                <b>{{invoice.poNumber}}</b>
               </td>
             </tr>
-            <tr>
+            <tr v-if="invoice.dcNumber">
               <td width="50%" class="borderBottomForTxn borderRightForTxn">
                 DC date
                 <br />
-                <b>20-02-2018</b>
+                <b>{{invoice.dcDate}}</b>
               </td>
               <td width="50%" class="borderBottomForTxn">
                 DC number
                 <br />
-                <b>56</b>
+                <b>{{invoice.dcNumber}}</b>
               </td>
             </tr>
-            <tr>
+            <tr v-if="invoice.drNumber">
               <td width="50%" class="borderBottomForTxn borderRightForTxn">
                 DR date
                 <br />
-                <b>20-02-2018</b>
+                <b>{{invoice.drDate}}</b>
               </td>
               <td width="50%" class="borderBottomForTxn">
                 DR number
                 <br />
-                <b>56</b>
+                <b>{{invoice.drNumber}}</b>
               </td>
             </tr>
             <tr>
@@ -321,11 +321,11 @@
               <td
                 align="right"
                 class="borderTopForTxn"
-              >₹ {{(invoice.cashAmount+invoice.cardAmount+invoice.upiAmount).toFixed(2)}}</td>
+              >₹ {{((+invoice.cashAmount)+(+invoice.cardAmount)+(+invoice.upiAmount)).toFixed(2)}}</td>
             </tr>
             <tr v-if="invoice.unpaidAmount">
               <td class="borderColorGrey">Balance</td>
-              <td align="right" class="borderColorGrey">₹ {{(invoice.unpaidAmount).toFixed(2)}}</td>
+              <td align="right" class="borderColorGrey">₹ {{(+invoice.unpaidAmount).toFixed(2)}}</td>
             </tr>
             <tr v-else>
               <td class="borderColorGrey">Balance</td>
@@ -538,8 +538,6 @@ export default {
 
         return r;
       }, []);
-
-      console.log(result);
 
       return result;
     },

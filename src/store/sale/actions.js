@@ -19,5 +19,9 @@ export default {
     });
     return sale;         
   },
+  async updateSale(context, obj) {
+    const res = await Database.Model.Sale.updateSale(obj,obj.id);
+    return res;         
+  },
 };
   
