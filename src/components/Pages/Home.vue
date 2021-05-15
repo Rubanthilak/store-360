@@ -176,7 +176,7 @@
                 <h1>₹ {{totalPrice.toFixed(2)}}</h1>
               </div>
               <the-button label="Print" @click="printInvoice"></the-button>
-              <the-button label="Save as PDF" color="green" @click="printInvoice"></the-button>
+              <the-button label="Save as PDF" color="green" @click="printToPDF"></the-button>
             </div>
           </div>
         </div>
@@ -187,6 +187,7 @@
 </template>
 
 <script>
+const ipcRenderer = require("electron").ipcRenderer;
 export default {
   data() {
     return {
@@ -346,6 +347,21 @@ export default {
     };
   },
   methods: {
+    intArrayToArrayBuffer(array) {
+      return array.buffer.slice(
+        array.byteOffset,
+        array.byteLength + array.byteOffset
+      );
+    },
+    saveByteArray(reportName, byte) {
+      var blob = new Blob([byte], { type: "application/pdf" });
+      var link = document.createElement("a");
+      link.style = "display:none";
+      link.href = window.URL.createObjectURL(blob);
+      var fileName = reportName;
+      link.download = fileName;
+      link.click();
+    },
     printInvoice() {
       this.updateBill();
       const webview = this.$refs.printwebview;
@@ -355,8 +371,25 @@ export default {
           webview.print({
             silent: true,
             printbackground: true,
-            devicename: "EPSON L360 Series",
+            devicename: this.defaultPrinter,
+            pageSize: "A4",
           });
+        }
+      });
+    },
+    printToPDF() {
+      const webview = this.$refs.printwebview;
+      webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
+      webview.addEventListener("ipc-message", (event) => {
+        if (event.channel === "webview-pdf-do") {
+          webview.printToPDF({
+              printbackground: true,
+              pageSize: "A4",
+            })
+            .then((pdfDataArray) => {
+              var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
+              this.saveByteArray(this.cartList[this.activeCartIndex].id +" " +this.cartList[this.activeCartIndex].createdAt.toDateString() + " Invoice",arrBuffer);
+            });
         }
       });
     },
@@ -406,12 +439,6 @@ export default {
           "sale/updateSale",
           this.cartList[this.activeCartIndex]
         );
-        this.$moshaToast("Save Successfully", {
-          type: "success",
-          hideProgressBar: "true",
-          position: "bottom-right",
-          transition: "bounce",
-        });
       } catch (error) {
         this.$moshaToast(error, {
           type: "danger",
@@ -509,6 +536,14 @@ export default {
     },
   },
   computed: {
+    defaultPrinter() {
+      var printer = "";
+      ipcRenderer.send("getDefaultPrinter");
+      ipcRenderer.once("getDefaultPrinter", (event, data) => {
+        printer = data;
+      });
+      return printer;
+    },
     totalPrice() {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
@@ -563,6 +598,9 @@ export default {
       return total;
     },
   },
+  mounted(){
+    
+  }
 };
 </script>
 

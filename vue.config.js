@@ -35,6 +35,14 @@ module.exports = {
       builderOptions: {
         extraResources: ["db.sqlite"],
       },
+      win: {
+        target: [
+          {
+            target: 'nsis',
+            arch: ['ia32']
+          }
+        ]
+      }
     },
   },
 };

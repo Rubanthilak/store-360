@@ -31,17 +31,21 @@ async function createWindow() {
   
 
 
-  ipcMain.on('getPrinterDefaultName', (event) => {
+  ipcMain.on('getDefaultPrinter', () => {
     //Listen to get the default printer name
     const list = win.webContents.getPrinters();
     let name = ''
     for(let item of list){
       item.isDefault && (name = item.name)
     }
-    console.log(name)
-    event.returnValue = name;
+    win.webContents.send('getDefaultPrinter', name);
   });
-  // win.removeMenu();
+
+  ipcMain.on('getPrinters', () => {
+    //Listen to get the default printer name
+    const list = win.webContents.getPrinters();
+    win.webContents.send('getPrinters', list);
+  });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
