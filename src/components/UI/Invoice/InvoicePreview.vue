@@ -297,7 +297,7 @@
               <td width="100%">Invoice Amount In Words</td>
             </tr>
             <tr>
-              <td width="100%" class="boldText">Fifty Three Thousand One Hundred only</td>
+              <td width="100%" class="boldText">{{totalAmountInWords}}</td>
             </tr>
           </table>
         </td>
@@ -476,6 +476,7 @@
 </template>
 
 <script>
+const numWords = require('num-words')
 export default {
   props: ["invoice"],
   data() {
@@ -517,6 +518,14 @@ export default {
         totalAmount += (product.productSellingPrice.rupee + "." +  product.productSellingPrice.paisa) * product.productCount
       });
       return totalAmount;
+    },
+    totalAmountInWords(){
+      var arr = (this.totalAmount+this.totalTax).toFixed(2).split(".");
+      var inwords = numWords(arr[0]);
+      if(arr[1]){
+        inwords += " rupees and " + numWords(arr[1]) + " paisa" ;
+      }
+      return (inwords + " only.").toUpperCase();
     },
     productHscArray() {
       const arr = this.invoice.productList;
