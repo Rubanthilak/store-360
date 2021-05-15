@@ -12,4 +12,4 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - run: npm run electron:build --windows
+      - run: npm run vue-cli-service electron:build --publish never
