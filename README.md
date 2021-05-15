@@ -1,3 +1,4 @@
+<h1 align="center">Store 360</h1>
 <p align="center">
   <strong>Awesome Tool for Supermarkets 🏬❤</strong>
 </p>
