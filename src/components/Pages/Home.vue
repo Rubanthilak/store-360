@@ -366,32 +366,11 @@ export default {
       this.updateBill();
       const webview = this.$refs.printwebview;
       webview.send("webview-print-render", this.$refs.invoice.innerHTML);
-      webview.addEventListener("ipc-message", (event) => {
-        if (event.channel === "webview-print-do") {
-          webview.print({
-            silent: true,
-            printbackground: true,
-            devicename: this.defaultPrinter,
-            pageSize: "A4",
-          });
-        }
-      });
     },
     printToPDF() {
+      this.updateBill();
       const webview = this.$refs.printwebview;
       webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
-      webview.addEventListener("ipc-message", (event) => {
-        if (event.channel === "webview-pdf-do") {
-          webview.printToPDF({
-              printbackground: true,
-              pageSize: "A4",
-            })
-            .then((pdfDataArray) => {
-              var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
-              this.saveByteArray(this.cartList[this.activeCartIndex].id +" " +this.cartList[this.activeCartIndex].createdAt.toDateString() + " Invoice",arrBuffer);
-            });
-        }
-      });
     },
     addProductToActiveCart(obj) {
       let index = this.cartList[this.activeCartIndex].productList.indexOf(obj);
@@ -598,9 +577,35 @@ export default {
       return total;
     },
   },
-  mounted(){
-    
-  }
+  updated() {
+    this.$refs.printwebview.addEventListener("ipc-message", (event) => {
+      if (event.channel === "webview-print-do") {
+        this.$refs.printwebview.print({
+          silent: true,
+          printbackground: true,
+          devicename: this.defaultPrinter,
+          pageSize: "A4",
+        });
+      } 
+      else if (event.channel === "webview-pdf-do") {
+       this.$refs.printwebview
+          .printToPDF({
+            printbackground: true,
+            pageSize: "A4",
+          })
+          .then((pdfDataArray) => {
+            var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
+            this.saveByteArray(
+              this.cartList[this.activeCartIndex].id +
+                " " +
+                this.cartList[this.activeCartIndex].createdAt.toDateString() +
+                " Invoice",
+              arrBuffer
+            );
+          });
+      }
+    });
+  },
 };
 </script>
 
