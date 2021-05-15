@@ -1,11 +1,10 @@
 name : Node Continuous Integration
-
 on:
   pull_request:
     branches: [ master ]
 
 jobs:
-  test_push_request:
+  test_pull_request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,4 +12,4 @@ jobs:
         with:
           node-version: 12
       - run: npm install
-      - run: npm run electron:build --windows
+      - run: npm run electron:build --publish never
