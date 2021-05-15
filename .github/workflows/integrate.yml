@@ -11,5 +11,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm install
-      - run: npm run electron:build --windows
+      - run: npm ci
+      - run: npm run vue-cli-service electron:build --publish never
