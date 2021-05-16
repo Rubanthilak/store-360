@@ -7,7 +7,7 @@
       <div class="dropdown-option">
         <div class="checkbox" @click="columnSelected('hsc_code')">
            <div class="checkmark" v-if="columnData.hsc_code.visible">
-            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
           </div>
         </div>
         <p>HSC Code</p>
@@ -15,7 +15,7 @@
       <div class="dropdown-option">
         <div class="checkbox"  @click="columnSelected('tax_type')">
            <div class="checkmark" v-if="columnData.tax_type.visible">
-            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
           </div>
         </div>
         <p>Tax Type</p>
@@ -23,7 +23,7 @@
       <div class="dropdown-option">
         <div class="checkbox"  @click="columnSelected('tax_percent')">
            <div class="checkmark" v-if="columnData.tax_percent.visible">
-            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
           </div>
         </div>
         <p>Tax %</p>
@@ -31,7 +31,7 @@
       <div class="dropdown-option">
         <div class="checkbox"  @click="columnSelected('mrp_price')">
            <div class="checkmark" v-if="columnData.mrp_price.visible">
-            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
           </div>
         </div>
         <p>MRP Price</p>
@@ -39,7 +39,7 @@
        <div class="dropdown-option">
         <div class="checkbox"  @click="columnSelected('bar_code')">
           <div class="checkmark" v-if="columnData.bar_code.visible">
-            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
           </div>
         </div>
         <p>Barcode</p>
@@ -103,7 +103,6 @@ export default {
 
   .checkmark{
     position: absolute;
-    border-radius: 3px;
     background: var(--blue);
     top:0;
     left:0;
@@ -111,6 +110,7 @@ export default {
     width:14px;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
 }
