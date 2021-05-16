@@ -5,7 +5,7 @@
       <div class="flex button-container" v-if="!tableEditMode">
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
-        <dropdown-menu-item @column-selected="toggleColumnVisibility"></dropdown-menu-item>
+        <dropdown-menu-item @column-selected="toggleColumnVisibility" :column-data="columnProps"></dropdown-menu-item>
       </div>
       <div class="flex button-container" v-if="tableEditMode">
         <the-button label="Save" @click="toggleTableEditMode"></the-button>

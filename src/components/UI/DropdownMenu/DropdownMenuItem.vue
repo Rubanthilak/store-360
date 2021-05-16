@@ -5,23 +5,43 @@
         <p>COLUMNS</p>
       </div>
       <div class="dropdown-option">
-        <div class="checkbox" @click="columnSelected('hsc_code')"></div>
+        <div class="checkbox" @click="columnSelected('hsc_code')">
+           <div class="checkmark" v-if="columnData.hsc_code.visible">
+            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+          </div>
+        </div>
         <p>HSC Code</p>
       </div>
       <div class="dropdown-option">
-        <div class="checkbox"  @click="columnSelected('tax_type')"></div>
+        <div class="checkbox"  @click="columnSelected('tax_type')">
+           <div class="checkmark" v-if="columnData.tax_type.visible">
+            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+          </div>
+        </div>
         <p>Tax Type</p>
       </div>
       <div class="dropdown-option">
-        <div class="checkbox"  @click="columnSelected('tax_percent')"></div>
+        <div class="checkbox"  @click="columnSelected('tax_percent')">
+           <div class="checkmark" v-if="columnData.tax_percent.visible">
+            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+          </div>
+        </div>
         <p>Tax %</p>
       </div>
       <div class="dropdown-option">
-        <div class="checkbox"  @click="columnSelected('mrp_price')"></div>
+        <div class="checkbox"  @click="columnSelected('mrp_price')">
+           <div class="checkmark" v-if="columnData.mrp_price.visible">
+            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+          </div>
+        </div>
         <p>MRP Price</p>
       </div>
        <div class="dropdown-option">
-        <div class="checkbox"  @click="columnSelected('bar_code')"></div>
+        <div class="checkbox"  @click="columnSelected('bar_code')">
+          <div class="checkmark" v-if="columnData.bar_code.visible">
+            <svg-icon icon="search-icon" color="gray0" size="12"></svg-icon>
+          </div>
+        </div>
         <p>Barcode</p>
       </div>
       <div class="dropdown-subs">
@@ -39,6 +59,7 @@
 <script>
 export default {
   emits: ["columnSelected"],
+  props: ["columnData"],
   methods: {
     columnSelected(columnName){
       this.$emit("columnSelected",columnName);
@@ -78,5 +99,19 @@ export default {
   border: 1px solid var(--blue);
   background: var(--aqua);
   border-radius: 3px;
+  position: relative;
+
+  .checkmark{
+    position: absolute;
+    border-radius: 3px;
+    background: var(--blue);
+    top:0;
+    left:0;
+    height:14px;
+    width:14px;
+    display: flex;
+    align-items: center;
+  }
+
 }
 </style>
