@@ -91,6 +91,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -136,7 +137,6 @@ input {
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  .card {
-  }
 }
+
 </style>

@@ -1,20 +1,28 @@
 <template>
   <dropdown-menu>
-    <template #options="slotProps">
+    <template #options>
       <div class="dropdown-subs">
-        <p>SORT BY</p>
+        <p>COLUMNS</p>
       </div>
-      <div @click="sortColumn('id',slotProps.closeTrigger)" class="dropdown-option">
-        <p>ID</p>
+      <div class="dropdown-option">
+        <div class="checkbox" @click="columnSelected('hsc_code')"></div>
+        <p>HSC Code</p>
       </div>
-      <div @click="sortColumn('productName',slotProps.closeTrigger)" class="dropdown-option">
-        <p>Name</p>
+      <div class="dropdown-option">
+        <div class="checkbox"  @click="columnSelected('tax_type')"></div>
+        <p>Tax Type</p>
       </div>
-      <div @click="sortColumn('productStock',slotProps.closeTrigger)" class="dropdown-option">
-        <p>Stock</p>
+      <div class="dropdown-option">
+        <div class="checkbox"  @click="columnSelected('tax_percent')"></div>
+        <p>Tax %</p>
       </div>
-      <div @click="sortColumn('productMrpPrice',slotProps.closeTrigger)" class="dropdown-option">
+      <div class="dropdown-option">
+        <div class="checkbox"  @click="columnSelected('mrp_price')"></div>
         <p>MRP Price</p>
+      </div>
+       <div class="dropdown-option">
+        <div class="checkbox"  @click="columnSelected('bar_code')"></div>
+        <p>Barcode</p>
       </div>
       <div class="dropdown-subs">
         <p>TOOLS</p>
@@ -30,11 +38,11 @@
 
 <script>
 export default {
+  emits: ["columnSelected"],
   methods: {
-    async sortColumn(columnToSort, closeDropdownMenu) {
-      closeDropdownMenu();
-      await this.$store.dispatch("product/getProductList", columnToSort);
-    },
+    columnSelected(columnName){
+      this.$emit("columnSelected",columnName);
+    }
   },
 };
 </script>
@@ -53,19 +61,22 @@ export default {
 
 .dropdown-option {
   padding: 5px 20px;
-  cursor: pointer;
+  display: flex;
+  gap:10px;
+  align-items: center;
 
   p {
     font-size: 14px;
     font-family: var(--font-medium);
     color: var(--gray6);
   }
+}
 
-  &:hover {
-    background: var(--blue);
-    P{
-      color: var(--gray0);
-    }
-  }
+.checkbox{
+  height:14px;
+  width:14px;
+  border: 1px solid var(--blue);
+  background: var(--aqua);
+  border-radius: 3px;
 }
 </style>
