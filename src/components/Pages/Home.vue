@@ -596,11 +596,10 @@ export default {
           .then((pdfDataArray) => {
             var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
             this.saveByteArray(
-              this.cartList[this.activeCartIndex].id +
+               "Invoice No " + this.cartList[this.activeCartIndex].id +
                 " " +
-                this.cartList[this.activeCartIndex].createdAt.toDateString() +
-                " Invoice",
-              arrBuffer
+                this.cartList[this.activeCartIndex].createdAt.toDateString(),
+                arrBuffer
             );
           });
       }

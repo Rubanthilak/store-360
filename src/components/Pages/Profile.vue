@@ -2,8 +2,8 @@
   <section>
     <div class="flex" style="margin-right:10px;justify-content:space-between">
       <div>
-        <h1 v-if="editMode" style="font-size:32px">Edit Details</h1>
-        <h1 v-else style="font-size:32px">{{company.companyName}}</h1>
+        <h1 v-if="editMode" style="font-size:32px">Edit Profile</h1>
+        <h1 v-else style="font-size:32px">Company Profile</h1>
       </div>
       <div class="flex" style="gap:10px;">
         <the-button label="Edit Details" v-show="!editMode" @click="editMode = !editMode"></the-button>
@@ -38,12 +38,11 @@
     </div>
     <div v-else class="user-profile">
       <div class="card">
-        <h1 style="font-size:18px">Address</h1>
-        <p>{{company.doorNumber}}</p>
-        <p>{{company.streetName}}</p>
-        <p>{{company.cityName}}</p>
-        <p>{{company.stateName}}</p>
-        <p>{{company.pincode}}</p>
+        <h1 style="font-size:32px">{{company.companyName}}</h1>
+        <p>Door No. {{company.doorNumber}},</p>
+        <p>{{company.streetName}},</p>
+        <p>{{company.cityName}},</p>
+        <p>{{company.stateName}} - {{company.pincode}}.</p>
       </div>
       <div class="card">
         <h1 style="font-size:18px">Contact</h1>
