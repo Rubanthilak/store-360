@@ -3,6 +3,7 @@
     <div class="flex">
       <search-bar @typing="searchProduct" :placeHolder="'Search Items by Name, ID, ...'"></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
+        <list-box-item-sort></list-box-item-sort>
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
         <dropdown-menu-item @column-selected="toggleColumnVisibility" :column-data="columnProps"></dropdown-menu-item>
