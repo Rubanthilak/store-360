@@ -40,6 +40,8 @@ import UsersIcon from './components/UI/Icons/UsersIcon.vue';
 import WalletIcon from './components/UI/Icons/WalletIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CheckIcon from './components/UI/Icons/CheckIcon.vue';
+import AngleUpIcon from './components/UI/Icons/AngleUpIcon.vue';
+import AngleDownIcon from './components/UI/Icons/AngleDownIcon.vue';
 
 import VueHtmlToPaper from '../resource/plugins/vueHtmlToPaper'
 
@@ -66,6 +68,8 @@ app.component('users-icon',UsersIcon);
 app.component('wallet-icon',WalletIcon);
 app.component('warn-icon',WarnIcon);
 app.component('check-icon',CheckIcon);
+app.component('angle-up-icon',AngleUpIcon);
+app.component('angle-down-icon',AngleDownIcon);
 
 app.component('navigation-bar',NavigationBar);
 app.component('side-bar',SideBar);

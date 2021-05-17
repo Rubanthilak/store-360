@@ -1,18 +1,21 @@
 <template>
   <div class="dropdown" @click="dropped=!dropped" :style=" boxLength ? 'width:'+ boxLength : ''">
-    <div class="dropdown-active" v-if="active > -1 && active !== null">
-      {{prefix ? prefix +" : ": ''}}
-      <span>{{options[active]}}</span>
+    <div>
+      <div class="dropdown-active" v-if="active > -1 && active !== null">
+        {{prefix ? prefix +" : ": ''}}
+        <span>{{options[active]}}</span>
+      </div>
+      <div class="hint" v-else>{{valueToDisplay}}</div>
+      <div class="dropdown-container" v-if="dropped">
+        <div
+          class="dropdown-item"
+          v-for="(op, index) in options"
+          :key="op"
+          @click="optionSelect(index)"
+        >{{op}}</div>
+      </div>
     </div>
-    <div class="hint" v-else>{{valueToDisplay}}</div>
-    <div class="dropdown-container" v-if="dropped">
-      <div
-        class="dropdown-item"
-        v-for="(op, index) in options"
-        :key="op"
-        @click="optionSelect(index)"
-      >{{op}}</div>
-    </div>
+    <svg-icon :icon="!dropped ? 'angle-down-icon' : 'angle-up-icon'" color="gray2" size="22"></svg-icon>
   </div>
 </template>
 
@@ -38,9 +41,12 @@ export default {
   font-family: var(--font-regular);
   font-size: 12px;
   border-radius: 5px;
-  padding: 7px 10px;
+  padding: 5px 10px;
   position: relative;
   background: var(--gray0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .hint {
@@ -59,7 +65,7 @@ export default {
   background: var(--gray0);
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 42px;
+  top: 38px;
   left: 0px;
   width: 100%;
   border-radius: 8px;

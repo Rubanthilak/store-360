@@ -4,8 +4,7 @@
     value-to-display="Sort By"
     :options="sortOptionsToDisplay"
     :active="active"
-    prefix="Sort By"
-    style="width:100px;"
+    style="width:80px;"
   >
   </list-box>
 </template>
