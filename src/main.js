@@ -19,6 +19,7 @@ import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 import ListBox from './components/UI/ListBox/ListBox.vue';
+import ListBoxItemSort from './components/UI/ListBox/ListBoxItemSort.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
@@ -38,6 +39,9 @@ import TagIcon from './components/UI/Icons/TagIcon.vue';
 import UsersIcon from './components/UI/Icons/UsersIcon.vue';
 import WalletIcon from './components/UI/Icons/WalletIcon.vue';
 import WarnIcon from './components/UI/Icons/WarnIcon.vue';
+import CheckIcon from './components/UI/Icons/CheckIcon.vue';
+import AngleUpIcon from './components/UI/Icons/AngleUpIcon.vue';
+import AngleDownIcon from './components/UI/Icons/AngleDownIcon.vue';
 
 import VueHtmlToPaper from '../resource/plugins/vueHtmlToPaper'
 
@@ -63,6 +67,9 @@ app.component('tag-icon',TagIcon);
 app.component('users-icon',UsersIcon);
 app.component('wallet-icon',WalletIcon);
 app.component('warn-icon',WarnIcon);
+app.component('check-icon',CheckIcon);
+app.component('angle-up-icon',AngleUpIcon);
+app.component('angle-down-icon',AngleDownIcon);
 
 app.component('navigation-bar',NavigationBar);
 app.component('side-bar',SideBar);
@@ -77,6 +84,7 @@ app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
 app.component('dropdown-menu',DropdownMenu);
 app.component('list-box',ListBox);
+app.component('list-box-item-sort',ListBoxItemSort);
 app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);

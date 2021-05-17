@@ -25,11 +25,10 @@
     </div>
     <div v-else-if="isListEmpty" class="loading-wrapper">
       <p>
-        The List is empty 📄.
-        <br />Please add items by clicking the button below.
+        Please enter the number of items to be added 📚.
       </p>
-      <div class="flex" style="gap:1rem">
-          <input type="text" placeholder="No. of Items" style="padding:8px;border:2px solid var(--gray2);border-radius:4px" v-model="rowsToBeAdded">
+      <div class="flex" style="gap:1rem;align-items:center">
+          <input type="text" placeholder="Number of Items" style="padding:9px 8px;border:2px solid var(--gray2);border-radius:4px" v-model="rowsToBeAdded">
           <the-button label="Add Row" @click="generateRows"></the-button>
       </div>
     </div>
@@ -305,7 +304,7 @@ export default {
       }
     },
     generateRows(){
-      if(this.rowsToBeAdded<100 && this.rowsToBeAdded > 0 && this.rowsToBeAdded !== null){
+      if(this.rowsToBeAdded<=100 && this.rowsToBeAdded > 0 && this.rowsToBeAdded !== null){
         for (var i = 0; i < this.rowsToBeAdded; i++) {
           this.productList.push({
             productName: "",

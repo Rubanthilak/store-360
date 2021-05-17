@@ -25,6 +25,7 @@ export default {
     },
     clearInputField(){
       this.inputFieldValue = "";
+      this.$emit("typing", this.inputFieldValue);
     }
   },
   computed: {

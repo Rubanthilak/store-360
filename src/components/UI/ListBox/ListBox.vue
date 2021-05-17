@@ -1,21 +1,27 @@
 <template>
   <div class="dropdown" @click="dropped=!dropped" :style=" boxLength ? 'width:'+ boxLength : ''">
-    <div class="dropdown-active" v-if="active > -1 && active !== null">{{options[active]}}</div>
-    <div class="hint" v-else>{{valueToDisplay}}</div>
-    <div class="dropdown-container" v-if="dropped">
-      <div
-        class="dropdown-item"
-        v-for="(op, index) in options"
-        :key="op"
-        @click="optionSelect(index)"
-      >{{op}}</div>
+    <div>
+      <div class="dropdown-active" v-if="active > -1 && active !== null">
+        {{prefix ? prefix +" : ": ''}}
+        <span>{{options[active]}}</span>
+      </div>
+      <div class="hint" v-else>{{valueToDisplay}}</div>
+      <div class="dropdown-container" v-if="dropped">
+        <div
+          class="dropdown-item"
+          v-for="(op, index) in options"
+          :key="op"
+          @click="optionSelect(index)"
+        >{{op}}</div>
+      </div>
     </div>
+    <svg-icon :icon="!dropped ? 'angle-down-icon' : 'angle-up-icon'" color="gray2" size="22"></svg-icon>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["valueToDisplay","options","active","boxLength"],
+  props: ["valueToDisplay", "options", "active", "boxLength", "prefix"],
   data() {
     return {
       dropped: false,
@@ -23,7 +29,7 @@ export default {
   },
   methods: {
     optionSelect(index) {
-      this.$emit("optionSelected",index) 
+      this.$emit("optionSelected", index);
     },
   },
 };
@@ -35,28 +41,36 @@ export default {
   font-family: var(--font-regular);
   font-size: 12px;
   border-radius: 5px;
-  padding: 8px 10px;
+  padding: 5px 10px;
   position: relative;
+  background: var(--gray0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.hint{
+.hint {
   color: var(--gray3);
 }
 
 .dropdown-active {
-  font-family: var(--font-semibold);
-  color: var(--gray8);
+  color: var(--gray3);
+  span {
+    font-family: var(--font-semibold);
+    color: var(--gray8);
+  }
 }
 
 .dropdown-container {
   background: var(--gray0);
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 42px;
+  top: 38px;
   left: 0px;
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  z-index: 1;
 
   .dropdown-item {
     padding: 8px 15px;

@@ -3,9 +3,10 @@
     <div class="flex">
       <search-bar @typing="searchProduct" :placeHolder="'Search Items by Name, ID, ...'"></search-bar>
       <div class="flex button-container" v-if="!tableEditMode">
+        <list-box-item-sort></list-box-item-sort>
         <the-button label="New" @click="triggerCreateProduct"></the-button>
         <the-button label="Edit" @click="toggleTableEditMode"></the-button>
-        <dropdown-menu-item></dropdown-menu-item>
+        <dropdown-menu-item @column-selected="toggleColumnVisibility" :column-data="columnProps"></dropdown-menu-item>
       </div>
       <div class="flex button-container" v-if="tableEditMode">
         <the-button label="Save" @click="toggleTableEditMode"></the-button>
@@ -201,7 +202,7 @@ export default {
         },
         bar_code: {
           name: "BAR CODE",
-          visible: false,
+          visible: true,
         },
       },
     };
@@ -225,6 +226,9 @@ export default {
     },
   },
   methods: {
+     toggleColumnVisibility(columnName){
+      this.columnProps[columnName].visible =!this.columnProps[columnName].visible;
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
