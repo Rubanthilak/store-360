@@ -1,7 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory
+} from "vue-router";
 
 import Home from "./components/Pages/Home.vue";
-import Sales from "./components/Pages/Sales.vue";
 import Profile from "./components/Pages/Profile.vue";
 
 import ItemsView from "./components/Pages/Item/ItemsView.vue";
@@ -12,26 +14,59 @@ import CustomerView from "./components/Pages/Customer/CustomerView.vue";
 import CustomerListView from "./components/Pages/Customer/CustomerListView.vue";
 import CustomerDetailsView from "./components/Pages/Customer/CustomerDetailsView.vue";
 
+import SalesView from "./components/Pages/Sale/SalesView.vue";
+import SalesListView from "./components/Pages/Sale/SalesListView.vue";
+import SalesDetailsView from "./components/Pages/Sale/SalesDetailsView.vue";
 
-const routes = [
-  { path: "/", component: Home },
+
+
+const routes = [{
+    path: "/",
+    component: Home
+  },
   {
     path: "/items",
     component: ItemsView,
-    children: [
-      { path: "", component: ItemsListView },
-      { path: "add", component: ItemsAddView },
+    children: [{
+        path: "",
+        component: ItemsListView
+      },
+      {
+        path: "add",
+        component: ItemsAddView
+      },
     ],
   },
-  { path: "/customers", 
+  {
+    path: "/customers",
     component: CustomerView,
-    children : [
-      {path: "", component: CustomerListView},
-      {path: ":id", component: CustomerDetailsView}
+    children: [{
+        path: "",
+        component: CustomerListView
+      },
+      {
+        path: ":id",
+        component: CustomerDetailsView
+      }
     ]
   },
-  { path: "/sales", component: Sales },
-  { path: "/profile", component: Profile },
+  {
+    path: "/sales",
+    component: SalesView,
+    children: [{
+        path: "",
+        component: SalesListView
+      },
+      {
+        path: ":id",
+        component: SalesDetailsView
+      }
+    ]
+  },
+  {
+    path: "/profile",
+    component: Profile
+  },
 ];
 
 const router = createRouter({

@@ -3,9 +3,13 @@ import Database from "../../../resource/database/Database";
 const paymentOptions = ["Card", "Cash", "UPI", "Split"];
 
 export default { 
+  async getSales(context){
+    const sales = await Database.Model.Sale.getSales();
+    context.commit("setSaleList", { sales });
+  },
   async getSalesByCustomerId(context,obj){
-    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
-    return sales;
+    const sale = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
+    return sale;
   },
   async postSale(context, obj) {
     const sale = await Database.Model.Sale.createSale({
