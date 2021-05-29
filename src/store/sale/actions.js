@@ -3,9 +3,13 @@ import Database from "../../../resource/database/Database";
 const paymentOptions = ["Card", "Cash", "UPI", "Split"];
 
 export default { 
-  async getSales(context){
+  async getSalesList(context){
     const sales = await Database.Model.Sale.getSales();
-    context.commit("setSaleList", { sales });
+    var tempList = [];
+    sales.forEach(sale => {
+      tempList.push(sale.dataValues)
+    })
+    context.commit("setSaleList", tempList);
   },
   async getSalesByCustomerId(context,obj){
     const sale = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)

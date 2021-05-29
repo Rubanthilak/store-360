@@ -79,9 +79,11 @@ const createTable = async function() {
   await Sale.sync();
 };
 
-const getSales = async function(columnToSort = "id") {
+const getSales = async function(columnToSort = "id",offset = 0) {
   const sales = await Sale.findAll({
-    order: [[columnToSort, "ASC"]],
+    order: [[columnToSort, "DESC"]],
+    limit: 50,
+    offset: (offset * 50)
   });
   return sales;
 };

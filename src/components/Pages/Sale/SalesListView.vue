@@ -1,125 +1,84 @@
 <template>
   <section class="container">
     <div class="flex">
-      <search-bar :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'"></search-bar>
+      <search-bar :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'" @typing="searchProduct"></search-bar>
     </div>
     <hr />
     <div class="sales-list">
-      <div class="sale-card">
-        <div class="card-header">
-          <h1>Invoice {{sale.id}}</h1>
-          <div></div>
-        </div>
-        <div class="card-body">
-          <div class="attribute">
-            <p class="key">Customer</p>
-            <p class="value name">{{sale.customerName}}</p>
-          </div>
-          <div class="attribute">
-            <p class="key">Date</p>
-            <p class="value">{{sale.createdAt}}</p>
-          </div>
-          <div class="attribute">
-            <p class="key">Amount</p>
-            <p
-              class="value"
-            >₹ {{((+sale.cashAmount)+(+sale.cardAmount)+(sale.upiAmount)+(+sale.unpaidAmount)).toFixed(2)}}</p>
-          </div>
-          <div class="attribute">
-            <p class="key">Payment Method</p>
-            <p class="value">{{sale.paymentMethod}}</p>
-          </div>
-        </div>
-        <div class="card-footer">
-          <the-button label="View Invoice"></the-button>
-        </div>
-      </div>
+      <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
     </div>
-    <div class="paginator">
+    <!-- <div class="paginator">
       <div class="page-link">&lt;</div>
       <div class="page-link">1</div>
       <div class="page-link">2</div>
       <div class="page-link">3</div>...
       <div class="page-link">6</div>
       <div class="page-link">&gt;</div>
-    </div>
+    </div> -->
   </section>
 </template>
 
 <script>
 export default {
-  data() {
+  data(){
     return {
-      sale: {
-        id: 123456,
-        customerName: "Sree Sakthi Enterprise",
-        paymentMethod: "Cash",
-        cashAmount: 1000,
-        cardAmount: null,
-        upiAmount: null,
-        unpaidAmount: null,
-        createdAt: "12/03/2021",
-      },
-    };
+       searchKeyword: null
+    }
   },
+  computed: {
+    salesList() {
+      return this.$store.getters["sale/getSales"];
+    },
+  },
+  methods: {
+    searchProduct(str) {
+      this.searchKeyword = str;
+    },
+  },
+  async mounted(){
+    await this.$store.dispatch("sale/getSalesList");
+  }
 };
 </script>
 
 <style scoped lang="scss">
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--gray2);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray3);
+}
+
 .sales-list {
   margin-top: 15px;
-  height: calc(100vh - 180px);
+  height: calc(100vh - 120px);
   overflow: auto;
-
-  .sale-card {
-    background: white;
-    padding: 25px;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 250px;
-    box-shadow: 0px 3px 15px #ececec;
-  }
-
-  .card-header {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e4e4e479;
-  }
-
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    .attribute {
-      display: flex;
-      justify-content: space-between;
-      p {
-        font-size: 14px;
-      }
-      .key {
-        color: var(--gray3);
-      }
-      .value {
-        color: var(--gray6);
-        font-family: var(--font-semibold);
-
-        &.name {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          width: 155px;
-          overflow: hidden;
-        }
-      }
-    }
-  }
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, 300px);
+  justify-content: space-evenly;
 }
 
 .paginator {
   display: flex;
-  margin: 0px auto;
+  margin: 15px auto;
   gap: 1rem;
-  justify-content: center;
+  justify-content:center;
   align-items: center;
 
   .page-link {

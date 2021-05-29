@@ -1,5 +1,5 @@
 export default {
-  setSaleList(state, { list }) {
+  setSaleList(state, list) {
     state.saleList.splice(0, state.saleList.length);
     state.saleList.push(...list);
   },
