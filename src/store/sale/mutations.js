@@ -6,4 +6,7 @@ export default {
   setSaleIdToDelete(state, id) {
     state.saleIdToDelete = id;
   },
+  setTotalSaleCount(state, count) {
+    state.totalSaleCount = count;
+  },
 };

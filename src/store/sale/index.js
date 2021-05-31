@@ -6,6 +6,7 @@ const state = function() {
   return {
     saleList: [],
     saleIdToDelete: null,
+    totalSaleCount : null
   };
 };
 

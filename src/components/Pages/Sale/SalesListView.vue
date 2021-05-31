@@ -1,73 +1,85 @@
 <template>
   <section class="container">
-    <div class="flex">
-      <search-bar :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'" @typing="searchProduct"></search-bar>
+    <div class="flex menubar">
+      <search-bar
+        :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'"
+        @typing="searchProduct"
+      ></search-bar>
     </div>
     <hr />
-    <div class="sales-list">
-      <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
+    <div class="content">
+      <div class="sales-list">
+        <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
+      </div>
+      <div class="paginator">
+        <div class="page-link" @click="prevPage" v-if="showPrevButton">&lt; Prev</div>
+        <div class="page-link" @click="nextPage" v-if="showNextButton">Next &gt;</div>
+      </div>
     </div>
-    <!-- <div class="paginator">
-      <div class="page-link">&lt;</div>
-      <div class="page-link">1</div>
-      <div class="page-link">2</div>
-      <div class="page-link">3</div>...
-      <div class="page-link">6</div>
-      <div class="page-link">&gt;</div>
-    </div> -->
   </section>
 </template>
 
 <script>
 export default {
-  data(){
+  data() {
     return {
-       searchKeyword: null
-    }
+      searchKeyword: null,
+      pageNumber: 0,
+    };
   },
   computed: {
     salesList() {
       return this.$store.getters["sale/getSales"];
+    },
+    showPrevButton() {
+      if (this.pageNumber == 0) {
+        return false;
+      }
+      return true;
+    },
+    showNextButton() {
+      let totalSale = this.$store.getters["sale/getTotalSaleCount"];
+      let res = Math.ceil(totalSale / 25);
+      if (this.pageNumber == res - 1) {
+        return false;
+      }
+      return true;
     },
   },
   methods: {
     searchProduct(str) {
       this.searchKeyword = str;
     },
+    async nextPage() {
+      this.pageNumber++;
+      await this.$store.dispatch("sale/getSalesList", this.pageNumber);
+    },
+    async prevPage() {
+      this.pageNumber--;
+      await this.$store.dispatch("sale/getSalesList", this.pageNumber);
+    },
   },
-  async mounted(){
+  async mounted() {
     await this.$store.dispatch("sale/getSalesList");
-  }
+  },
 };
 </script>
 
 <style scoped lang="scss">
 
-/* width */
-::-webkit-scrollbar {
-  width: 6px;
+hr{
+  margin-bottom: 0px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: var(--gray2);
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray3);
+.content{
+  height: calc(100vh - 100px);
+  overflow: auto;
 }
 
 .sales-list {
   margin-top: 15px;
-  height: calc(100vh - 120px);
-  overflow: auto;
+  // height: calc(100vh - 180px);
+  // overflow: auto;
   display: grid;
   gap: 1.25rem;
   grid-template-columns: repeat(auto-fit, 300px);
@@ -76,9 +88,9 @@ export default {
 
 .paginator {
   display: flex;
-  margin: 15px auto;
+  margin: 25px 15px 25px 15px;
   gap: 1rem;
-  justify-content:center;
+  justify-content: flex-end;
   align-items: center;
 
   .page-link {
@@ -86,7 +98,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 40px;
-    width: 60px;
+    width: 80px;
     border-radius: 4px;
     background: var(--gray0);
     font-family: var(--font-semibold);

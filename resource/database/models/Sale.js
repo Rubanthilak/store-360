@@ -80,10 +80,10 @@ const createTable = async function() {
 };
 
 const getSales = async function(columnToSort = "id",offset = 0) {
-  const sales = await Sale.findAll({
+  const sales = await Sale.findAndCountAll({
     order: [[columnToSort, "DESC"]],
-    limit: 50,
-    offset: (offset * 50)
+    limit: 25,
+    offset: (offset * 25)
   });
   return sales;
 };

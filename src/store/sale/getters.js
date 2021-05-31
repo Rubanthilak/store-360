@@ -6,4 +6,7 @@ export default {
     getSaleIdToDelete: (state) => {
       return state.saleIdToDelete;
     },
+    getTotalSaleCount: (state) => {
+      return state.totalSaleCount;
+    },
   };
