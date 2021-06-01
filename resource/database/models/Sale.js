@@ -1,4 +1,5 @@
 import connection from "../helperFunctions/getConnection.js";
+const { Op } = require("sequelize");
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -79,20 +80,37 @@ const createTable = async function() {
   await Sale.sync();
 };
 
-const getSales = async function(columnToSort = "id",offset = 0) {
-  const sales = await Sale.findAndCountAll({
-    order: [[columnToSort, "DESC"]],
-    limit: 25,
-    offset: (offset * 25)
-  });
+const getSales = async function(columnToSort,offset,date) {
+  var sales;
+  if(date !== null){
+    sales = await Sale.findAndCountAll({
+      order: [[columnToSort, "DESC"]],
+      limit: 25,
+      offset: (offset * 25),
+      where: {
+        createdAt:{
+          [Op.gt]: new Date((date.getUTCFullYear()) + "-" + (date.getUTCMonth() + 1) + "-" + ( date.getUTCDate())+ " 00:00:00"),
+          [Op.lt]: new Date((date.getUTCFullYear()) + "-" + (date.getUTCMonth() + 1) + "-" + ( date.getUTCDate())+ " 23:59:59")
+        }
+      }
+    });
+  }else{
+    sales = await Sale.findAndCountAll({
+      order: [[columnToSort, "DESC"]],
+      limit: 25,
+      offset: (offset * 25)
+    });
+  }
   return sales;
 };
 
 const getSaleById = async function(id) {
     const sale = await Sale.findByPk(id);
+    if(sale === null){
+      return null;
+    }
     return sale.dataValues;
 };
-
 
 const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
   const sales = await Sale.findAll({

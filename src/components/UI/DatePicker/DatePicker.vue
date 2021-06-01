@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       flag: false,
-      date: new Date(),
+      date: null,
     };
   },
   methods: {
@@ -25,6 +25,7 @@ export default {
     date(curVal, oldVal) {
       if (curVal != oldVal) {
         this.flag = !this.flag;
+        this.$emit("pick",this.date)
       }
     },
   },

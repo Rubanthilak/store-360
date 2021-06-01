@@ -1,16 +1,13 @@
 <template>
   <section class="container">
     <div class="flex menubar">
-      <search-bar
-        :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'"
-        @typing="searchProduct"
-      ></search-bar>
+      <search-bar :placeHolder="'Search Sale by Invoice Number, ...'" @typing="searchProduct"></search-bar>
       <div class="flex button-container">
-        <date-picker></date-picker>
+        <date-picker @pick="dateFilter"></date-picker>
       </div>
     </div>
     <hr />
-    <div class="content">
+    <div class="content" v-if="salesList.length > 0">
       <div class="sales-list">
         <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
       </div>
@@ -24,10 +21,11 @@
 
 <script>
 export default {
- data() {
+  data() {
     return {
       searchKeyword: null,
       pageNumber: 0,
+      invoiceDate: null,
     };
   },
   computed: {
@@ -50,37 +48,66 @@ export default {
     },
   },
   methods: {
-    searchProduct(str) {
-      this.searchKeyword = str;
+    async searchProduct(id) {
+      if (id !== "") {
+        var sale = await this.$store.dispatch("sale/getSalesById", id);
+        if (sale !== null) {
+          this.$store.commit("sale/setSaleList", [sale]);
+          this.$store.commit("sale/setTotalSaleCount", 1);
+        } else {
+          this.$store.commit("sale/setSaleList", []);
+          this.$store.commit("sale/setTotalSaleCount", 1);
+        }
+      } else {
+        await this.$store.dispatch("sale/getSalesList", {
+          date: this.invoiceDate,
+        });
+        this.pageNumber = 0;
+      }
     },
     async nextPage() {
       this.pageNumber++;
-      await this.$store.dispatch("sale/getSalesList", this.pageNumber);
+      await this.$store.dispatch("sale/getSalesList", {
+        offset: this.pageNumber,
+        date: this.invoiceDate,
+      });
     },
     async prevPage() {
       this.pageNumber--;
-      await this.$store.dispatch("sale/getSalesList", this.pageNumber);
+      await this.$store.dispatch("sale/getSalesList", {
+        offset: this.pageNumber,
+        date: this.invoiceDate,
+      });
+    },
+    async dateFilter(date) {
+      this.invoiceDate = date;
+      await this.$store.dispatch("sale/getSalesList", {
+        date: this.invoiceDate,
+      });
+      this.pageNumber = 0;
     },
   },
   async mounted() {
-    await this.$store.dispatch("sale/getSalesList");
+    await this.$store.dispatch("sale/getSalesList", {
+      offset: this.pageNumber,
+      date: this.invoiceDate,
+    });
   },
 };
 </script>
 
 <style scoped lang="scss">
-
-.button-container{
-  div{
-    margin-left:10px;;
+.button-container {
+  div {
+    margin-left: 10px;
   }
 }
 
-hr{
+hr {
   margin-bottom: 0px;
 }
 
-.content{
+.content {
   height: calc(100vh - 100px);
   overflow: auto;
 }
