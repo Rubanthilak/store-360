@@ -6,6 +6,8 @@ import store from './store/index.js';
 import moshaToast from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
+import VCalendar from 'v-calendar';
+
 import NavigationBar from './components/UI/NavigationBar/NavigationBar.vue';
 import SideBar from './components/UI/SideBar/SideBar.vue';
 import SearchBar from './components/UI/SearchBar/SearchBar.vue';
@@ -17,6 +19,7 @@ import TheTable from './components/UI/Common/TheTable.vue';
 import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
+import SaleCard from './components/UI/Cards/SaleCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 import ListBox from './components/UI/ListBox/ListBox.vue';
 import ListBoxItemSort from './components/UI/ListBox/ListBoxItemSort.vue';
@@ -24,6 +27,7 @@ import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 import InvoicePreview from './components/UI/Invoice/InvoicePreview.vue'
+import DatePicker from './components/UI/DatePicker/DatePicker.vue'
 
 import SvgIcon from './components/UI/Icons/SvgIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
@@ -43,14 +47,13 @@ import CheckIcon from './components/UI/Icons/CheckIcon.vue';
 import AngleUpIcon from './components/UI/Icons/AngleUpIcon.vue';
 import AngleDownIcon from './components/UI/Icons/AngleDownIcon.vue';
 
-import VueHtmlToPaper from '../resource/plugins/vueHtmlToPaper'
 
 const app = createApp(App);
 
 app.use(router);
 app.use(store);
-app.use(VueHtmlToPaper);
 app.use(moshaToast);
+app.use(VCalendar);
 
 app.component('svg-icon',SvgIcon);
 
@@ -82,6 +85,7 @@ app.component('the-table',TheTable);
 app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
+app.component('sale-card',SaleCard);
 app.component('dropdown-menu',DropdownMenu);
 app.component('list-box',ListBox);
 app.component('list-box-item-sort',ListBoxItemSort);
@@ -89,6 +93,7 @@ app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
 app.component('invoice-preview',InvoicePreview);
+app.component('date-picker',DatePicker);
 
 app.mount('#app');
 

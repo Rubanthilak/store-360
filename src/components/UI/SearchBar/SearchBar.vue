@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input :placeholder="placeHolder" v-model="inputFieldValue" @input="validateInputField($event)" />
+    <input :placeholder="placeHolder" v-model="inputFieldValue" @keyup="validateInputField($event)" />
     <svg-icon v-if="typing" @click="clearInputField" class="clear" icon="cross-icon" color="red" size="22"></svg-icon>
     <svg-icon v-else class="search" icon="search-icon" color="gray2" size="22"></svg-icon>
   </div>
@@ -9,7 +9,7 @@
 <script>
 export default {
   props: ["placeHolder"],
-  emits: ["enter", "typing"],
+  emits: ["entered", "typing"],
   data() {
     return {
       inputFieldValue: "",
@@ -18,7 +18,7 @@ export default {
   methods: {
     validateInputField(e) {
       if (e.keyCode === 13 && this.inputFieldValue !== "") {
-        this.$emit("enter", this.inputFieldValue);
+        this.$emit("entered", this.inputFieldValue);
       } else {
         this.$emit("typing", this.inputFieldValue);
       }
