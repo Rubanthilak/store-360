@@ -5,6 +5,9 @@
         :placeHolder="'Search Sale by Customer Phone, Invoice Number, ...'"
         @typing="searchProduct"
       ></search-bar>
+      <div class="flex button-container">
+        <date-picker></date-picker>
+      </div>
     </div>
     <hr />
     <div class="content">
@@ -21,7 +24,7 @@
 
 <script>
 export default {
-  data() {
+ data() {
     return {
       searchKeyword: null,
       pageNumber: 0,
@@ -66,6 +69,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.button-container{
+  div{
+    margin-left:10px;;
+  }
+}
 
 hr{
   margin-bottom: 0px;
