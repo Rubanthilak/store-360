@@ -7,13 +7,13 @@
       </div>
     </div>
     <hr />
-    <div class="content" v-if="salesList.length > 0">
+    <div ref="content" class="content" v-if="salesList.length > 0">
       <div class="sales-list">
         <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
       </div>
       <div class="paginator">
-        <div class="page-link" @click="prevPage" v-if="showPrevButton">&lt; Prev</div>
-        <div class="page-link" @click="nextPage" v-if="showNextButton">Next &gt;</div>
+        <div class="page-link prev" @click="prevPage" v-show="showPrevButton">&lt; Prev</div>
+        <div class="page-link next" @click="nextPage" v-show="showNextButton">Next &gt;</div>
       </div>
     </div>
   </section>
@@ -71,6 +71,7 @@ export default {
         offset: this.pageNumber,
         date: this.invoiceDate,
       });
+      this.$refs.content.scrollTo(0,0);
     },
     async prevPage() {
       this.pageNumber--;
@@ -78,6 +79,7 @@ export default {
         offset: this.pageNumber,
         date: this.invoiceDate,
       });
+      this.$refs.content.scrollTo(0,0);
     },
     async dateFilter(date) {
       this.invoiceDate = date;
@@ -123,16 +125,15 @@ hr {
 }
 
 .paginator {
-  display: flex;
-  margin: 25px 15px 25px 15px;
+  padding: 25px 15px;
   gap: 1rem;
-  justify-content: flex-end;
-  align-items: center;
+  width: calc(100% - 30px);
 
   .page-link {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom:25px;
     height: 40px;
     width: 80px;
     border-radius: 4px;
@@ -141,6 +142,14 @@ hr {
     cursor: pointer;
     font-size: 12px;
     transition: all 0.3s smooth;
+
+    &.prev{
+      float: left;
+    }
+
+    &.next{
+      float: right;
+    }
 
     &:hover {
       background: var(--blue);

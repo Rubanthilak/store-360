@@ -25,7 +25,9 @@
       </div>
     </div>
     <div class="card-footer">
-      <the-button label="View Invoice"></the-button>
+      <router-link :to="'/sales/'+sale.id">
+        <the-button label="View Invoice" ></the-button>
+      </router-link>
     </div>
   </div>
 </template>
