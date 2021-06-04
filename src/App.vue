@@ -116,6 +116,7 @@ textarea,
 ::-webkit-scrollbar-thumb {
   background: var(--gray2);
   border-radius: 10px;
+  cursor: pointer;
 }
 
 /* Handle on hover */
