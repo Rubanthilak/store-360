@@ -17,6 +17,7 @@ import CustomerDetailsView from "./components/Pages/Customer/CustomerDetailsView
 import SalesView from "./components/Pages/Sale/SalesView.vue";
 import SalesListView from "./components/Pages/Sale/SalesListView.vue";
 import SalesDetailsView from "./components/Pages/Sale/SalesDetailsView.vue";
+import SalesPrintView from "./components/Pages/Sale/SalesPrintView.vue";
 
 
 
@@ -53,13 +54,18 @@ const routes = [{
   {
     path: "/sales",
     component: SalesView,
-    children: [{
+    children: [
+      {
         path: "",
         component: SalesListView
       },
       {
         path: ":id",
         component: SalesDetailsView
+      },
+      {
+        path: ":id/print",
+        component: SalesPrintView
       }
     ]
   },

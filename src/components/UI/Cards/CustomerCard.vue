@@ -46,6 +46,7 @@ export default {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0px 5px 15px #7070700c;
 }
 
 .cust-card:hover {

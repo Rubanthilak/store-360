@@ -168,7 +168,6 @@
                 <input type="text" placeholder="DR Number" v-model="cart.drNumber" />
                 <input type="text" placeholder="DD/MM/YYYY" v-model="cart.drDate" />
               </div>
-              <!-- <the-button label="Save" @click="updateBill"></the-button> -->
             </div>
             <div class="price-card">
               <div class="flex apart">
@@ -181,8 +180,8 @@
           </div>
         </div>
       </div>
-      <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
     </div>
+    <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
   </section>
 </template>
 
@@ -447,34 +446,28 @@ export default {
     validatePayment() {
       switch (this.cartList[this.activeCartIndex].paymentMethod.method) {
         case 0:
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.card = this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card =
+            this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.unpaid = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
+            null;
           break;
         case 1:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.cash = this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash =
+            this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.unpaid = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
+            null;
           break;
         case 2:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.upi = this.totalPrice;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.unpaid = null;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi =
+            this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
+            null;
           break;
         case 3:
           if (this.splitTotal !== this.totalPrice) {
@@ -491,9 +484,8 @@ export default {
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[
-            this.activeCartIndex
-          ].paymentMethod.amount.unpaid = this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
+            this.totalPrice;
           break;
       }
       return true;
@@ -577,7 +569,7 @@ export default {
       return total;
     },
   },
-  updated() {
+  mounted() {
     this.$refs.printwebview.addEventListener("ipc-message", (event) => {
       if (event.channel === "webview-print-do") {
         this.$refs.printwebview.print({
@@ -586,9 +578,8 @@ export default {
           devicename: this.defaultPrinter,
           pageSize: "A4",
         });
-      } 
-      else if (event.channel === "webview-pdf-do") {
-       this.$refs.printwebview
+      } else if (event.channel === "webview-pdf-do") {
+        this.$refs.printwebview
           .printToPDF({
             printbackground: true,
             pageSize: "A4",
@@ -596,10 +587,11 @@ export default {
           .then((pdfDataArray) => {
             var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
             this.saveByteArray(
-               "Invoice No " + this.cartList[this.activeCartIndex].id +
+              "Invoice No " +
+                this.cartList[this.activeCartIndex].id +
                 " " +
                 this.cartList[this.activeCartIndex].createdAt.toDateString(),
-                arrBuffer
+              arrBuffer
             );
           });
       }

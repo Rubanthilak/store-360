@@ -92,7 +92,7 @@
             </tr>
           </table>
           <table width="100%">
-            <tr style="background-color:#ffffff; color:#000000;">
+            <tr>
               <td align="left" width="100%">Bill To</td>
             </tr>
             <tr class="boldText bigTextSize">
