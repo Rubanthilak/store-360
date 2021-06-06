@@ -1,9 +1,11 @@
 <template>
-  <section class="container" v-if="invoiceDetails">
-    <div class="flex print-preview">
-      <div>
-        <webview style="height:0px;width:0px;" ref="printwebview" src="./print.html" nodeintegration></webview>
-        <invoice-preview :invoice="invoiceDetails" ref="invoice"></invoice-preview>
+  <section class="container" >
+    <div class="flex print-preview" v-if="invoiceDetails">
+      <div
+        ref="invoice"
+        style="height:85vh;overflow:auto;width:100%;background:white;margin:25px 0px;border-radius:5px"
+      >
+        <invoice-preview :invoice="invoiceDetails"></invoice-preview>
       </div>
       <div>
         <div class="side-card">
@@ -33,6 +35,12 @@
         </div>
       </div>
     </div>
+    <webview
+      style="height:0px;width:0px;"
+      ref="printwebview"
+      src="../../print.html"
+      nodeintegration
+    ></webview>
   </section>
 </template>
 
@@ -61,14 +69,11 @@ export default {
   methods: {
     async updateBill() {
       try {
-        await this.$store.dispatch(
-          "sale/updateSale",
-          this.cartList[this.activeCartIndex]
-        );
+        await this.$store.dispatch("sale/updateSale", this.invoiceDetails);
       } catch (error) {
         this.$moshaToast(error, {
           type: "danger",
-          hideProgressBar: "true",
+          hideProgressBar: true,
           position: "bottom-right",
           transition: "bounce",
         });
@@ -97,6 +102,7 @@ export default {
     printToPDF() {
       this.updateBill();
       const webview = this.$refs.printwebview;
+      webview.openDevTools();
       webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
     },
   },
@@ -106,7 +112,7 @@ export default {
       this.$route.params.id
     );
   },
-  updated() {
+  mounted() {
     this.$refs.printwebview.addEventListener("ipc-message", (event) => {
       if (event.channel === "webview-print-do") {
         this.$refs.printwebview.print({
@@ -125,9 +131,9 @@ export default {
             var arrBuffer = this.intArrayToArrayBuffer(pdfDataArray);
             this.saveByteArray(
               "Invoice No " +
-                this.cartList[this.activeCartIndex].id +
+                this.invoiceDetails.id +
                 " " +
-                this.cartList[this.activeCartIndex].createdAt.toDateString(),
+                this.invoiceDetails.createdAt.toDateString(),
               arrBuffer
             );
           });
@@ -138,7 +144,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .print-preview {
   margin: 0px auto;
   width: 95%;
@@ -181,5 +186,4 @@ export default {
     }
   }
 }
-
 </style>
