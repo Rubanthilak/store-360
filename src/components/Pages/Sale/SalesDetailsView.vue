@@ -12,7 +12,9 @@
         </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Print Invoice"></the-button>
+          <router-link :to="'/sales/'+sale.id+'/print'">
+            <the-button label="Print Invoice"></the-button>
+          </router-link>
       </div>
     </div>
     <hr />
@@ -246,5 +248,6 @@ export default {
       }
     }
   }
+
 }
 </style>
