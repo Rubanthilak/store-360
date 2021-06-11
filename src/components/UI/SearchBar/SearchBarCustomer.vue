@@ -149,10 +149,10 @@ export default {
   display: flex;
   width: calc(100% - 24px);
   padding: 0px 10px;
-  height: 35px;
+  height: 32px;
   border: 2px solid var(--gray2);
   outline: none;
-  border-radius: 4px;
+  border-radius:5px;
   background: transparent;
   font-family: var(--font-regular);
   font-size: 12px;

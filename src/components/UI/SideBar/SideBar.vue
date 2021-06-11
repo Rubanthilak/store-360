@@ -15,11 +15,11 @@
           <router-link to="/sales">
             <svg-icon icon="tag-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
+          <router-link to="/profile">
+            <svg-icon icon="user-circle-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
+          </router-link>
         </div>
         <div class="links">
-          <router-link to="/profile">
-            <svg-icon icon="users-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
-          </router-link>
           <img src="../../../assets/icons/settings.svg" alt="settings_icon" />
         </div>
       </div>

@@ -46,6 +46,7 @@ import WarnIcon from './components/UI/Icons/WarnIcon.vue';
 import CheckIcon from './components/UI/Icons/CheckIcon.vue';
 import AngleUpIcon from './components/UI/Icons/AngleUpIcon.vue';
 import AngleDownIcon from './components/UI/Icons/AngleDownIcon.vue';
+import UserCircleIcon from './components/UI/Icons/UserCircleIcon.vue';
 
 
 const app = createApp(App);
@@ -73,6 +74,7 @@ app.component('warn-icon',WarnIcon);
 app.component('check-icon',CheckIcon);
 app.component('angle-up-icon',AngleUpIcon);
 app.component('angle-down-icon',AngleDownIcon);
+app.component('user-circle-icon',UserCircleIcon);
 
 app.component('navigation-bar',NavigationBar);
 app.component('side-bar',SideBar);
