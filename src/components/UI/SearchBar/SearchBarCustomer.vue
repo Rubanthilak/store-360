@@ -42,7 +42,7 @@ export default {
     },
     customerSelected(obj) {
       this.searchKeyword = "";
-      this.$emit("select", obj.dataValues);
+      this.$emit("select", obj);
     },
     clearField(){
       this.searchKeyword = "";

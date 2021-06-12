@@ -5,6 +5,7 @@ import {
 
 import Home from "./components/Pages/Home.vue";
 import Profile from "./components/Pages/Profile.vue";
+import Settings from "./components/Pages/Settings.vue";
 
 import ItemsView from "./components/Pages/Item/ItemsView.vue";
 import ItemsAddView from "./components/Pages/Item/ItemsAddView.vue";
@@ -72,6 +73,10 @@ const routes = [{
   {
     path: "/profile",
     component: Profile
+  },
+  {
+    path: "/settings",
+    component: Settings
   },
 ];
 

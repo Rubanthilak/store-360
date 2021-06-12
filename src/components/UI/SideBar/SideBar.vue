@@ -20,7 +20,9 @@
           </router-link>
         </div>
         <div class="links">
-          <img src="../../../assets/icons/settings.svg" alt="settings_icon" />
+          <router-link to="/settings">
+            <img src="../../../assets/icons/settings.svg" alt="settings_icon" />
+          </router-link>
         </div>
       </div>
     </div>
