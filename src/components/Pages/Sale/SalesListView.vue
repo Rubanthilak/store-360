@@ -3,6 +3,7 @@
     <div class="flex menubar">
       <search-bar :placeHolder="'Search Sale by Invoice Number, ...'" @typing="searchProduct"></search-bar>
       <div class="flex button-container">
+        <list-box-sale-sort :sortOrder="sortOrder" @selected="changeSortOrder"></list-box-sale-sort>
         <date-picker @pick="dateFilter"></date-picker>
       </div>
     </div>
@@ -26,6 +27,7 @@ export default {
       searchKeyword: null,
       pageNumber: 0,
       invoiceDate: null,
+      sortOrder: { index: 1, value: "DESC" },
     };
   },
   computed: {
@@ -48,6 +50,13 @@ export default {
     },
   },
   methods: {
+    async changeSortOrder(index) {
+      this.sortOrder = index;
+      await this.$store.dispatch("sale/getSalesList", {
+        date: this.invoiceDate,
+        order: this.sortOrder.value,
+      });
+    },
     async searchProduct(id) {
       if (id !== "") {
         var sale = await this.$store.dispatch("sale/getSalesById", id);
@@ -61,6 +70,7 @@ export default {
       } else {
         await this.$store.dispatch("sale/getSalesList", {
           date: this.invoiceDate,
+          order: this.sortOrder.value,
         });
         this.pageNumber = 0;
       }
@@ -70,21 +80,24 @@ export default {
       await this.$store.dispatch("sale/getSalesList", {
         offset: this.pageNumber,
         date: this.invoiceDate,
+        order: this.sortOrder.value,
       });
-      this.$refs.content.scrollTo(0,0);
+      this.$refs.content.scrollTo(0, 0);
     },
     async prevPage() {
       this.pageNumber--;
       await this.$store.dispatch("sale/getSalesList", {
         offset: this.pageNumber,
         date: this.invoiceDate,
+        order: this.sortOrder.value,
       });
-      this.$refs.content.scrollTo(0,0);
+      this.$refs.content.scrollTo(0, 0);
     },
     async dateFilter(date) {
       this.invoiceDate = date;
       await this.$store.dispatch("sale/getSalesList", {
         date: this.invoiceDate,
+        order: this.sortOrder.value,
       });
       this.pageNumber = 0;
     },
@@ -93,6 +106,7 @@ export default {
     await this.$store.dispatch("sale/getSalesList", {
       offset: this.pageNumber,
       date: this.invoiceDate,
+      order: this.sortOrder.value,
     });
   },
 };
@@ -133,7 +147,7 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom:25px;
+    margin-bottom: 25px;
     height: 40px;
     width: 80px;
     border-radius: 4px;
@@ -143,11 +157,11 @@ hr {
     font-size: 12px;
     transition: all 0.3s smooth;
 
-    &.prev{
+    &.prev {
       float: left;
     }
 
-    &.next{
+    &.next {
       float: right;
     }
 

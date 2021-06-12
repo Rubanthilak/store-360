@@ -90,18 +90,18 @@ const createTable = async function() {
   await Sale.sync();
 };
 
-const getSales = async function(columnToSort,offset,date) {
+const getSales = async function(columnToSort,offset,order,date) {
   var sales;
   if(date !== null){
     sales = await Sale.findAndCountAll({
-      order: [[columnToSort, "DESC"]],
+      order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25),
       where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('createdAt')), '=', formatDate(date)),
     });
   }else{
     sales = await Sale.findAndCountAll({
-      order: [[columnToSort, "DESC"]],
+      order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25)
     });

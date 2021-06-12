@@ -45,11 +45,13 @@ h5,
 h6 {
   margin: 0px;
   font-family: var(--font-semibold);
+  color: var(--gray8)
 }
 
 p {
   margin: 0px;
   font-family: var(--font-regular);
+  color: var(--gray8)
 }
 
 a {

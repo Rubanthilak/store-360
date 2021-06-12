@@ -24,6 +24,7 @@ import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 import ListBox from './components/UI/ListBox/ListBox.vue';
 import ListBoxItemSort from './components/UI/ListBox/ListBoxItemSort.vue';
 import ListBoxCustomerSort from './components/UI/ListBox/ListBoxCustomerSort.vue';
+import ListBoxSaleSort from './components/UI/ListBox/ListBoxSaleSort.vue';
 import SnackBar from './components/UI/SnackBar/SnackBar.vue'
 import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
@@ -93,6 +94,7 @@ app.component('dropdown-menu',DropdownMenu);
 app.component('list-box',ListBox);
 app.component('list-box-item-sort',ListBoxItemSort);
 app.component('list-box-customer-sort',ListBoxCustomerSort);
+app.component('list-box-sale-sort',ListBoxSaleSort);
 app.component('snack-bar',SnackBar);
 app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
