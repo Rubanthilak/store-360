@@ -10,7 +10,6 @@
         <div class="dropdown-header">
           <p>ID</p>
           <p>ITEM NAME</p>
-          <p>BARCODE</p>
         </div>
         <div
           v-for="(item,index) in filteredProductList"
@@ -20,7 +19,6 @@
         >
           <p>{{item.id}}</p>
           <p>{{item.productName}}</p>
-          <p>{{item.productBarcode}}</p>
         </div>
       </div>
       <div v-else class="nf-text">

@@ -226,8 +226,9 @@ export default {
     },
   },
   methods: {
-     toggleColumnVisibility(columnName){
+    toggleColumnVisibility(columnName){
       this.columnProps[columnName].visible =!this.columnProps[columnName].visible;
+      localStorage.setItem('itemColumns', JSON.stringify(this.columnProps))
     },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
@@ -362,6 +363,9 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch("product/getProductList");
+    if(localStorage.getItem('itemColumns') !== null){
+      this.columnProps = JSON.parse(localStorage.getItem('itemColumns'));
+    }
   },
 };
 </script>

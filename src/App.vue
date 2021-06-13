@@ -15,8 +15,9 @@ export default {
   name: "App",
   async mounted() {
     await this.$store.dispatch("product/getProductList");
-    await this.$store.dispatch("customer/getCustomerList");
+    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
   },
+  
 };
 </script>
 
@@ -44,11 +45,13 @@ h5,
 h6 {
   margin: 0px;
   font-family: var(--font-semibold);
+  color: var(--gray8)
 }
 
 p {
   margin: 0px;
   font-family: var(--font-regular);
+  color: var(--gray8)
 }
 
 a {

@@ -1,5 +1,4 @@
 import connection from "../helperFunctions/getConnection.js";
-const { Op } = require("sequelize");
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -76,27 +75,33 @@ const Sale = connection.sequelize.define("Sale", {
   }
 });
 
+const formatDate = function(date){
+  let result ='';
+  result  +=  date.toLocaleString('en-GB', { timeZone: 'IST', year: 'numeric' }) + '-';
+  if(date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' }).length === 1){
+    result +='0';
+  }
+  result +=date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' })+'-';
+  result += date.toLocaleString('en-GB', { timeZone: 'IST', day: 'numeric' });
+  return result;
+}
+
 const createTable = async function() {
   await Sale.sync();
 };
 
-const getSales = async function(columnToSort,offset,date) {
+const getSales = async function(columnToSort,offset,order,date) {
   var sales;
   if(date !== null){
     sales = await Sale.findAndCountAll({
-      order: [[columnToSort, "DESC"]],
+      order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25),
-      where: {
-        createdAt:{
-          [Op.gt]: new Date((date.getUTCFullYear()) + "-" + (date.getUTCMonth() + 1) + "-" + ( date.getUTCDate())+ " 00:00:00"),
-          [Op.lt]: new Date((date.getUTCFullYear()) + "-" + (date.getUTCMonth() + 1) + "-" + ( date.getUTCDate())+ " 23:59:59")
-        }
-      }
+      where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('createdAt')), '=', formatDate(date)),
     });
   }else{
     sales = await Sale.findAndCountAll({
-      order: [[columnToSort, "DESC"]],
+      order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25)
     });

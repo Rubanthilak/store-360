@@ -522,8 +522,11 @@ export default {
     totalAmountInWords(){
       var arr = (this.totalAmount+this.totalTax).toFixed(2).split(".");
       var inwords = numWords(arr[0]);
-      if(arr[1]){
+      if(arr[1] > 0){
         inwords += " rupees and " + numWords(arr[1]) + " paisa" ;
+      }
+      else{
+        inwords += " rupees";
       }
       return (inwords + " only.").toUpperCase();
     },

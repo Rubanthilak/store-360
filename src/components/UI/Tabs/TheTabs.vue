@@ -118,7 +118,7 @@ export default {
 
 <style lang="scss" scoped>
 .tab-wrapper {
-  background: var(--gray2);
+  background: #cecece;
   .add-tab {
     display: flex;
     align-items: center;

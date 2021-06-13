@@ -5,4 +5,8 @@ export default {
   getCustomerIdToDelete: (state) => {
     return state.customerIdToDelete;
   },
+  
+  getTotalCustomerCount: (state) => {
+    return state.totalCustomerCount;
+  },
 };

@@ -30,8 +30,6 @@ async function createWindow() {
     frame: false
   });
   
-
-
   ipcMain.on('getDefaultPrinter', () => {
     //Listen to get the default printer name
     const list = win.webContents.getPrinters();

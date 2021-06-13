@@ -1,6 +1,6 @@
 <template>
-    <section>
-        
+    <section class="container">
+        <h1>Settings</h1>
     </section>
 </template>
 

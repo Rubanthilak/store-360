@@ -3,8 +3,8 @@ import Database from "../../../resource/database/Database";
 const paymentOptions = ["Card", "Cash", "UPI", "Split"];
 
 export default { 
-  async getSalesList(context,{columnToSort ="id", offset=0, date}){
-    const sales = await Database.Model.Sale.getSales(columnToSort,offset,date);
+  async getSalesList(context,{columnToSort ="id", offset=0, order='DESC',date=null}){
+    const sales = await Database.Model.Sale.getSales(columnToSort,offset,order,date);
     var tempList = [];
     sales.rows.forEach(sale => {
       tempList.push(sale.dataValues)

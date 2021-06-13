@@ -69,9 +69,11 @@ const createTable = async function() {
   await Customer.sync();
 };
 
-const getCustomers = async function(columnToSort = "id") {
-  const customers = await Customer.findAll({
+const getCustomers = async function(columnToSort,offset,limit) {
+  const customers = await Customer.findAndCountAll({
     order: [[columnToSort, "ASC"]],
+    limit: limit,
+    offset: (offset * 25)
   });
 
   return customers;

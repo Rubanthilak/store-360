@@ -64,7 +64,7 @@
                     @select="setCustomerToActiveCart"
                     v-if="cart.customer === null"
                   ></search-bar-customer>
-                  <div class="cust" v-if="cart.customer">
+                  <div class="cust" v-if="cart.customer !== null">
                     <div class="avatar">{{cart.customer.customerName[0]}}</div>
                     <div class="details">
                       <p class="name">{{cart.customer.customerName}}</p>
@@ -120,18 +120,14 @@
               </div>
               <div class="content">
                 <div class="summ-wrapper">
-                  <!-- <div class="flex">
+                  <div class="flex">
                     <p>Subtotal</p>
-                    <p>{{totalPrice.toFixed(2)}}</p>
+                    <p>₹ {{totalAmount.toFixed(2)}}</p>
                   </div>
                   <div class="flex">
-                    <p>State GST</p>
-                    <p>{{sgstAmount.toFixed(2)}}</p>
+                    <p>GST</p>
+                    <p>₹ {{totalTax.toFixed(2)}}</p>
                   </div>
-                  <div class="flex">
-                    <p>Central GST</p>
-                    <p>{{cgstAmount.toFixed(2)}}</p>
-                  </div>-->
                   <div class="flex">
                     <p>Total</p>
                     <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
@@ -515,6 +511,25 @@ export default {
       });
       return printer;
     },
+    totalTax() {
+      var totalTax = 0;
+      this.cartList[this.activeCartIndex].productList.forEach((product) => {
+        totalTax +=
+          (product.productSellingPrice.rupee +
+            "." +
+            product.productSellingPrice.paisa) *
+          product.productCount *
+          (product.productTaxPercentage / 100);
+      });
+      return totalTax;
+    },
+    totalAmount() {
+      var totalAmount = 0;
+      this.cartList[this.activeCartIndex].productList.forEach((product) => {
+        totalAmount += (product.productSellingPrice.rupee + "." +  product.productSellingPrice.paisa) * product.productCount
+      });
+      return totalAmount;
+    },
     totalPrice() {
       let temp = 0;
       this.cartList[this.activeCartIndex].productList.forEach((item) => {
@@ -569,7 +584,9 @@ export default {
       return total;
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
+
     this.$refs.printwebview.addEventListener("ipc-message", (event) => {
       if (event.channel === "webview-print-do") {
         this.$refs.printwebview.print({
@@ -593,7 +610,7 @@ export default {
                 this.cartList[this.activeCartIndex].createdAt.toDateString(),
               arrBuffer
             );
-          });
+        });
       }
     });
   },
