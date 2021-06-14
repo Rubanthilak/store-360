@@ -6,7 +6,7 @@
         :placeHolder="'Search Customer by Name, Phone Number, ...'"
       ></search-bar>
       <div class="flex button-container">
-        <list-box-customer-sort></list-box-customer-sort>
+        <list-box-customer-sort @selected="sortCustomerList"></list-box-customer-sort>
         <the-button :label="'+'" @click="triggerCreateCustomer"></the-button>
       </div>
     </div>
@@ -54,7 +54,7 @@ export default {
     },
     showNextButton() {
       let totalSale = this.$store.getters["customer/getTotalCustomerCount"];
-      let res = Math.ceil(totalSale / 25);
+      let res = Math.ceil(totalSale / 50);
       if (this.pageNumber == res - 1 || this.searchKeyword !== "") {
         return false;
       }
@@ -65,16 +65,18 @@ export default {
     async nextPage() {
       this.pageNumber++;
       await this.$store.dispatch("customer/getCustomerList", {
+        columnToSort: this.sortOrder,
         offset: this.pageNumber,
-        limit: 25,
+        limit: 50,
       });
       this.$refs.content.scrollTo(0, 0);
     },
     async prevPage() {
       this.pageNumber--;
       await this.$store.dispatch("customer/getCustomerList", {
+        columnToSort: this.sortOrder,
         offset: this.pageNumber,
-        limit: 25,
+        limit: 50,
       });
       this.$refs.content.scrollTo(0, 0);
     },
@@ -83,10 +85,11 @@ export default {
         await this.$store.dispatch("customer/getCustomerList", {
           limit: null,
         });
-      }else{
+      } else {
         await this.$store.dispatch("customer/getCustomerList", {
+        columnToSort: this.sortOrder,
           offset: this.pageNumber,
-          limit: 25,
+          limit: 50,
         });
       }
       this.searchKeyword = str;
@@ -94,17 +97,27 @@ export default {
     triggerCreateCustomer() {
       this.$store.commit("setActivePopup", "popup-new-customer");
     },
+    async sortCustomerList(obj) {
+      this.sortOrder = obj.value;
+      await this.$store.dispatch("customer/getCustomerList", {
+        columnToSort: this.sortOrder,
+        offset: this.pageNumber,
+        limit: 50,
+      });
+    },
   },
   data() {
     return {
       searchKeyword: "",
       pageNumber: 0,
+      sortOrder: "customerName"
     };
   },
   async mounted() {
     await this.$store.dispatch("customer/getCustomerList", {
+      columnToSort: this.sortOrder,
       offset: this.pageNumber,
-      limit: 25,
+      limit: 50,
     });
   },
 };
@@ -128,14 +141,14 @@ hr {
 
 .content-wrapper {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.50rem;
   grid-template-columns: repeat(auto-fit, 280px);
   justify-content: space-evenly;
   padding-top: 15px;
 }
 
 .paginator {
-  padding: 25px 15px;
+  padding: 50px 15px;
   gap: 1rem;
   width: calc(100% - 30px);
 
@@ -143,7 +156,7 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 50px;
     height: 40px;
     width: 80px;
     border-radius: 4px;

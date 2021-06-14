@@ -14,7 +14,7 @@ export default {
   methods: {
       async sort(columnIndex){
           this.active = columnIndex;
-          await this.$store.dispatch("customer/getCustomerList",{columnToSort:this.sortOptions[columnIndex]});
+          this.$emit("selected",{index:columnIndex,value:this.sortOptions[columnIndex]})
       }
   },
   data() {
