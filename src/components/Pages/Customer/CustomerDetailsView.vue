@@ -8,16 +8,21 @@
           </div>
         </router-link>
         <div>
-          <h1>{{customer.customerName}}</h1>
+          <h1>{{editMode ? "Edit Details" : customer.customerName}}</h1>
         </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Edit User"></the-button>
-        <icon-button icon="delete-icon" background-color="red" @click="triggerDeleteCustomer"></icon-button>
+        <the-button :label="editMode ? 'Save' : 'Edit User'" @click="toggleEditMode"></the-button>
+        <icon-button
+          v-if="editMode"
+          icon="delete-icon"
+          background-color="red"
+          @click="triggerDeleteCustomer"
+        ></icon-button>
       </div>
     </div>
     <hr />
-    <div class="cust-body">
+    <div class="cust-body" v-if="!editMode">
       <div class="user-summary">
         <div class="title">
           <p>User Summary</p>
@@ -31,7 +36,10 @@
           <div>
             <svg-icon icon="wallet-icon" size="24" color="gray3" hover-color="red"></svg-icon>
             <p class="subs">Unpaid Balance</p>
-            <p class="value" style="color:var(--red)">₹ {{customer.customerUnpaidBalance.toFixed(2)}}</p>
+            <p
+              class="value"
+              style="color:var(--red)"
+            >₹ {{customer.customerUnpaidBalance.toFixed(2)}}</p>
           </div>
         </div>
       </div>
@@ -58,6 +66,60 @@
         </div>
       </div>
     </div>
+    <div v-else class="edit-body">
+      <div>
+        <div class="title">
+          <p>User Summary</p>
+        </div>
+        <div class="edit-card">
+          <div class="row">
+            <p>Name</p>
+            <input type="text" v-model="customer.customerName" />
+          </div>
+          <div class="row">
+            <p>Phone Number</p>
+            <input type="text" v-model="customer.customerPhoneNumber" />
+          </div>
+          <div class="row">
+            <p>GSTIN Number</p>
+            <input type="text" v-model="customer.customerGstinNumber" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="title">
+          <p>Address</p>
+        </div>
+        <div class="edit-card">
+          <div style="display:flex;flex-direction:row;gap:1.5rem;">
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div class="row">
+                <p>Door Number</p>
+                <input type="text" v-model="customer.customerDoorNumber" />
+              </div>
+              <div class="row">
+                <p>Street Name</p>
+                <input type="text" v-model="customer.customerStreetName" />
+              </div>
+              <div class="row">
+                <p>City Name</p>
+                <input type="text" v-model="customer.customerCityName" />
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div class="row">
+                <p>State Name</p>
+                <input type="text" v-model="customer.customerStateName" />
+              </div>
+              <div class="row">
+                <p>Pincode</p>
+                <input type="text" v-model="customer.customerPincode" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="sales-body">
       <div class="title">
         <p>Last Purchases</p>
@@ -80,6 +142,7 @@ export default {
   data() {
     return {
       customer: null,
+      editMode: false,
     };
   },
 
@@ -115,6 +178,12 @@ export default {
           "Unable to update the customer record"
         );
       }
+    },
+    toggleEditMode() {
+      if(this.editMode){
+        this.triggerUpdateCustomer();
+      }
+      this.editMode = !this.editMode;
     },
   },
 };
@@ -158,13 +227,13 @@ export default {
   gap: 3rem;
 }
 
-.sales-body{
+.sales-body {
   margin-top: 25px;
 }
 
 .title {
-  display:flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
   p {
     font-family: var(--font-semibold);
     color: var(--gray3);
@@ -211,13 +280,47 @@ export default {
     margin-bottom: 3px;
     cursor: pointer;
 
-    P{
+    P {
       font-size: 16px;
-      &:nth-last-child(1),&:nth-last-child(2){
+      &:nth-last-child(1),
+      &:nth-last-child(2) {
         text-align: right;
       }
     }
   }
+}
 
+.edit-body {
+  display: flex;
+  gap: 3rem;
+  margin-top: 25px;
+
+  .edit-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--gray0);
+    padding: 25px;
+    box-shadow: 0px 3px 5px rgb(0, 0, 0, 0.01);
+    border-radius: 5px;
+    margin-top: 10px;
+
+    .row {
+      align-items: center;
+
+      input {
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 2px solid var(--gray2);
+        font-family: var(--font-regular);
+        width: 320px;
+
+        &:focus {
+          border: 2px solid var(--blue);
+          outline: none;
+        }
+      }
+    }
+  }
 }
 </style>

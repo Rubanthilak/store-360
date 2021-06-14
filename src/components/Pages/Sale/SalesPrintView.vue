@@ -1,5 +1,5 @@
 <template>
-  <section class="container" >
+  <section class="container">
     <div class="flex print-preview" v-if="invoiceDetails">
       <div
         ref="invoice"
@@ -10,7 +10,7 @@
       <div>
         <div class="side-card">
           <div class="price-card">
-            <h1>Additional Details</h1>
+            <h1>📜 Additional Details</h1>
             <div class="flex apart">
               <input type="text" placeholder="PO Number" v-model="invoiceDetails.poNumber" />
               <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.poDate" />
@@ -23,6 +23,15 @@
               <input type="text" placeholder="DR Number" v-model="invoiceDetails.drNumber" />
               <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.drDate" />
             </div>
+          </div>
+          <div class="price-card">
+            <h1>📑 Choose Printer</h1>
+            <list-box
+              @option-selected="changePrinter"
+              value-to-display="Select Printer"
+              :options="printerList"
+              :active="activePrinter"
+            ></list-box>
           </div>
           <div class="price-card">
             <div class="flex apart">
@@ -45,10 +54,12 @@
 </template>
 
 <script>
+const ipcRenderer = require("electron").ipcRenderer;
 export default {
   data() {
     return {
       invoiceDetails: null,
+      activePrinter: null
     };
   },
   computed: {
@@ -65,8 +76,24 @@ export default {
       });
       return parseFloat(temp);
     },
+    printerList() {
+      var printers = [];
+      ipcRenderer.send("getPrinters");
+      ipcRenderer.once("getPrinters", (event, data) => {
+        data.forEach((printer,index) => {
+          printers.push(printer.name);
+          if(printer.isDefault){
+            this.activePrinter = index;
+          }
+        })
+      });
+      return printers;
+    },
   },
   methods: {
+    changePrinter(index){
+      this.activePrinter = index;
+    },
     async updateBill() {
       try {
         await this.$store.dispatch("sale/updateSale", this.invoiceDetails);
@@ -102,7 +129,6 @@ export default {
     printToPDF() {
       this.updateBill();
       const webview = this.$refs.printwebview;
-      webview.openDevTools();
       webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
     },
   },
@@ -118,7 +144,7 @@ export default {
         this.$refs.printwebview.print({
           silent: true,
           printbackground: true,
-          devicename: this.defaultPrinter,
+          deviceName: this.printerList[this.activePrinter],
           pageSize: "A4",
         });
       } else if (event.channel === "webview-pdf-do") {
@@ -140,6 +166,7 @@ export default {
       }
     });
   },
+ 
 };
 </script>
 
