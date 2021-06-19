@@ -3,6 +3,6 @@
 </div>
 <p></p>
 <p align="center">
-  <strong>Awesome Tool for Invoicing 🏬❤</strong>
+  <strong>Awesome Tool for GST Invoicing 🏬❤</strong>
 </p>
 
