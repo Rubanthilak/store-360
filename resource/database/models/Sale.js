@@ -1,4 +1,5 @@
 import connection from "../helperFunctions/getConnection.js";
+import { Payment } from './Payment';
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -12,30 +13,13 @@ const Sale = connection.sequelize.define("Sale", {
     type: connection.DataTypes.INTEGER,
     allowNull: true,
   },
-  paymentMethod: {
-    type: connection.DataTypes.ENUM,
-    values: ["Card", "Cash", "UPI", "Split","Unpaid"],
-    allowNull: false,
-  },
-  cashAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  cardAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  upiAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  unpaidAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
   productList: {
     type: connection.DataTypes.JSON,
     allowNull: false,
+  },
+  totalAmount: {
+    type: connection.DataTypes.FLOAT,
+    allowNull: true,
   },
   billingAddress: {
     type: connection.DataTypes.STRING,
@@ -74,6 +58,8 @@ const Sale = connection.sequelize.define("Sale", {
     allowNull: true,
   }
 });
+
+Sale.hasMany(Payment);
 
 const formatDate = function(date){
   let result ='';
@@ -131,12 +117,15 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
 const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
-        paymentMethod : obj.paymentMethod,
-        cashAmount: obj.cashAmount,
-        cardAmount: obj.cardAmount,
-        upiAmount: obj.upiAmount,
-        unpaidAmount: obj.unpaidAmount,
         productList: obj.productList,
+        Payments: [{
+          paymentMethod: 'Cash',
+          amountPaid: 100.00,
+          transactionNumber: 'EKC4567891',
+          dateOfTransaction: new Date()
+        }]
+    },{
+      include: [ Payment ]
     });
    return sale.dataValues;
 }
