@@ -6,7 +6,7 @@
   <strong>Awesome Tool for GST Invoicing 🏬❤</strong>
 </p>
 <div align="center">
-  <img src="https://img.shields.io/badge/status-alpha-blue?style=for-the-badge&logo=appveyor" alt="Version alt image" /></img>
+  <img src="https://img.shields.io/badge/status-alpha-bluestyle=flat-square&logo=appveyor" alt="Version alt image" /></img>
 </div>
 
 
