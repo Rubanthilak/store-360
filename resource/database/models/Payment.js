@@ -1,6 +1,13 @@
 import connection from "../helperFunctions/getConnection.js";
 
 const Payment = connection.sequelize.define("Payment", {
+  id: {
+    field: 'paymentId', 
+    type: connection.DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true
+  },
   paymentMethod: {
     type: connection.DataTypes.ENUM,
     values: ["Card", "Cash", "UPI", "Cheque"],

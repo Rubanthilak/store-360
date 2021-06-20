@@ -321,11 +321,11 @@
               <td
                 align="right"
                 class="borderTopForTxn"
-              >₹ {{((+invoice.cashAmount)+(+invoice.cardAmount)+(+invoice.upiAmount)).toFixed(2)}}</td>
+              >₹ {{(invoice.totalAmountPaid).toFixed(2)}}</td>
             </tr>
-            <tr v-if="invoice.unpaidAmount">
+            <tr v-if="invoice.totalAmountPaid < invoice.totalPrice">
               <td class="borderColorGrey">Balance</td>
-              <td align="right" class="borderColorGrey">₹ {{(+invoice.unpaidAmount).toFixed(2)}}</td>
+              <td align="right" class="borderColorGrey">₹ {{(invoice.totalPrice - invoice.totalAmountPaid).toFixed(2)}}</td>
             </tr>
             <tr v-else>
               <td class="borderColorGrey">Balance</td>

@@ -123,6 +123,7 @@ input {
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
+  width:60%;
   div {
     gap: 50px;
   }
@@ -136,7 +137,8 @@ input {
   background: var(--gray0);
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
-  border-radius: 6px;
+  border-radius: 6px;  
+  width:60%;
 }
 
 </style>

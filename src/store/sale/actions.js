@@ -1,38 +1,92 @@
 import Database from "../../../resource/database/Database";
 
-// const paymentOptions = ["Card", "Cash", "UPI", "Split"];
+const paymentOptions = ["Card", "Cash", "UPI"];
+
+function generatePaymentArray(obj){
+  var arr = []
+  if(obj.method === 4){
+    return arr;
+  }
+  if(obj.amount.card !== null && obj.amount.card !== ''){
+    let payment = {
+      paymentMethod : paymentOptions[0],
+      amountPaid : obj.amount.card,
+      dateOfTransaction : new Date()
+    }
+    arr.push(payment);
+  }
+  if(obj.amount.cash !== null && obj.amount.cash !== ''){
+    let payment = {
+      paymentMethod : paymentOptions[1],
+      amountPaid : obj.amount.cash,
+      dateOfTransaction : new Date()
+    }
+    arr.push(payment);
+  }
+  if(obj.amount.upi !== null && obj.amount.upi !== ''){
+    let payment = {
+      paymentMethod : paymentOptions[2],
+      amountPaid : obj.amount.upi,
+      dateOfTransaction : new Date()
+    }
+    arr.push(payment);
+  }
+  return arr;
+}
 
 export default { 
   async getSalesList(context,{columnToSort ="id", offset=0, order='DESC',date=null}){
     const sales = await Database.Model.Sale.getSales(columnToSort,offset,order,date);
     var tempList = [];
     sales.rows.forEach(sale => {
-      tempList.push(sale.dataValues)
+      let temp = {
+        ...sale.dataValues,
+        Payments: []
+      }
+      sale.Payments.forEach(payment => {
+        temp.Payments.push(payment.dataValues)
+      })
+      tempList.push(temp)
     });
     context.commit("setSaleList", tempList);
     context.commit("setTotalSaleCount", sales.count);
   },
   async getSalesById(context,id){
     const sale = await Database.Model.Sale.getSaleById(id)
-    return sale;
+    let temp = {
+      ...sale.dataValues,
+      Payments: [],
+      totalAmountPaid: 0
+    }
+    sale.Payments.forEach(payment => {
+      temp.Payments.push(payment.dataValues)
+      temp.totalAmountPaid += payment.dataValues.amountPaid
+    })
+    return temp;
   },
   async getSalesByCustomerId(context,obj){
     const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
     return sales;
   },
   async postSale(context, obj) {
+    const payments = generatePaymentArray(obj.paymentMethod);
     const sale = await Database.Model.Sale.createSale({
       customerId : obj.customer.id,
       productList: obj.productList,
+      totalPrice: obj.totalPrice,
+      payments: payments
     });
-    // const payment = {
-    //   paymentMethod : paymentOptions[obj.paymentMethod.method],
-    //   cashAmount: obj.paymentMethod.amount.cash,
-    //   cardAmount: obj.paymentMethod.amount.card,
-    //   upiAmount: obj.paymentMethod.amount.upi,
-    //   unpaidAmount: obj.paymentMethod.amount.unpaid,
-    // }
-    return sale;         
+    let temp = {
+      ...sale.dataValues,
+      Payments: [],
+      totalAmountPaid: 0.00
+    }
+    sale.Payments.forEach(payment => {
+      temp.Payments.push(payment.dataValues)
+      temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
+    })
+    console.log(temp);
+    return temp;         
   },
   async updateSale(context, obj) {
     const res = await Database.Model.Sale.updateSale(obj,obj.id);

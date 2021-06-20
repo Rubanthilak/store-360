@@ -37,13 +37,9 @@
               <p>Date</p>
               <p>{{sale.createdAt.toDateString()}}</p>
             </div>
-            <div>
-              <p>Method</p>
-              <p>{{sale.paymentMethod}}</p>
-            </div>
-            <div v-if="sale.unpaidAmount">
+            <div v-if="sale.totalAmountPaid < sale.totalPrice">
               <p>Balance</p>
-              <p style="color:var(--red)">₹ {{sale.unpaidAmount.toFixed(2)}}</p>
+              <p style="color:var(--red)">₹ {{(sale.totalPrice - sale.totalAmountPaid).toFixed(2)}}</p>
             </div>
             <div v-else>
               <p>Status</p>
@@ -88,7 +84,7 @@
           <p style="text-align:right"></p>
           <p style="text-align:right"></p>
           <p style="text-align:right"></p>
-          <p style="text-align:right">₹ {{totalPrice.toFixed(2)}}</p>
+          <p style="text-align:right">₹ {{sale.totalPrice.toFixed(2)}}</p>
         </div>
       </div>
     </div>
@@ -127,15 +123,6 @@ export default {
         tempList.push(temp);
       });
       return tempList;
-    },
-    totalPrice() {
-      let temp = null;
-      temp =
-        this.sale.cardAmount +
-        this.sale.cashAmount +
-        this.sale.upiAmount +
-        this.sale.unpaidAmount;
-      return temp;
     },
   },
   async mounted() {
@@ -230,7 +217,7 @@ export default {
   background: var(--gray0);
   height:100px;
   box-shadow: 0px 5px 15px #7070700c;
-  width: 400px;
+  width: 250px;
   border-radius: 6px;
   padding:0px 30px;
 

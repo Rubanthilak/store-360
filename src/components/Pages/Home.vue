@@ -94,22 +94,23 @@
                   <div class="split-wrapper" v-if="splitPaymentInputVisible">
                     <input
                       type="number"
-                      placeholder="Card"
+                      placeholder="Card Amount"
                       v-model="cart.paymentMethod.amount.card"
                     />
+                  </div>
+                  <div class="split-wrapper" v-if="splitPaymentInputVisible">
                     <input
                       type="number"
-                      placeholder="Cash"
+                      placeholder="Cash Amount"
                       v-model="cart.paymentMethod.amount.cash"
                     />
                   </div>
                   <div class="split-wrapper" v-if="splitPaymentInputVisible">
-                    <input type="number" placeholder="UPI" v-model="cart.paymentMethod.amount.upi" />
-                    <input
-                      type="number"
-                      placeholder="Balance"
-                      v-model="cart.paymentMethod.amount.unpaid"
-                    />
+                    <input type="number" placeholder="UPI Amount" v-model="cart.paymentMethod.amount.upi" />
+                  </div>
+                   <div class="flex" style="justify-content:space-between; margin-top: 25px; padding:0px 8px" v-if="splitPaymentInputVisible">
+                    <p>Balance Amount</p>
+                    <p>₹ {{(totalPrice - splitTotal).toFixed(2)}}</p>
                   </div>
                 </div>
               </div>
@@ -129,9 +130,10 @@
                     <p>₹ {{totalTax.toFixed(2)}}</p>
                   </div>
                   <div class="flex">
-                    <p>Total</p>
+                    <h1>Total</h1>
                     <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
                   </div>
+                 
                 </div>
               </div>
             </div>
@@ -195,7 +197,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -209,7 +210,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -223,7 +223,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -237,7 +236,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -251,7 +249,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -265,7 +262,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -279,7 +275,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -293,7 +288,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -307,7 +301,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -321,7 +314,6 @@ export default {
               card: null,
               cash: null,
               upi: null,
-              unpaid: null,
             },
           },
           customer: null,
@@ -338,7 +330,7 @@ export default {
         " ",
       ],
       activeCartIndex: 0,
-      paymentOptions: ["Card", "Cash", "UPI", "Split", "Unpaid"],
+      paymentOptions: ["Card Payment", "Cash Payment", "UPI Payment", "Split Payment", "Not Paid"],
     };
   },
   methods: {
@@ -391,7 +383,6 @@ export default {
             card: null,
             cash: null,
             upi: null,
-            unpaid: null,
           },
         },
         customer: null,
@@ -429,6 +420,7 @@ export default {
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
+          this.cartList[this.activeCartIndex].totalPrice = this.totalPrice
           this.cartList[this.activeCartIndex] = await this.$store.dispatch(
             "sale/postSale",
             this.cartList[this.activeCartIndex]
@@ -442,55 +434,31 @@ export default {
     validatePayment() {
       switch (this.cartList[this.activeCartIndex].paymentMethod.method) {
         case 0:
-          this.cartList[this.activeCartIndex].paymentMethod.amount.card =
-            this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.card = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
-            null;
           break;
         case 1:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.cash =
-            this.totalPrice;
+          this.cartList[this.activeCartIndex].paymentMethod.amount.cash = this.totalPrice;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
-            null;
           break;
         case 2:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.upi =
-            this.totalPrice;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
-            null;
-          break;
-        case 3:
-          if (this.splitTotal !== this.totalPrice) {
-            this.$moshaToast("Please, Enter correct payment values", {
-              type: "danger",
-              hideProgressBar: "true",
-              position: "bottom-right",
-              transition: "bounce",
-            });
-            return false;
-          }
+          this.cartList[this.activeCartIndex].paymentMethod.amount.upi = this.totalPrice;
           break;
         case 4:
           this.cartList[this.activeCartIndex].paymentMethod.amount.card = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash = null;
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi = null;
-          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid =
-            this.totalPrice;
           break;
       }
       return true;
     },
     validateCustomer() {
       if (
-        this.cartList[this.activeCartIndex].customer === null &&
-        this.cartList[this.activeCartIndex].paymentMethod.method !== 1
-      ) {
+        this.cartList[this.activeCartIndex].customer === null) {
         this.$moshaToast("Please, Select customer for cashless payment", {
           type: "danger",
           hideProgressBar: "true",
@@ -526,7 +494,11 @@ export default {
     totalAmount() {
       var totalAmount = 0;
       this.cartList[this.activeCartIndex].productList.forEach((product) => {
-        totalAmount += (product.productSellingPrice.rupee + "." +  product.productSellingPrice.paisa) * product.productCount
+        totalAmount +=
+          (product.productSellingPrice.rupee +
+            "." +
+            product.productSellingPrice.paisa) *
+          product.productCount;
       });
       return totalAmount;
     },
@@ -554,38 +526,31 @@ export default {
     splitTotal() {
       var total = 0;
       if (
-        this.cartList[this.activeCartIndex].paymentMethod.amount.card !== null
+        this.cartList[this.activeCartIndex].paymentMethod.amount.card !== null && this.cartList[this.activeCartIndex].paymentMethod.amount.card !== ''
       ) {
         total += parseFloat(
           this.cartList[this.activeCartIndex].paymentMethod.amount.card
         );
       }
       if (
-        this.cartList[this.activeCartIndex].paymentMethod.amount.cash !== null
+        this.cartList[this.activeCartIndex].paymentMethod.amount.cash !== null && this.cartList[this.activeCartIndex].paymentMethod.amount.cash !== ''
       ) {
         total += parseFloat(
           this.cartList[this.activeCartIndex].paymentMethod.amount.cash
         );
       }
       if (
-        this.cartList[this.activeCartIndex].paymentMethod.amount.upi !== null
+        this.cartList[this.activeCartIndex].paymentMethod.amount.upi !== null && this.cartList[this.activeCartIndex].paymentMethod.amount.upi !== ''
       ) {
         total += parseFloat(
           this.cartList[this.activeCartIndex].paymentMethod.amount.upi
-        );
-      }
-      if (
-        this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid !== null
-      ) {
-        total += parseFloat(
-          this.cartList[this.activeCartIndex].paymentMethod.amount.unpaid
         );
       }
       return total;
     },
   },
   async mounted() {
-    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
+    await this.$store.dispatch("customer/getCustomerList", { offset: 0 });
 
     this.$refs.printwebview.addEventListener("ipc-message", (event) => {
       if (event.channel === "webview-print-do") {
@@ -610,7 +575,7 @@ export default {
                 this.cartList[this.activeCartIndex].createdAt.toDateString(),
               arrBuffer
             );
-        });
+          });
       }
     });
   },
