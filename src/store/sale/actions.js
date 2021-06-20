@@ -41,10 +41,10 @@ export default {
     sales.rows.forEach(sale => {
       let temp = {
         ...sale.dataValues,
-        Payments: []
+        payments: []
       }
-      sale.Payments.forEach(payment => {
-        temp.Payments.push(payment.dataValues)
+      sale.payments.forEach(payment => {
+        temp.payments.push(payment.dataValues)
       })
       tempList.push(temp)
     });
@@ -55,11 +55,11 @@ export default {
     const sale = await Database.Model.Sale.getSaleById(id)
     let temp = {
       ...sale.dataValues,
-      Payments: [],
+      payments: [],
       totalAmountPaid: 0
     }
-    sale.Payments.forEach(payment => {
-      temp.Payments.push(payment.dataValues)
+    sale.payments.forEach(payment => {
+      temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += payment.dataValues.amountPaid
     })
     return temp;
@@ -78,11 +78,11 @@ export default {
     });
     let temp = {
       ...sale.dataValues,
-      Payments: [],
+      payments: [],
       totalAmountPaid: 0.00
     }
-    sale.Payments.forEach(payment => {
-      temp.Payments.push(payment.dataValues)
+    sale.payments.forEach(payment => {
+      temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
     })
     console.log(temp);

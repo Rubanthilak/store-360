@@ -1,7 +1,7 @@
 import connection from "../helperFunctions/getConnection.js";
 import { Payment } from './Payment';
 
-const Sale = connection.sequelize.define("Sale", {
+const Sale = connection.sequelize.define("sale", {
   id: {
     field: "saleid",
     type: connection.DataTypes.INTEGER,
@@ -121,7 +121,7 @@ const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
         productList: obj.productList,
-        Payments: obj.payments,
+        payments: obj.payments,
         totalPrice: obj.totalPrice
     },{
       include: [ Payment ]

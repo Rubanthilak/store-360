@@ -1,6 +1,6 @@
 import connection from '../helperFunctions/getConnection.js';
 
-const Product = connection.sequelize.define('Product', {
+const Product = connection.sequelize.define('product', {
   id: {
     type: connection.DataTypes.INTEGER,
     allowNull: false,
