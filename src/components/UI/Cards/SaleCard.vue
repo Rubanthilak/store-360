@@ -17,10 +17,10 @@
         <p class="key">Amount</p>
         <p
           class="value"
-        >₹ {{((+sale.cashAmount)+(+sale.cardAmount)+(sale.upiAmount)+(+sale.unpaidAmount)).toFixed(2)}}</p>
+        >₹ {{(sale.totalPrice).toFixed(2)}}</p>
       </div>
       <div class="attribute">
-        <p class="key">Payment Method</p>
+        <p class="key">Payment Status</p>
         <p class="value">{{sale.paymentMethod}}</p>
       </div>
     </div>

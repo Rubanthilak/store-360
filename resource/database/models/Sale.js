@@ -1,4 +1,5 @@
 import connection from "../helperFunctions/getConnection.js";
+import { Payment } from './Payment';
 
 const Sale = connection.sequelize.define("Sale", {
   id: {
@@ -10,27 +11,6 @@ const Sale = connection.sequelize.define("Sale", {
   },
   customerId: {
     type: connection.DataTypes.INTEGER,
-    allowNull: true,
-  },
-  paymentMethod: {
-    type: connection.DataTypes.ENUM,
-    values: ["Card", "Cash", "UPI", "Split","Unpaid"],
-    allowNull: false,
-  },
-  cashAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  cardAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  upiAmount: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
-  },
-  unpaidAmount: {
-    type: connection.DataTypes.FLOAT,
     allowNull: true,
   },
   productList: {
@@ -72,8 +52,15 @@ const Sale = connection.sequelize.define("Sale", {
   drDate: {
     type: connection.DataTypes.DATEONLY,
     allowNull: true,
+  },
+  totalPrice : {
+    type: connection.DataTypes.FLOAT,
+    allowNull: true,
   }
 });
+
+Sale.hasMany(Payment);
+Payment.belongsTo(Sale);
 
 const formatDate = function(date){
   let result ='';
@@ -97,24 +84,26 @@ const getSales = async function(columnToSort,offset,order,date) {
       order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25),
-      where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('createdAt')), '=', formatDate(date)),
+      where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('Sale.createdAt')), '=', formatDate(date)),
+      include: [Payment]
     });
   }else{
     sales = await Sale.findAndCountAll({
       order: [[columnToSort, order]],
       limit: 25,
-      offset: (offset * 25)
+      offset: (offset * 25),
+      include: [Payment]
     });
   }
   return sales;
 };
 
 const getSaleById = async function(id) {
-    const sale = await Sale.findByPk(id);
+    const sale = await Sale.findByPk(id,{include: [Payment]});
     if(sale === null){
       return null;
     }
-    return sale.dataValues;
+    return sale;
 };
 
 const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
@@ -131,16 +120,14 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
 const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
-        paymentMethod : obj.paymentMethod,
-        cashAmount: obj.cashAmount,
-        cardAmount: obj.cardAmount,
-        upiAmount: obj.upiAmount,
-        unpaidAmount: obj.unpaidAmount,
         productList: obj.productList,
+        Payments: obj.payments,
+        totalPrice: obj.totalPrice
+    },{
+      include: [ Payment ]
     });
-   return sale.dataValues;
+   return sale;
 }
-
 
 const updateSale = async function(obj,id){
   const res = await Sale.update(obj,{
