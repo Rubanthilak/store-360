@@ -32,6 +32,7 @@ export default {
   },
   computed: {
     salesList() {
+      console.log(this.$store.getters["sale/getSales"]);
       return this.$store.getters["sale/getSales"];
     },
     showPrevButton() {

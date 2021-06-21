@@ -125,13 +125,9 @@
         <p>Last Purchases</p>
         <the-button label="View All"></the-button>
       </div>
+      <hr>
       <div class="sale-list">
-        <div v-for="sale in customer.sales" :key="sale.id" class="sale-tile">
-          <p class="bold">Bill Number #{{sale.id}}</p>
-          <p>{{sale.createdAt.toDateString()}}</p>
-          <p>{{sale.paymentMethod}}</p>
-          <p>{{(sale.cashAmount+sale.cardAmount+sale.upiAmount).toFixed(2)}}</p>
-        </div>
+        <sale-card v-for="sale in customer.sales" :key="sale.id" :sale="sale"></sale-card>
       </div>
     </div>
   </section>
@@ -234,6 +230,7 @@ export default {
 .title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   p {
     font-family: var(--font-semibold);
     color: var(--gray3);
@@ -267,27 +264,14 @@ export default {
 }
 
 .sale-list {
-  margin-top: 15px;
-
-  .sale-tile {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    justify-content: space-between;
-    background: var(--gray0);
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.01);
-    margin-bottom: 3px;
-    cursor: pointer;
-
-    P {
-      font-size: 16px;
-      &:nth-last-child(1),
-      &:nth-last-child(2) {
-        text-align: right;
-      }
-    }
-  }
+  // margin-top: 30px;
+  margin-bottom: 50px;
+  // height: calc(100vh - 180px);
+  // overflow: auto;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, 300px);
+  justify-content: space-evenly;
 }
 
 .edit-body {

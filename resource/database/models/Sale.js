@@ -112,7 +112,8 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
     where: {
       customerId: cust_id,
     },
-    limit:limit
+    limit:limit,
+    include: [Payment]
   });
   return sales;
 };

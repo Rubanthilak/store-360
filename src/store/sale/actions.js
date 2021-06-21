@@ -41,10 +41,12 @@ export default {
     sales.rows.forEach(sale => {
       let temp = {
         ...sale.dataValues,
-        payments: []
+        payments: [],
+        totalAmountPaid: 0
       }
       sale.payments.forEach(payment => {
         temp.payments.push(payment.dataValues)
+        temp.totalAmountPaid += payment.dataValues.amountPaid
       })
       tempList.push(temp)
     });
@@ -65,8 +67,21 @@ export default {
     return temp;
   },
   async getSalesByCustomerId(context,obj){
-    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
-    return sales;
+    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit);
+    var tempList = [];
+    sales.forEach(sale => {
+      let temp = {
+        ...sale.dataValues,
+        payments: [],
+        totalAmountPaid: 0
+      }
+      sale.payments.forEach(payment => {
+        temp.payments.push(payment.dataValues)
+        temp.totalAmountPaid += payment.dataValues.amountPaid
+      })
+      tempList.push(temp)
+    });
+    return tempList;
   },
   async postSale(context, obj) {
     const payments = generatePaymentArray(obj.paymentMethod);

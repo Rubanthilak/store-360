@@ -8,23 +8,77 @@
           </div>
         </router-link>
         <div>
-          <h1>Invoice {{sale.id}}</h1>
+          <h1>Invoice {{ sale.id }}</h1>
         </div>
       </div>
       <div class="flex button-container">
-          <router-link :to="'/sales/'+sale.id+'/print'">
-            <the-button label="Print Invoice"></the-button>
-          </router-link>
+        <the-button label="Add Payment" color="green"></the-button>
+        <router-link :to="'/sales/' + sale.id + '/print'">
+          <the-button label="Print Invoice"></the-button>
+        </router-link>
       </div>
     </div>
     <hr />
-    <div v-if="customer">
-      <div class="flex" style="gap:3rem">
+    <div v-if="customer" class="content-wrapper">
+      <div>
+        <div class="title">
+          <p>BILL SUMMARY</p>
+        </div>
+        <div class="bill-card">
+          <div class="header tile">
+            <p style="text-align: right">S.NO</p>
+            <p style="text-align: left">ITEM</p>
+            <p style="text-align: right">PRICE/UNIT</p>
+            <p style="text-align: right">UNIT</p>
+            <p style="text-align: right">PRICE</p>
+            <p style="text-align: right">GST</p>
+            <p style="text-align: right">GST (in ₹)</p>
+            <p style="text-align: right">TOTAL</p>
+          </div>
+          <hr />
+          <div style="min-height: 65vh">
+            <div
+              class="tile"
+              v-for="(product, index) in productList"
+              :key="product.id"
+            >
+              <p style="text-align: right">{{ index + 1 }}</p>
+              <p>{{ product.productName }}</p>
+              <p style="text-align: right">{{ product.productPrice }}</p>
+              <p style="text-align: right">{{ product.productCount }}</p>
+              <p style="text-align: right">
+                {{ product.productTotalPrice.toFixed(2) }}
+              </p>
+              <p style="text-align: right">
+                {{ product.productTaxPercentage }}%
+              </p>
+              <p style="text-align: right">
+                {{ product.productTotalTax.toFixed(2) }}
+              </p>
+              <p style="text-align: right">
+                {{ product.productTotalAmount.toFixed(2) }}
+              </p>
+            </div>
+          </div>
+          <hr />
+          <div class="header tile">
+            <p style="text-align: right"></p>
+            <p style="text-align: left">TOTAL</p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right">₹ {{ sale.totalPrice.toFixed(2) }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex" style="flex-direction: column">
         <div>
           <div class="title">
             <p>CUSTOMER</p>
           </div>
-          <router-link :to="'/customers/'+customer.id">
+          <router-link :to="'/customers/' + customer.id">
             <customer-card :customer="customer"></customer-card>
           </router-link>
         </div>
@@ -34,57 +88,25 @@
           </div>
           <div class="pay-card">
             <div>
-              <p>Date</p>
-              <p>{{sale.createdAt.toDateString()}}</p>
+              <p>Purchase Date</p>
+              <p>{{ sale.createdAt.toDateString().substring(4,) }}</p>
             </div>
             <div v-if="sale.totalAmountPaid < sale.totalPrice">
               <p>Balance</p>
-              <p style="color:var(--red)">₹ {{(sale.totalPrice - sale.totalAmountPaid).toFixed(2)}}</p>
+              <p style="color: var(--red)">
+                ₹ {{ (sale.totalPrice - sale.totalAmountPaid).toFixed(2) }}
+              </p>
             </div>
             <div v-else>
               <p>Status</p>
-              <p style="color:var(--green)">Success</p>
+              <p style="color: var(--green)">Success</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="title">
-        <p>BILL SUMMARY</p>
-      </div>
-      <div class="bill-card">
-        <div class="header tile">
-          <p style="text-align:right">S.NO</p>
-          <p style="text-align:left">ITEM</p>
-          <p style="text-align:right">PRICE/UNIT</p>
-          <p style="text-align:right">UNIT</p>
-          <p style="text-align:right">PRICE</p>
-          <p style="text-align:right">GST</p>
-          <p style="text-align:right">GST (in ₹)</p>
-          <p style="text-align:right">TOTAL</p>
-        </div>
-        <hr />
-        <div style="min-height:200px">
-          <div class="tile" v-for="(product,index) in productList" :key="product.id">
-            <p style="text-align:right">{{index+1}}</p>
-            <p>{{product.productName}}</p>
-            <p style="text-align:right">{{product.productPrice}}</p>
-            <p style="text-align:right">{{product.productCount}}</p>
-            <p style="text-align:right">{{product.productTotalPrice.toFixed(2)}}</p>
-            <p style="text-align:right">{{product.productTaxPercentage}}%</p>
-            <p style="text-align:right">{{product.productTotalTax.toFixed(2)}}</p>
-            <p style="text-align:right">{{product.productTotalAmount.toFixed(2)}}</p>
-          </div>
-        </div>
-        <hr />
-        <div class="header tile">
-          <p style="text-align:right"></p>
-          <p style="text-align:left">TOTAL</p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right">₹ {{sale.totalPrice.toFixed(2)}}</p>
+        <div>
+           <div class="title">
+              <p>PAYMENT HISTORY</p>
+           </div>
         </div>
       </div>
     </div>
@@ -181,6 +203,12 @@ export default {
   }
 }
 
+.content-wrapper{
+  display:grid;
+  grid-template-columns: auto 280px;
+  gap:2.5rem
+}
+
 .bill-card {
   background: var(--gray0);
   padding: 20px;
@@ -211,15 +239,14 @@ export default {
 
 .pay-card {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: 3rem;
   background: var(--gray0);
-  height:100px;
+  height: 100px;
   box-shadow: 0px 5px 15px #7070700c;
-  width: 250px;
+  width: 220px;
   border-radius: 6px;
-  padding:0px 30px;
+  padding: 0px 30px;
 
   div {
     p {
@@ -229,12 +256,11 @@ export default {
         color: var(--gray3);
       }
       &:last-child {
-        font-size: 18px;
+        font-size: 16px;
         font-family: var(--font-semibold);
         color: var(--gray6);
       }
     }
   }
-
 }
 </style>

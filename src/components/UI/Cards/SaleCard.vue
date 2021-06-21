@@ -21,7 +21,8 @@
       </div>
       <div class="attribute">
         <p class="key">Payment Status</p>
-        <p class="value">{{sale.paymentMethod}}</p>
+        <p class="value" v-if="sale.totalAmountPaid < sale.totalPrice" style="color:var(--red)">Pending</p>
+        <p class="value" v-else style="color:var(--green)">Success</p>
       </div>
     </div>
     <div class="card-footer">
