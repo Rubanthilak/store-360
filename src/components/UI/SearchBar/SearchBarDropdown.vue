@@ -95,7 +95,7 @@ input {
   height: 35px;
   border: none;
   outline: none;
-  box-shadow: 0px 3px 50px #0000000a;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.01);
   border-radius: 4px;
 }
 

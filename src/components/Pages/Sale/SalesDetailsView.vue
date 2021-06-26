@@ -1,5 +1,10 @@
 <template>
   <section class="container" v-if="sale">
+    <popup-new-payment
+      :open="showAddPayment"
+      @close="toggleAddPaymentPopup"
+      :id="sale.id"
+    ></popup-new-payment>
     <div class="flex menubar">
       <div class="flex header">
         <router-link to="/sales">
@@ -12,7 +17,11 @@
         </div>
       </div>
       <div class="flex button-container">
-        <the-button label="Add Payment" color="green"></the-button>
+        <the-button
+          label="Add Payment"
+          @click="toggleAddPaymentPopup"
+          v-if="sale.totalAmountPaid < sale.totalPrice"
+        ></the-button>
         <router-link :to="'/sales/' + sale.id + '/print'">
           <the-button label="Print Invoice"></the-button>
         </router-link>
@@ -21,9 +30,6 @@
     <hr />
     <div v-if="customer" class="content-wrapper">
       <div>
-        <div class="title">
-          <p>BILL SUMMARY</p>
-        </div>
         <div class="bill-card">
           <div class="header tile">
             <p style="text-align: right">S.NO</p>
@@ -36,7 +42,7 @@
             <p style="text-align: right">TOTAL</p>
           </div>
           <hr />
-          <div style="min-height: 65vh">
+          <div style="min-height: 70vh">
             <div
               class="tile"
               v-for="(product, index) in productList"
@@ -74,22 +80,28 @@
         </div>
       </div>
       <div class="flex" style="flex-direction: column">
-        <div>
+        <div class="card">
           <div class="title">
-            <p>CUSTOMER</p>
+            <p>Customer</p>
           </div>
           <router-link :to="'/customers/' + customer.id">
-            <customer-card :customer="customer"></customer-card>
+            <div class="cust">
+              <div class="avatar">{{ customer.customerName[0] }}</div>
+              <div class="details">
+                <p class="name">{{ customer.customerName }}</p>
+                <p class="phone">{{ customer.customerPhoneNumber }}</p>
+              </div>
+            </div>
           </router-link>
         </div>
-        <div>
+        <div class="card">
           <div class="title">
-            <p>PAYMENT SUMMARY</p>
+            <p>Payment Summary</p>
           </div>
           <div class="pay-card">
             <div>
               <p>Purchase Date</p>
-              <p>{{ sale.createdAt.toDateString().substring(4,) }}</p>
+              <p>{{ sale.createdAt.toDateString().substring(4) }}</p>
             </div>
             <div v-if="sale.totalAmountPaid < sale.totalPrice">
               <p>Balance</p>
@@ -103,10 +115,23 @@
             </div>
           </div>
         </div>
-        <div>
-           <div class="title">
-              <p>PAYMENT HISTORY</p>
-           </div>
+        <div class="card">
+          <div class="title">
+            <p>Payment History</p>
+          </div>
+          <div class="pay-list">
+            <div
+              class="flex pay-tile"
+              v-for="payment in sale.payments"
+              :key="payment.id"
+            >
+              <div>
+                <p class="method">{{ payment.paymentMethod }} Payment</p>
+                <p class="date">{{ payment.dateOfTransaction }}</p>
+              </div>
+              <p class="amount">₹ {{ payment.amountPaid.toFixed(2) }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,10 +139,15 @@
 </template>
 
 <script>
+import PopupNewPayment from "../../UI/Popups/PopupNewPayment.vue";
 export default {
+  components: {
+    PopupNewPayment,
+  },
   data() {
     return {
       sale: null,
+      showAddPayment: false,
       customer: null,
     };
   },
@@ -147,7 +177,22 @@ export default {
       return tempList;
     },
   },
+  methods: {
+    toggleAddPaymentPopup() {
+      this.showAddPayment = !this.showAddPayment;
+    },
+  },
   async mounted() {
+    this.sale = await this.$store.dispatch(
+      "sale/getSalesById",
+      this.$route.params.id
+    );
+    this.customer = await this.$store.dispatch(
+      "customer/getCustomerById",
+      this.sale.customerId
+    );
+  },
+  async updated() {
     this.sale = await this.$store.dispatch(
       "sale/getSalesById",
       this.$route.params.id
@@ -161,6 +206,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+section {
+  padding-top: 10px !important;
+}
+
 .menubar {
   justify-content: space-between;
   align-items: center;
@@ -192,21 +241,28 @@ export default {
   display: flex;
 }
 
+.card {
+  background: white;
+  padding: 20px;
+  width: calc(100% - 40px);
+  margin-bottom: 25px;
+  border-radius: 6px;
+}
+
 .title {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0px;
   p {
-    font-family: var(--font-semibold);
-    color: var(--gray3);
-    margin: 0px;
+    background: var(--gray1);
+    font-family: var(--font-bold);
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 4px;
   }
 }
 
-.content-wrapper{
-  display:grid;
-  grid-template-columns: auto 280px;
-  gap:2.5rem
+.content-wrapper {
+  display: grid;
+  grid-template-columns: auto 350px;
+  gap: 20px;
 }
 
 .bill-card {
@@ -239,14 +295,12 @@ export default {
 
 .pay-card {
   display: flex;
-  align-items: center;
-  gap: 3rem;
+  align-items: flex-start;
+  gap: 20px;
   background: var(--gray0);
-  height: 100px;
-  box-shadow: 0px 5px 15px #7070700c;
-  width: 220px;
-  border-radius: 6px;
-  padding: 0px 30px;
+  margin-top: 20px;
+  margin-left: 5px;
+  flex-direction: column;
 
   div {
     p {
@@ -260,6 +314,59 @@ export default {
         font-family: var(--font-semibold);
         color: var(--gray6);
       }
+    }
+  }
+}
+
+.cust {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 20px;
+  margin-left: 5px;
+
+  .avatar {
+    height: 50px;
+    width: 50px;
+    background: var(--blue);
+    color: var(--gray0);
+    border-radius: 360px;
+    font-size: 32px;
+    font-family: var(--font-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .details {
+    .name {
+      font-family: var(--font-semibold);
+    }
+    .phone {
+      color: var(--gray3);
+    }
+  }
+}
+
+.pay-list {
+  .pay-tile {
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    align-items: center;
+
+    .method {
+      font-family: var(--font-semibold);
+    }
+    .date {
+      font-family: var(--font-light);
+      color: var(--gray3);
+      font-size: 14px;
+    }
+    .amount {
+      font-family: var(--font-semibold);
+      color: var(--green);
+      font-size: 18px;
     }
   }
 }

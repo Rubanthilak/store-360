@@ -107,5 +107,9 @@ export default {
     const res = await Database.Model.Sale.updateSale(obj,obj.id);
     return res;         
   },
+  async addPayment(context,obj){
+    const res = await Database.Model.Payment.createPayment(obj);
+    return res;
+  }
 };
   

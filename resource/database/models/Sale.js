@@ -134,7 +134,8 @@ const updateSale = async function(obj,id){
   const res = await Sale.update(obj,{
     where: {
       id: id
-    }
+    },
+    include: [ Payment ]
   });
   return res[0] === 1 ? true : false;
 }
@@ -143,7 +144,7 @@ const deleteSale = async function(id){
   const res = await Sale.destroy({
     where: {
       id: id
-    }
+    },
   });
   return res === 1 ? true : false;
 }

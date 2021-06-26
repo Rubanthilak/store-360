@@ -588,6 +588,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -730,6 +731,7 @@ td {
   .content {
     .paym-wrapper {
       margin-top: 20px;
+      transition: all 0.3s;
       .split-wrapper {
         margin-top: 20px;
         display: flex;

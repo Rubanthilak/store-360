@@ -10,7 +10,7 @@
       <div>
         <div class="side-card">
           <div class="price-card">
-            <h1>📜 Additional Details</h1>
+            <h1 class="title">Additional Details</h1>
             <div class="flex apart">
               <input type="text" placeholder="PO Number" v-model="invoiceDetails.poNumber" />
               <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.poDate" />
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="price-card">
-            <h1>📑 Choose Printer</h1>
+            <h1  class="title">Choose Printer</h1>
             <list-box
               @option-selected="changePrinter"
               value-to-display="Select Printer"
@@ -173,17 +173,24 @@ export default {
 <style lang="scss" scoped>
 .print-preview {
   margin: 0px auto;
-  width: 95%;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 20px;
 
   .side-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
-    width: 100%;
+    width: 350px;
     margin: 25px 0px;
+
+    .title{
+        background: var(--gray1);
+        font-family: var(--font-bold);
+        padding: 8px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+    }
 
     .price-card {
       display: flex;
@@ -191,7 +198,7 @@ export default {
       gap: 1rem;
       padding: 25px;
       background: var(--gray0);
-      border-radius: 4px;
+      border-radius: 6px;
       box-shadow: 0px 3px 15px #0000000e;
 
       input {

@@ -35,6 +35,14 @@ const createTable = async function() {
     await Payment.sync();
 };
 
+const createPayment = async function(obj) {
+  const res = await Payment.create(obj)
+  return res;
+}
+
 export { Payment };
 
-export default { createTable }
+export default { 
+  createTable,
+  createPayment
+}
