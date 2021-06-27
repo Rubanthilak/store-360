@@ -52,7 +52,7 @@ export default {};
     align-items: center;
     margin-top: 25px;
     margin-bottom: 25px;
-    height: calc(100% - 50px);
+    height: 100%;
   }
 
   .logo {

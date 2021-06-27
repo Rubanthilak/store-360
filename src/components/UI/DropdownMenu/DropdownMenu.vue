@@ -1,6 +1,6 @@
 <template>
   <div class="menu-icon">
-    <img src="../../../assets/icons/menu.svg" alt="menu.svg" @click="toggleMenu" />
+    <svg-icon icon="ellipsis-icon" color="gray2" hover-color="blue" size="28" @click="toggleMenu" ></svg-icon>
     <transition name="dropdown">
       <div class="drop-down" v-if="menuMode">
         <slot name="options" :closeTrigger="toggleMenu"></slot>
@@ -32,25 +32,20 @@ export default {
   padding: 0px 5px;
   border: none;
   border-radius: 4px;
-  background-color: var(--blue);
+  // background-color: var(--blue);
   outline: none;
   cursor: pointer;
-  box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
-  margin-left: 10px;
+  // box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
   position: relative;
-
-  img {
-    height: 20px !important;
-    width: 20px !important;
-    padding: 8px;
-  }
+  display:flex;
+  align-items: center;
 }
 
 .drop-down {
   max-height: 500px;
   min-width: 170px;
   position: absolute;
-  top: 125%;
+  top: 115%;
   right: 0px;
   background: white;
   z-index: 1;

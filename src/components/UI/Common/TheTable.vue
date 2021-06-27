@@ -49,7 +49,7 @@ export default {
   overflow-y: auto;
   background: var(--gray0);
   border-radius: 6px;
-  box-shadow: 0px 5px 50px #0000001c;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.026);
 }
 
 table {

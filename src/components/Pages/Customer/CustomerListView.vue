@@ -1,27 +1,42 @@
 <template>
   <section class="container">
-    <div class="flex">
-      <search-bar
-        @typing="searchCustomer"
-        :placeHolder="'Search Customer by Name, Phone Number, ...'"
-      ></search-bar>
-      <div class="flex button-container">
-        <list-box-customer-sort @selected="sortCustomerList"></list-box-customer-sort>
-        <the-button :label="'+'" @click="triggerCreateCustomer"></the-button>
-      </div>
-    </div>
-    <hr />
+    <top-bar>
+      <template #default>
+        <div class="flex">
+          <search-bar
+            @typing="searchCustomer"
+            :placeHolder="'Search Customer by Name, Phone Number, ...'"
+          ></search-bar>
+          <div class="flex button-container">
+            <list-box-customer-sort
+              @selected="sortCustomerList"
+            ></list-box-customer-sort>
+            <the-button
+              :label="'+'"
+              @click="triggerCreateCustomer"
+            ></the-button>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <div class="content-section">
       <div class="content-wrapper" ref="content">
-        <div v-for="customer in filteredCustomerList" :key="customer.customerId">
-          <router-link :to="'/customers/'+customer.id">
+        <div
+          v-for="customer in filteredCustomerList"
+          :key="customer.customerId"
+        >
+          <router-link :to="'/customers/' + customer.id">
             <customer-card :customer="customer"></customer-card>
           </router-link>
         </div>
       </div>
       <div class="paginator">
-        <div class="page-link prev" @click="prevPage" v-show="showPrevButton">&lt; Prev</div>
-        <div class="page-link next" @click="nextPage" v-show="showNextButton">Next &gt;</div>
+        <div class="page-link prev" @click="prevPage" v-show="showPrevButton">
+          &lt; Prev
+        </div>
+        <div class="page-link next" @click="nextPage" v-show="showNextButton">
+          Next &gt;
+        </div>
       </div>
     </div>
   </section>
@@ -87,7 +102,7 @@ export default {
         });
       } else {
         await this.$store.dispatch("customer/getCustomerList", {
-        columnToSort: this.sortOrder,
+          columnToSort: this.sortOrder,
           offset: this.pageNumber,
           limit: 50,
         });
@@ -110,7 +125,7 @@ export default {
     return {
       searchKeyword: "",
       pageNumber: 0,
-      sortOrder: "customerName"
+      sortOrder: "customerName",
     };
   },
   async mounted() {
@@ -141,7 +156,7 @@ hr {
 
 .content-wrapper {
   display: grid;
-  gap: 1.50rem;
+  gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, 280px);
   justify-content: space-evenly;
   padding-top: 15px;

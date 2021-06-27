@@ -30,8 +30,14 @@ import TheTabs from './components/UI/Tabs/TheTabs.vue'
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner.vue'
 import InvoicePreview from './components/UI/Invoice/InvoicePreview.vue'
 import DatePicker from './components/UI/DatePicker/DatePicker.vue'
+import TopBar from './components/UI/TopBar/TopBar.vue'
 
 import SvgIcon from './components/UI/Icons/SvgIcon.vue';
+import PlusIcon from './components/UI/Icons/PlusIcon.vue';
+import EditIcon from './components/UI/Icons/EditIcon.vue';
+import EllipsisIcon from './components/UI/Icons/EllipsisIcon.vue';
+import InvoiceIcon from './components/UI/Icons/InvoiceIcon.vue';
+import PrintIcon from './components/UI/Icons/PrintIcon.vue';
 import BackIcon from './components/UI/Icons/BackIcon.vue';
 import BadgeIcon from './components/UI/Icons/BadgeIcon.vue';
 import BoxIcon from './components/UI/Icons/BoxIcon.vue';
@@ -62,6 +68,11 @@ app.use(VCalendar);
 app.component('svg-icon',SvgIcon);
 
 app.component('back-icon',BackIcon);
+app.component('plus-icon',PlusIcon);
+app.component('edit-icon',EditIcon);
+app.component('ellipsis-icon',EllipsisIcon);
+app.component('invoice-icon',InvoiceIcon);
+app.component('print-icon',PrintIcon);
 app.component('badge-icon',BadgeIcon);
 app.component('box-icon',BoxIcon);
 app.component('browser-icon',BrowserIcon);
@@ -102,6 +113,7 @@ app.component('the-tabs',TheTabs);
 app.component('loading-spinner',LoadingSpinner);
 app.component('invoice-preview',InvoicePreview);
 app.component('date-picker',DatePicker);
+app.component('top-bar',TopBar);
 
 app.mount('#app');
 

@@ -1,9 +1,25 @@
 <template>
   <section class="container">
+    <top-bar>
+      <template #default>
+        <div class="flex menubar">
+          <div class="flex header">
+            <router-link to="/sales">
+              <div class="back-button">
+                <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+              </div>
+            </router-link>
+            <div>
+              <h1>Print Preview</h1>
+            </div>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <div class="flex print-preview" v-if="invoiceDetails">
       <div
         ref="invoice"
-        style="height:85vh;overflow:auto;width:100%;background:white;margin:25px 0px;border-radius:5px"
+        style="height:85vh;overflow:auto;width:100%;background:white;margin:0px;border-radius:5px"
       >
         <invoice-preview :invoice="invoiceDetails"></invoice-preview>
       </div>
@@ -182,7 +198,7 @@ export default {
     justify-content: center;
     gap: 1rem;
     width: 350px;
-    margin: 25px 0px;
+    margin: 0px 0px;
 
     .title{
         background: var(--gray1);

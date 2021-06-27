@@ -6,7 +6,7 @@
         <div class="tab-lhs">
           <div class="flex menu-bar">
             <search-bar-dropdown
-              place-holder="Search Items by Name, ID, Barcode"
+              place-holder="Search Items by Name, ID"
               @select="addProductToActiveCart"
             ></search-bar-dropdown>
           </div>

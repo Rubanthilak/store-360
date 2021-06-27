@@ -1,33 +1,36 @@
 <template>
   <section class="container" v-if="sale">
+    <top-bar>
+      <template #default>
+        <div class="flex menubar">
+          <div class="flex header">
+            <router-link to="/sales">
+              <div class="back-button">
+                <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+              </div>
+            </router-link>
+            <div>
+              <h1>Invoice {{ sale.id }}</h1>
+            </div>
+          </div>
+          <div class="flex button-container">
+            <the-button
+              label="Add Payment"
+              @click="toggleAddPaymentPopup"
+              v-if="sale.totalAmountPaid < sale.totalPrice"
+            ></the-button>
+            <router-link :to="'/sales/' + sale.id + '/print'">
+              <the-button label="Print Invoice"></the-button>
+            </router-link>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <popup-new-payment
       :open="showAddPayment"
       @close="toggleAddPaymentPopup"
       :id="sale.id"
     ></popup-new-payment>
-    <div class="flex menubar">
-      <div class="flex header">
-        <router-link to="/sales">
-          <div class="back-button">
-            <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
-          </div>
-        </router-link>
-        <div>
-          <h1>Invoice {{ sale.id }}</h1>
-        </div>
-      </div>
-      <div class="flex button-container">
-        <the-button
-          label="Add Payment"
-          @click="toggleAddPaymentPopup"
-          v-if="sale.totalAmountPaid < sale.totalPrice"
-        ></the-button>
-        <router-link :to="'/sales/' + sale.id + '/print'">
-          <the-button label="Print Invoice"></the-button>
-        </router-link>
-      </div>
-    </div>
-    <hr />
     <div v-if="customer" class="content-wrapper">
       <div>
         <div class="bill-card">

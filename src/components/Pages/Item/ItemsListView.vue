@@ -1,54 +1,112 @@
 <template>
   <section class="container">
-    <div class="flex">
-      <search-bar @typing="searchProduct" :placeHolder="'Search Items by Name, ID, ...'"></search-bar>
-      <div class="flex button-container" v-if="!tableEditMode">
-        <list-box-item-sort></list-box-item-sort>
-        <the-button label="New" @click="triggerCreateProduct"></the-button>
-        <the-button label="Edit" @click="toggleTableEditMode"></the-button>
-        <dropdown-menu-item @column-selected="toggleColumnVisibility" :column-data="columnProps"></dropdown-menu-item>
-      </div>
-      <div class="flex button-container" v-if="tableEditMode">
-        <the-button label="Save" @click="toggleTableEditMode"></the-button>
-      </div>
-    </div>
-    <hr />
+    <top-bar>
+      <template #default>
+        <div class="flex menu-bar">
+          <search-bar
+            @typing="searchProduct"
+            :placeHolder="'Search Items by Name, ID, ...'"
+          ></search-bar>
+          <div class="flex button-container" v-if="!tableEditMode">
+            <list-box-item-sort></list-box-item-sort>
+            <svg-icon
+              icon="plus-icon"
+              color="gray2"
+              hover-color="blue"
+              size="24"
+              @click="triggerCreateProduct"
+            ></svg-icon>
+            <svg-icon
+              icon="edit-icon"
+              color="gray2"
+              hover-color="blue"
+              size="24"
+              @click="toggleTableEditMode"
+            ></svg-icon>
+            <dropdown-menu-item
+              @column-selected="toggleColumnVisibility"
+              :column-data="columnProps"
+            ></dropdown-menu-item>
+          </div>
+          <div class="flex button-container" v-if="tableEditMode">
+            <the-button label="Save" @click="toggleTableEditMode"></the-button>
+          </div>
+        </div>
+      </template>
+    </top-bar>
+
     <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 25%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
+        <col span="1" style="width: 5%" />
+        <col span="1" style="width: 25%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
       </template>
       <template #thead>
         <tr>
-          <th v-if="columnProps.id.visible">{{columnProps.id.name}}</th>
-          <th v-if="columnProps.item_name.visible">{{columnProps.item_name.name}}</th>
-          <th v-if="columnProps.hsc_code.visible">{{columnProps.hsc_code.name}}</th>
-          <th v-if="columnProps.tax_type.visible">{{columnProps.tax_type.name}}</th>
-          <th v-if="columnProps.tax_percent.visible">{{columnProps.tax_percent.name}}</th>
-          <th v-if="columnProps.stock.visible">{{columnProps.stock.name}}</th>
-          <th v-if="columnProps.mrp_price.visible">{{columnProps.mrp_price.name}}</th>
-          <th v-if="columnProps.selling_price.visible">{{columnProps.selling_price.name}}</th>
-          <th v-if="columnProps.bar_code.visible">{{columnProps.bar_code.name}}</th>
+          <th v-if="columnProps.id.visible">{{ columnProps.id.name }}</th>
+          <th v-if="columnProps.item_name.visible">
+            {{ columnProps.item_name.name }}
+          </th>
+          <th v-if="columnProps.hsc_code.visible">
+            {{ columnProps.hsc_code.name }}
+          </th>
+          <th v-if="columnProps.tax_type.visible">
+            {{ columnProps.tax_type.name }}
+          </th>
+          <th v-if="columnProps.tax_percent.visible">
+            {{ columnProps.tax_percent.name }}
+          </th>
+          <th v-if="columnProps.stock.visible">{{ columnProps.stock.name }}</th>
+          <th v-if="columnProps.mrp_price.visible">
+            {{ columnProps.mrp_price.name }}
+          </th>
+          <th v-if="columnProps.selling_price.visible">
+            {{ columnProps.selling_price.name }}
+          </th>
+          <th v-if="columnProps.bar_code.visible">
+            {{ columnProps.bar_code.name }}
+          </th>
         </tr>
       </template>
       <template #tbody>
         <tr v-for="product in filteredProductList" :key="product.id">
-          <td v-if="columnProps.id.visible">{{product.id}}</td>
-          <td v-if="columnProps.item_name.visible">{{product.productName}}</td>
-          <td v-if="columnProps.hsc_code.visible">{{product.productHscNumber}}</td>
-          <td v-if="columnProps.tax_type.visible">{{product.productTaxType}}</td>
-          <td v-if="columnProps.tax_percent.visible">{{product.productTaxPercentage}} %</td>
-          <td v-if="columnProps.stock.visible">{{product.productStock}}</td>
-          <td v-if="columnProps.mrp_price.visible">{{product.productMrpPrice.rupee+'.'+product.productMrpPrice.paisa}}</td>
-          <td v-if="columnProps.selling_price.visible">{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
-          <td v-if="columnProps.bar_code.visible">{{product.productBarcode}}</td>
+          <td v-if="columnProps.id.visible">{{ product.id }}</td>
+          <td v-if="columnProps.item_name.visible">
+            {{ product.productName }}
+          </td>
+          <td v-if="columnProps.hsc_code.visible">
+            {{ product.productHscNumber }}
+          </td>
+          <td v-if="columnProps.tax_type.visible">
+            {{ product.productTaxType }}
+          </td>
+          <td v-if="columnProps.tax_percent.visible">
+            {{ product.productTaxPercentage }} %
+          </td>
+          <td v-if="columnProps.stock.visible">{{ product.productStock }}</td>
+          <td v-if="columnProps.mrp_price.visible">
+            {{
+              product.productMrpPrice.rupee +
+              "." +
+              product.productMrpPrice.paisa
+            }}
+          </td>
+          <td v-if="columnProps.selling_price.visible">
+            {{
+              product.productSellingPrice.rupee +
+              "." +
+              product.productSellingPrice.paisa
+            }}
+          </td>
+          <td v-if="columnProps.bar_code.visible">
+            {{ product.productBarcode }}
+          </td>
         </tr>
       </template>
     </the-table>
@@ -59,39 +117,39 @@
       table-height="calc(100vh - 135px)"
     >
       <template #colgroup>
-        <col span="1" style="width: 5%;" />
-        <col span="1" style="width: 20%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 9%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 14%;" />
-        <col span="1" style="width: 14%;" />
-        <col span="1" style="width: 10%;" />
-        <col span="1" style="width: 3%;" />
+        <col span="1" style="width: 5%" />
+        <col span="1" style="width: 20%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 9%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 14%" />
+        <col span="1" style="width: 14%" />
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 3%" />
       </template>
       <template #thead>
         <tr>
-          <th v-for="column in columnProps" :key="column">{{column.name}}</th>
+          <th v-for="column in columnProps" :key="column">{{ column.name }}</th>
           <th></th>
         </tr>
       </template>
       <template #tbody>
         <tr v-for="product in filteredProductList" :key="product.id">
-          <td>{{product.id}}</td>
-          <td>{{product.productName}}</td>
-          <td>{{product.productHscNumber}}</td>
-          <td>{{product.productTaxType}}</td>
-          <td>{{product.productTaxPercentage}} %</td>
+          <td>{{ product.id }}</td>
+          <td>{{ product.productName }}</td>
+          <td>{{ product.productHscNumber }}</td>
+          <td>{{ product.productTaxType }}</td>
+          <td>{{ product.productTaxPercentage }} %</td>
           <td>
             <input
               type="text"
               v-model="product.productStock"
-              v-on:keydown="arrowkeyEventHandler($event,product.id)"
+              v-on:keydown="arrowkeyEventHandler($event, product.id)"
               placeholder="Stock"
               class="max-sm-wd"
               maxlength="6"
-              @blur="validateInputField($event,product.id)"
+              @blur="validateInputField($event, product.id)"
               field="unit"
               @keypress="isNumber($event)"
             />
@@ -100,20 +158,20 @@
             <input
               type="text"
               v-model="product.productMrpPrice.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,product.id)"
+              v-on:keydown="arrowkeyEventHandler($event, product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,product.id)"
+              @blur="validateInputField($event, product.id)"
               field="mrp_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
               v-model="product.productMrpPrice.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,product.id)"
+              v-on:keydown="arrowkeyEventHandler($event, product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,product.id)"
+              @blur="validateInputField($event, product.id)"
               field="mrp_paisa"
               @keypress="isNumber($event)"
             />
@@ -122,25 +180,25 @@
             <input
               type="text"
               v-model="product.productSellingPrice.rupee"
-              v-on:keydown="arrowkeyEventHandler($event,product.id)"
+              v-on:keydown="arrowkeyEventHandler($event, product.id)"
               class="mid-wd"
               placeholder="Enter Rupees"
-              @blur="validateInputField($event,product.id)"
+              @blur="validateInputField($event, product.id)"
               field="sell_rupee"
               @keypress="isNumber($event)"
             />.
             <input
               type="text"
               v-model="product.productSellingPrice.paisa"
-              v-on:keydown="arrowkeyEventHandler($event,product.id)"
+              v-on:keydown="arrowkeyEventHandler($event, product.id)"
               class="min-wd"
               maxlength="2"
-              @blur="validateInputField($event,product.id)"
+              @blur="validateInputField($event, product.id)"
               field="sell_paisa"
               @keypress="isNumber($event)"
             />
           </td>
-          <td>{{product.productBarcode}}</td>
+          <td>{{ product.productBarcode }}</td>
           <td>
             <svg-icon
               @click="triggerDeleteProduct(product.id)"
@@ -226,9 +284,10 @@ export default {
     },
   },
   methods: {
-    toggleColumnVisibility(columnName){
-      this.columnProps[columnName].visible =!this.columnProps[columnName].visible;
-      localStorage.setItem('itemColumns', JSON.stringify(this.columnProps))
+    toggleColumnVisibility(columnName) {
+      this.columnProps[columnName].visible =
+        !this.columnProps[columnName].visible;
+      localStorage.setItem("itemColumns", JSON.stringify(this.columnProps));
     },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
@@ -363,21 +422,23 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch("product/getProductList");
-    if(localStorage.getItem('itemColumns') !== null){
-      this.columnProps = JSON.parse(localStorage.getItem('itemColumns'));
+    if (localStorage.getItem("itemColumns") !== null) {
+      this.columnProps = JSON.parse(localStorage.getItem("itemColumns"));
     }
   },
 };
 </script>
 <style lang="scss" scoped>
-.flex {
+
+.menu-bar {
   justify-content: space-between;
+  align-items:center;
+  gap: 1rem;
 }
 
 .button-container {
-  & > div {
-    margin-left: 10px;
-  }
+  align-items:center;
+  gap: 1rem;
 }
 
 th {

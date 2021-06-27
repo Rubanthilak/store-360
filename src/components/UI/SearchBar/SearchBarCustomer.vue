@@ -156,7 +156,6 @@ export default {
   background: transparent;
   font-family: var(--font-regular);
   font-size: 12px;
-  color: var(--gray8);
 }
 
 .new-cust {
@@ -219,12 +218,16 @@ p {
 
   &:hover {
     background: var(--blue);
+    p{
     color: var(--gray0);
+    }
   }
   
   &.active {
     background: var(--blue);
-    color: var(--gray0);
+    p{
+      color: var(--gray0);
+    }
   }
 
   p {
