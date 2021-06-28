@@ -1,90 +1,141 @@
 <template>
   <section class="container" v-if="sale">
-    <div class="flex menubar">
-      <div class="flex header">
-        <router-link to="/sales">
-          <div class="back-button">
-            <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+    <top-bar>
+      <template #default>
+        <div class="flex menubar">
+          <div class="flex header">
+            <router-link to="/sales">
+              <div class="back-button">
+                <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+              </div>
+            </router-link>
+            <div>
+              <h1>Invoice {{ sale.id }}</h1>
+            </div>
           </div>
-        </router-link>
-        <div>
-          <h1>Invoice {{sale.id}}</h1>
+          <div class="flex button-container">
+            <router-link :to="'/sales/' + sale.id + '/print'">
+                <svg-icon class="print-btn" icon="print-icon" color="gray2" hover-color="blue" size="24"  ></svg-icon>
+            </router-link>
+            <flow-button label="New Payment"
+                @click="toggleAddPaymentPopup"
+              v-if="sale.totalAmountPaid < sale.totalPrice"
+              >
+              <svg-icon icon="plus-icon" color="gray2" size="24"></svg-icon>
+            </flow-button>
+          </div>
+        </div>
+      </template>
+    </top-bar>
+    <popup-new-payment
+      :open="showAddPayment"
+      @close="toggleAddPaymentPopup"
+      :id="sale.id"
+    ></popup-new-payment>
+    <div v-if="customer" class="content-wrapper">
+      <div>
+        <div class="bill-card">
+          <div class="header tile">
+            <p style="text-align: right">S.NO</p>
+            <p style="text-align: left">ITEM</p>
+            <p style="text-align: right">PRICE/UNIT</p>
+            <p style="text-align: right">UNIT</p>
+            <p style="text-align: right">PRICE</p>
+            <p style="text-align: right">GST</p>
+            <p style="text-align: right">GST (in ₹)</p>
+            <p style="text-align: right">TOTAL</p>
+          </div>
+          <hr />
+          <div style="min-height: 75vh">
+            <div
+              class="tile"
+              v-for="(product, index) in productList"
+              :key="product.id"
+            >
+              <p style="text-align: right">{{ index + 1 }}</p>
+              <p>{{ product.productName }}</p>
+              <p style="text-align: right">{{ product.productPrice }}</p>
+              <p style="text-align: right">{{ product.productCount }}</p>
+              <p style="text-align: right">
+                {{ product.productTotalPrice.toFixed(2) }}
+              </p>
+              <p style="text-align: right">
+                {{ product.productTaxPercentage }}%
+              </p>
+              <p style="text-align: right">
+                {{ product.productTotalTax.toFixed(2) }}
+              </p>
+              <p style="text-align: right">
+                {{ product.productTotalAmount.toFixed(2) }}
+              </p>
+            </div>
+          </div>
+          <hr />
+          <div class="header tile">
+            <p style="text-align: right"></p>
+            <p style="text-align: left">TOTAL</p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right"></p>
+            <p style="text-align: right">₹ {{ sale.totalPrice.toFixed(2) }}</p>
+          </div>
         </div>
       </div>
-      <div class="flex button-container">
-          <router-link :to="'/sales/'+sale.id+'/print'">
-            <the-button label="Print Invoice"></the-button>
-          </router-link>
-      </div>
-    </div>
-    <hr />
-    <div v-if="customer">
-      <div class="flex" style="gap:3rem">
-        <div>
+      <div class="flex" style="flex-direction: column">
+        <div class="card">
           <div class="title">
-            <p>CUSTOMER</p>
+            <p>Customer</p>
           </div>
-          <router-link :to="'/customers/'+customer.id">
-            <customer-card :customer="customer"></customer-card>
+          <router-link :to="'/customers/' + customer.id">
+            <div class="cust">
+              <div class="avatar">{{ customer.customerName[0] }}</div>
+              <div class="details">
+                <p class="name">{{ customer.customerName }}</p>
+                <p class="phone">{{ customer.customerPhoneNumber }}</p>
+              </div>
+            </div>
           </router-link>
         </div>
-        <div>
+        <div class="card">
           <div class="title">
-            <p>PAYMENT SUMMARY</p>
+            <p>Payment Summary</p>
           </div>
           <div class="pay-card">
             <div>
-              <p>Date</p>
-              <p>{{sale.createdAt.toDateString()}}</p>
+              <p>Purchase Date</p>
+              <p>{{ sale.createdAt.toDateString().substring(4) }}</p>
             </div>
             <div v-if="sale.totalAmountPaid < sale.totalPrice">
               <p>Balance</p>
-              <p style="color:var(--red)">₹ {{(sale.totalPrice - sale.totalAmountPaid).toFixed(2)}}</p>
+              <p style="color: var(--red)">
+                ₹ {{ (sale.totalPrice - sale.totalAmountPaid).toFixed(2) }}
+              </p>
             </div>
             <div v-else>
               <p>Status</p>
-              <p style="color:var(--green)">Success</p>
+              <p style="color: var(--green)">Success</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="title">
-        <p>BILL SUMMARY</p>
-      </div>
-      <div class="bill-card">
-        <div class="header tile">
-          <p style="text-align:right">S.NO</p>
-          <p style="text-align:left">ITEM</p>
-          <p style="text-align:right">PRICE/UNIT</p>
-          <p style="text-align:right">UNIT</p>
-          <p style="text-align:right">PRICE</p>
-          <p style="text-align:right">GST</p>
-          <p style="text-align:right">GST (in ₹)</p>
-          <p style="text-align:right">TOTAL</p>
-        </div>
-        <hr />
-        <div style="min-height:200px">
-          <div class="tile" v-for="(product,index) in productList" :key="product.id">
-            <p style="text-align:right">{{index+1}}</p>
-            <p>{{product.productName}}</p>
-            <p style="text-align:right">{{product.productPrice}}</p>
-            <p style="text-align:right">{{product.productCount}}</p>
-            <p style="text-align:right">{{product.productTotalPrice.toFixed(2)}}</p>
-            <p style="text-align:right">{{product.productTaxPercentage}}%</p>
-            <p style="text-align:right">{{product.productTotalTax.toFixed(2)}}</p>
-            <p style="text-align:right">{{product.productTotalAmount.toFixed(2)}}</p>
+        <div class="card">
+          <div class="title">
+            <p>Payment History</p>
           </div>
-        </div>
-        <hr />
-        <div class="header tile">
-          <p style="text-align:right"></p>
-          <p style="text-align:left">TOTAL</p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right"></p>
-          <p style="text-align:right">₹ {{sale.totalPrice.toFixed(2)}}</p>
+          <div class="pay-list">
+            <div
+              class="flex pay-tile"
+              v-for="payment in sale.payments"
+              :key="payment.id"
+            >
+              <div>
+                <p class="method">{{ payment.paymentMethod }} Payment</p>
+                <p class="date">{{ payment.dateOfTransaction }}</p>
+              </div>
+              <p class="amount">₹ {{ payment.amountPaid.toFixed(2) }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -92,10 +143,15 @@
 </template>
 
 <script>
+import PopupNewPayment from "../../UI/Popups/PopupNewPayment.vue";
 export default {
+  components: {
+    PopupNewPayment,
+  },
   data() {
     return {
       sale: null,
+      showAddPayment: false,
       customer: null,
     };
   },
@@ -125,7 +181,22 @@ export default {
       return tempList;
     },
   },
+  methods: {
+    toggleAddPaymentPopup() {
+      this.showAddPayment = !this.showAddPayment;
+    },
+  },
   async mounted() {
+    this.sale = await this.$store.dispatch(
+      "sale/getSalesById",
+      this.$route.params.id
+    );
+    this.customer = await this.$store.dispatch(
+      "customer/getCustomerById",
+      this.sale.customerId
+    );
+  },
+  async updated() {
     this.sale = await this.$store.dispatch(
       "sale/getSalesById",
       this.$route.params.id
@@ -139,15 +210,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+section {
+  padding-top: 10px !important;
+}
+
+.print-btn{
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 5px;
+
+  &:hover{
+    background: var(--gray1);
+  }
+}
+
 .menubar {
   justify-content: space-between;
   align-items: center;
 }
 
 .button-container {
-  div {
-    margin-left: 10px;
-  }
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .header {
@@ -170,15 +254,28 @@ export default {
   display: flex;
 }
 
+.card {
+  background: white;
+  padding: 20px;
+  width: calc(100% - 40px);
+  margin-bottom: 25px;
+  border-radius: 6px;
+}
+
 .title {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0px;
   p {
-    font-family: var(--font-semibold);
-    color: var(--gray3);
-    margin: 0px;
+    background: var(--gray1);
+    font-family: var(--font-bold);
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 4px;
   }
+}
+
+.content-wrapper {
+  display: grid;
+  grid-template-columns: auto 350px;
+  gap: 20px;
 }
 
 .bill-card {
@@ -211,15 +308,12 @@ export default {
 
 .pay-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
+  align-items: flex-start;
+  gap: 20px;
   background: var(--gray0);
-  height:100px;
-  box-shadow: 0px 5px 15px #7070700c;
-  width: 250px;
-  border-radius: 6px;
-  padding:0px 30px;
+  margin-top: 20px;
+  margin-left: 5px;
+  flex-direction: column;
 
   div {
     p {
@@ -229,12 +323,64 @@ export default {
         color: var(--gray3);
       }
       &:last-child {
-        font-size: 18px;
+        font-size: 16px;
         font-family: var(--font-semibold);
         color: var(--gray6);
       }
     }
   }
+}
 
+.cust {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 20px;
+  margin-left: 5px;
+
+  .avatar {
+    height: 50px;
+    width: 50px;
+    background: var(--blue);
+    color: var(--gray0);
+    border-radius: 360px;
+    font-size: 32px;
+    font-family: var(--font-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .details {
+    .name {
+      font-family: var(--font-semibold);
+    }
+    .phone {
+      color: var(--gray3);
+    }
+  }
+}
+
+.pay-list {
+  .pay-tile {
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    align-items: center;
+
+    .method {
+      font-family: var(--font-semibold);
+    }
+    .date {
+      font-family: var(--font-light);
+      color: var(--gray3);
+      font-size: 14px;
+    }
+    .amount {
+      font-family: var(--font-semibold);
+      color: var(--green);
+      font-size: 18px;
+    }
+  }
 }
 </style>

@@ -2,10 +2,10 @@
   <div class="datepicker">
     <div class="box"  @click="toggleDropdown" style="width: 110px">
       <div class="icon-wrapper">
-        <svg-icon icon="calendar-icon" size="20" color="gray0"></svg-icon>
+        <svg-icon icon="calendar-icon" size="20" :color="date !== null ? 'blue' : 'gray3' "></svg-icon>
       </div>
       <div class="date-wrapper">
-        {{date ? date.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}) : 'Date Filter'}}
+        {{date ? date.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}) : (label ? label : 'Date Filter')}}
       </div>
     </div>
     <v-date-picker v-model="date" color="blue" class="dropdown" v-if="flag" />
@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  props: ["label"],
   data() {
     return {
       flag: false,
@@ -38,36 +39,42 @@ export default {
 
 <style lang="scss" scoped>
 .datepicker {
-  background:var(--gray0);
+  background:var(--gray1);
   position: relative;
+  box-shadow:inset 0px 0px 15px rgb(0,0,0,0.05);
+  border-radius: 5px;
+
   .dropdown {
     position: absolute;
     top: 40px;
     right: 0px;
   }
+
 }
  .icon-wrapper{
-   background:var(--blue);
+  //  background:var(--gray1);
    height:100%;
    align-items: center;
    justify-content: center;
-   display: flex
+   display: flex;
+   border-radius: 6px;
  }
 
  .date-wrapper{
-    text-align: center;
+    text-align: left;
+    border-radius: 6px;
  }
 
  .box{
-    border: 2px solid var(--gray2);
-    border-radius: 5px;
-    height: 32px;
+    // border: 2px solid var(--gray2);
+    border-radius: 6px;
+    height: 34px;
     overflow:hidden;
     align-items: center;
-    color: var(--gray4);
-    font-family: var(--font-regular);
+    color: var(--gray6);
+    font-family: var(--font-medium);
     font-size: 12px;
     display: grid;
-    grid-template-columns: 35px 75px;
+    grid-template-columns: 35px 85px;
  }
 </style>

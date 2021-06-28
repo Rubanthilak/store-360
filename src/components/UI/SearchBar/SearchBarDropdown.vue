@@ -95,7 +95,7 @@ input {
   height: 35px;
   border: none;
   outline: none;
-  box-shadow: 0px 3px 50px #0000000a;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.01);
   border-radius: 4px;
 }
 
@@ -130,7 +130,7 @@ input {
 
 .dropdown-item {
   display: grid;
-  grid-template-columns: 5% auto 20%;
+  grid-template-columns: 5% auto;
   gap: 1rem;
   cursor: pointer;
   padding: 10px 15px;
@@ -138,19 +138,23 @@ input {
 
   &:hover {
     background: var(--blue);
-    color: var(--gray0);
+    p{
+      color: var(--gray0);
+    }
   }
 
   &.active {
     background: var(--blue);
-    color: var(--gray0);
-  }
-
-  p {
-    &:last-child {
-      text-align: right;
+    p{
+      color: var(--gray0);
     }
   }
+
+  // p {
+  //   &:last-child {
+  //     text-align: right;
+  //   }
+  // }
 }
 
 .dropdown-header {
@@ -158,7 +162,7 @@ input {
   top: 0px;
   background: var(--gray0);
   display: grid;
-  grid-template-columns: 5% auto 20%;
+  grid-template-columns: 5% auto;
   gap: 1rem;
   cursor: pointer;
   padding: 10px 15px;
@@ -166,9 +170,9 @@ input {
 
   p {
     font-family: var(--font-semibold);
-    &:last-child {
-      text-align: right;
-    }
+    // &:last-child {
+    //   text-align: right;
+    // }
   }
 }
 

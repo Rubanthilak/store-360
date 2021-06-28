@@ -32,6 +32,7 @@ body {
 main {
   overflow: auto;
   height: 100vh;
+  position:relative;
   section {
     padding-top: 20px !important;
   }

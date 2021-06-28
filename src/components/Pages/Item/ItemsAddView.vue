@@ -1,21 +1,24 @@
 <template>
   <section class="container">
-    <div class="flex">
-      <div class="flex">
-        <router-link to="/items">
-          <div class="back-button">
-            <svg-icon size="34" icon="back-icon"></svg-icon>
+    <top-bar>
+      <template #default>
+        <div class="flex">
+          <div class="flex">
+            <router-link to="/items">
+              <div class="back-button">
+                <svg-icon size="34" icon="back-icon"></svg-icon>
+              </div>
+            </router-link>
+            <h1>Add Items</h1>
           </div>
-        </router-link>
-        <h1>Add Items</h1>
-      </div>
-      <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
-        <the-button label="Save" @click="validateProductList"></the-button>
-        <the-button label="Add Rows" @click="addRows"></the-button>
-        <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
-      </div>
-    </div>
-    <hr />
+          <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
+            <the-button label="Save" @click="validateProductList"></the-button>
+            <the-button label="Add Rows" @click="addRows"></the-button>
+            <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <div v-if="isLoading" class="loading-wrapper">
       <loading-spinner></loading-spinner>
       <p class="mg-top">Adding Items ....</p>
@@ -393,10 +396,6 @@ export default {
 .flex {
   justify-content: space-between;
   align-items: center;
-}
-
-.table-wrapper {
-  margin-top: 15px;
 }
 
 .mg-top {

@@ -37,16 +37,17 @@ export default {
 
 <style lang="scss" scoped>
 .dropdown {
-  border: 2px solid var(--gray2);
+  // border: 2px solid var(--gray2);
   font-family: var(--font-regular);
   font-size: 12px;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 7px 10px;
   position: relative;
-  background: var(--gray0);
+  background: var(--gray1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);
 }
 
 .hint {

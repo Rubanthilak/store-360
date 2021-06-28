@@ -54,8 +54,9 @@ input {
   height: 35px;
   border: none;
   outline: none;
-  box-shadow: 0px 5px 50px #0000001c;
+  box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
+  background: var(--gray1);
 }
 
 .search,.clear{

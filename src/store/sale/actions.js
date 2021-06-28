@@ -41,10 +41,12 @@ export default {
     sales.rows.forEach(sale => {
       let temp = {
         ...sale.dataValues,
-        Payments: []
+        payments: [],
+        totalAmountPaid: 0
       }
-      sale.Payments.forEach(payment => {
-        temp.Payments.push(payment.dataValues)
+      sale.payments.forEach(payment => {
+        temp.payments.push(payment.dataValues)
+        temp.totalAmountPaid += payment.dataValues.amountPaid
       })
       tempList.push(temp)
     });
@@ -55,18 +57,31 @@ export default {
     const sale = await Database.Model.Sale.getSaleById(id)
     let temp = {
       ...sale.dataValues,
-      Payments: [],
+      payments: [],
       totalAmountPaid: 0
     }
-    sale.Payments.forEach(payment => {
-      temp.Payments.push(payment.dataValues)
+    sale.payments.forEach(payment => {
+      temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += payment.dataValues.amountPaid
     })
     return temp;
   },
   async getSalesByCustomerId(context,obj){
-    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit)
-    return sales;
+    const sales = await Database.Model.Sale.getSalesCustomerId(obj.cust_id,obj.limit);
+    var tempList = [];
+    sales.forEach(sale => {
+      let temp = {
+        ...sale.dataValues,
+        payments: [],
+        totalAmountPaid: 0
+      }
+      sale.payments.forEach(payment => {
+        temp.payments.push(payment.dataValues)
+        temp.totalAmountPaid += payment.dataValues.amountPaid
+      })
+      tempList.push(temp)
+    });
+    return tempList;
   },
   async postSale(context, obj) {
     const payments = generatePaymentArray(obj.paymentMethod);
@@ -78,11 +93,11 @@ export default {
     });
     let temp = {
       ...sale.dataValues,
-      Payments: [],
+      payments: [],
       totalAmountPaid: 0.00
     }
-    sale.Payments.forEach(payment => {
-      temp.Payments.push(payment.dataValues)
+    sale.payments.forEach(payment => {
+      temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
     })
     console.log(temp);
@@ -92,5 +107,9 @@ export default {
     const res = await Database.Model.Sale.updateSale(obj,obj.id);
     return res;         
   },
+  async addPayment(context,obj){
+    const res = await Database.Model.Payment.createPayment(obj);
+    return res;
+  }
 };
   

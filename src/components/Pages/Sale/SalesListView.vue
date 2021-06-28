@@ -1,20 +1,37 @@
 <template>
   <section class="container">
-    <div class="flex menubar">
-      <search-bar :placeHolder="'Search Sale by Invoice Number, ...'" @typing="searchProduct"></search-bar>
-      <div class="flex button-container">
-        <list-box-sale-sort :sortOrder="sortOrder" @selected="changeSortOrder"></list-box-sale-sort>
-        <date-picker @pick="dateFilter"></date-picker>
-      </div>
-    </div>
-    <hr />
+    <top-bar>
+      <template #default>
+        <div class="flex menubar">
+          <search-bar
+            :placeHolder="'Search Sale by Invoice Number, ...'"
+            @typing="searchProduct"
+          ></search-bar>
+          <div class="flex button-container">
+            <list-box-sale-sort
+              :sortOrder="sortOrder"
+              @selected="changeSortOrder"
+            ></list-box-sale-sort>
+            <date-picker @pick="dateFilter"></date-picker>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <div ref="content" class="content" v-if="salesList.length > 0">
       <div class="sales-list">
-        <sale-card v-for="sale in salesList" :key="sale.id" :sale="sale"></sale-card>
+        <sale-card
+          v-for="sale in salesList"
+          :key="sale.id"
+          :sale="sale"
+        ></sale-card>
       </div>
       <div class="paginator">
-        <div class="page-link prev" @click="prevPage" v-show="showPrevButton">&lt; Prev</div>
-        <div class="page-link next" @click="nextPage" v-show="showNextButton">Next &gt;</div>
+        <div class="page-link prev" @click="prevPage" v-show="showPrevButton">
+          &lt; Prev
+        </div>
+        <div class="page-link next" @click="nextPage" v-show="showNextButton">
+          Next &gt;
+        </div>
       </div>
     </div>
   </section>
@@ -134,7 +151,7 @@ hr {
   // overflow: auto;
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, 300px);
+  grid-template-columns: repeat(auto-fill, 300px);
   justify-content: space-evenly;
 }
 

@@ -1,7 +1,7 @@
 import connection from "../helperFunctions/getConnection.js";
 import { Payment } from './Payment';
 
-const Sale = connection.sequelize.define("Sale", {
+const Sale = connection.sequelize.define("sale", {
   id: {
     field: "saleid",
     type: connection.DataTypes.INTEGER,
@@ -112,7 +112,8 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
     where: {
       customerId: cust_id,
     },
-    limit:limit
+    limit:limit,
+    include: [Payment]
   });
   return sales;
 };
@@ -121,7 +122,7 @@ const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
         productList: obj.productList,
-        Payments: obj.payments,
+        payments: obj.payments,
         totalPrice: obj.totalPrice
     },{
       include: [ Payment ]
@@ -133,7 +134,8 @@ const updateSale = async function(obj,id){
   const res = await Sale.update(obj,{
     where: {
       id: id
-    }
+    },
+    include: [ Payment ]
   });
   return res[0] === 1 ? true : false;
 }
@@ -142,7 +144,7 @@ const deleteSale = async function(id){
   const res = await Sale.destroy({
     where: {
       id: id
-    }
+    },
   });
   return res === 1 ? true : false;
 }

@@ -1,25 +1,52 @@
 <template>
   <section>
-    <div class="flex" style="margin-right:10px;justify-content:space-between">
-      <div>
-        <h1 v-if="editMode" style="font-size:32px">Edit Profile</h1>
-        <h1 v-else style="font-size:32px">Company Profile</h1>
-      </div>
-      <div class="flex" style="gap:10px;">
-        <the-button label="Edit Details" v-show="!editMode" @click="editMode = !editMode"></the-button>
-        <the-button label="Update" v-show="editMode" @click="updateCompanyDetails"></the-button>
-        <the-button label="Cancel" v-show="editMode" color="red" @click="editMode = !editMode"></the-button>
-      </div>
-    </div>
+    <top-bar>
+      <template #default>
+        <div
+         style="display:flex; margin-right: 10px; justify-content: flex-end;align-items:center"
+        >
+          <div class="flex" style="gap: 10px">
+            <the-button
+              label="Edit"
+              v-show="!editMode"
+              @click="editMode = !editMode"
+            ></the-button>
+            <the-button
+              label="Update"
+              v-show="editMode"
+              @click="updateCompanyDetails"
+            ></the-button>
+            <the-button
+              label="Cancel"
+              v-show="editMode"
+              color="red"
+              @click="editMode = !editMode"
+            ></the-button>
+          </div>
+        </div>
+      </template>
+    </top-bar>
     <div v-if="editMode" class="user-form">
-      <h1 style="font-size:18px">Name</h1>
+      <h1 style="font-size: 18px">Name</h1>
       <div class="flex">
-        <input type="text" placeholder="Company Name" v-model="company.companyName" />
+        <input
+          type="text"
+          placeholder="Company Name"
+          v-model="company.companyName"
+        />
       </div>
-      <h1 style="font-size:18px">Address</h1>
+      <h1 style="font-size: 18px">Address</h1>
       <div class="flex">
-        <input type="number" placeholder="Door Number" v-model="company.doorNumber" />
-        <input type="text" placeholder="Street Name" v-model="company.streetName" />
+        <input
+          type="number"
+          placeholder="Door Number"
+          v-model="company.doorNumber"
+        />
+        <input
+          type="text"
+          placeholder="Street Name"
+          v-model="company.streetName"
+        />
       </div>
       <div class="flex">
         <input type="text" placeholder="City" v-model="company.cityName" />
@@ -28,30 +55,34 @@
       <div class="flex">
         <input type="number" placeholder="Pincode" v-model="company.pincode" />
       </div>
-      <h1 style="font-size:18px">Contact</h1>
+      <h1 style="font-size: 18px">Contact</h1>
       <div class="flex">
         <input type="email" placeholder="Email" v-model="company.emailId" />
-        <input type="phone" placeholder="Phone Number" v-model="company.phoneNumber" />
+        <input
+          type="phone"
+          placeholder="Phone Number"
+          v-model="company.phoneNumber"
+        />
       </div>
-      <h1 style="font-size:18px">GSTIN</h1>
+      <h1 style="font-size: 18px">GSTIN</h1>
       <input type="text" placeholder="GSTIN" v-model="company.gstinNumber" />
     </div>
     <div v-else class="user-profile">
       <div class="card">
-        <h1 style="font-size:32px">{{company.companyName}}</h1>
-        <p>Door No. {{company.doorNumber}},</p>
-        <p>{{company.streetName}},</p>
-        <p>{{company.cityName}},</p>
-        <p>{{company.stateName}} - {{company.pincode}}.</p>
+        <h1 style="font-size: 32px">{{ company.companyName }}</h1>
+        <p>Door No. {{ company.doorNumber }},</p>
+        <p>{{ company.streetName }},</p>
+        <p>{{ company.cityName }},</p>
+        <p>{{ company.stateName }} - {{ company.pincode }}.</p>
       </div>
       <div class="card">
-        <h1 style="font-size:18px">Contact</h1>
-        <p>{{company.emailId}}</p>
-        <p>{{company.phoneNumber}}</p>
+        <h1 style="font-size: 18px">Contact</h1>
+        <p>{{ company.emailId }}</p>
+        <p>{{ company.phoneNumber }}</p>
       </div>
       <div class="card">
-        <h1 style="font-size:18px">GSTIN</h1>
-        <p>{{company.gstinNumber}}</p>
+        <h1 style="font-size: 18px">GSTIN</h1>
+        <p>{{ company.gstinNumber }}</p>
       </div>
     </div>
   </section>
@@ -91,7 +122,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -118,12 +148,12 @@ input {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin: 15px 0px;
+  margin:0px;
   background: var(--gray0);
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  width:60%;
+  width: 60%;
   div {
     gap: 50px;
   }
@@ -132,13 +162,12 @@ input {
 .user-profile {
   display: flex;
   flex-direction: column;
-  margin: 15px 00px;
+  margin: 0px;
   gap: 25px;
   background: var(--gray0);
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
-  border-radius: 6px;  
-  width:60%;
+  border-radius: 6px;
+  width: 60%;
 }
-
 </style>

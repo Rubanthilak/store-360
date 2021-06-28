@@ -1,6 +1,8 @@
 <template>
   <div :style="color ? 'background-color:var(--'+ color +')' : ''">
-    <p :style="textColor ? 'color:var(--'+ textColor +')' : ''">{{label}}</p>
+    <slot>
+      <p :style="textColor ? 'color:var(--'+ textColor +')' : ''">{{label}}</p>
+    </slot>
   </div>
 </template>
 
@@ -34,14 +36,17 @@ export default {
 
 <style lang="scss" scoped>
 div {
-  padding: 0px 20px;
   height: 35px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   border: none;
   border-radius: 4px;
   background-color: var(--blue);
   outline: none;
   cursor: pointer;
-  box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
+  // box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.1);
+  gap:0.25rem;
 }
 
 p{
@@ -50,7 +55,8 @@ p{
   line-height: 35px;
   color: var(--gray0);
   text-align: center;
-  white-space: nowrap
+  white-space: nowrap;
+  padding: 0px 15px ;
 }
 
 </style>

@@ -148,15 +148,15 @@ export default {
 .search {
   display: flex;
   width: calc(100% - 24px);
-  padding: 0px 10px;
+  padding: 2px 10px;
   height: 32px;
-  border: 2px solid var(--gray2);
+  border: none;
   outline: none;
   border-radius:5px;
-  background: transparent;
-  font-family: var(--font-regular);
+  background: var(--gray1);
+  font-family: var(--font-medium);
   font-size: 12px;
-  color: var(--gray8);
+  box-shadow: inset 0px 0px 25px rgb(0,0,0,0.05);
 }
 
 .new-cust {
@@ -219,12 +219,16 @@ p {
 
   &:hover {
     background: var(--blue);
+    p{
     color: var(--gray0);
+    }
   }
   
   &.active {
     background: var(--blue);
-    color: var(--gray0);
+    p{
+      color: var(--gray0);
+    }
   }
 
   p {

@@ -6,7 +6,7 @@
         <div class="tab-lhs">
           <div class="flex menu-bar">
             <search-bar-dropdown
-              place-holder="Search Items by Name, ID, Barcode"
+              place-holder="Search Items by Name, ID"
               @select="addProductToActiveCart"
             ></search-bar-dropdown>
           </div>
@@ -79,6 +79,9 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="bill-card">
+
             <div class="item2">
               <div class="header">
                 <p>Payment Method</p>
@@ -115,6 +118,8 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="bill-card">
             <div class="item3">
               <div class="header">
                 <p>Bill Summary</p>
@@ -583,6 +588,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 0px !important;
   min-width: 1200px;
@@ -630,6 +636,7 @@ td {
   width: 100%;
   height: 100%;
   overflow: auto;
+  background: var(--gray1);
 }
 
 .menu-bar {
@@ -640,30 +647,30 @@ td {
   background: var(--gray0);
   width: calc(100% - 40px);
   // height: calc(100% - 40px);
-  border-radius: 4px;
-  box-shadow: 0px 5px 50px #0000001c;
+  border-radius: 6px;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.01);
   display: flex;
   flex-direction: column;
   padding: 20px;
   // margin-top: 68px;
+  margin-bottom:25px;
   .header {
     P {
       background: var(--gray1);
       font-family: var(--font-bold);
-      padding: 10px;
+      padding: 8px 10px;
       font-size: 14px;
       border-radius: 4px;
     }
   }
 
   .content {
-    margin: 10px 0px;
     p {
       font-size: 14px;
       font-family: var(--font-medium);
     }
     .summ-wrapper {
-      margin: 0px 10px;
+      margin: 10px 10px;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -692,7 +699,7 @@ td {
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      margin: 20px 0px;
+      margin-top: 20px;
       .cust {
         display: flex;
         align-items: center;
@@ -723,7 +730,8 @@ td {
 
   .content {
     .paym-wrapper {
-      margin: 20px 0px;
+      margin-top: 20px;
+      transition: all 0.3s;
       .split-wrapper {
         margin-top: 20px;
         display: flex;

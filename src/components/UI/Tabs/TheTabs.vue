@@ -7,7 +7,7 @@
       @click="setTab(tab.key)"
     >
       <p>{{tab.tabName}}</p>
-      <p style="color:var(--red);cursor:pointer;" @click="removeTab(tab.key)">x</p>
+      <svg-icon class="close-button" @click="removeTab(tab.key)" icon="cross-icon" color="gray8" hover-color="gray0" size="18"></svg-icon>
     </div>
     <div class="add-tab" @click="addTab">
       <p>+</p>
@@ -117,13 +117,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.close-button{
+  margin-right: 8px;
+  border-radius:5px;   
+  padding:1px; 
+  display:none;
+
+  &:hover{
+    background: var(--red);
+  }
+}
+
 .tab-wrapper {
   background: #cecece;
   .add-tab {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     &:hover {
       background: var(--blue);
       p {
@@ -150,8 +161,17 @@ export default {
     margin-right: 3px;
     transition: all 0.2s;
 
+    &:hover{
+      .close-button{
+        display:block;
+      }
+    }
+
     &.is-active {
       background: var(--gray1);
+      .close-button{
+        display:block;
+      }
     }
 
     p {
@@ -167,4 +187,5 @@ export default {
     }
   }
 }
+
 </style>

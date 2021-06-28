@@ -1,27 +1,38 @@
 <template>
   <section v-if="customer" class="container">
-    <div class="flex">
-      <div class="flex header">
-        <router-link to="/customers">
-          <div class="back-button">
-            <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+    <top-bar>
+      <template #default>
+        <div class="flex">
+          <div class="flex header">
+            <router-link to="/customers">
+              <div class="back-button">
+                <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
+              </div>
+            </router-link>
+            <div>
+              <h1>{{ editMode ? "Edit Details" : customer.customerName }}</h1>
+            </div>
           </div>
-        </router-link>
-        <div>
-          <h1>{{editMode ? "Edit Details" : customer.customerName}}</h1>
+          <div class="flex button-container">
+            <svg-icon
+              icon="edit-icon"
+              color="gray2"
+              hover-color="blue"
+              size="24"
+              @click="toggleEditMode"
+            ></svg-icon>
+            <svg-icon
+              v-if="editMode"
+              icon="delete-icon"
+              color="gray2"
+              hover-color="red"
+              size="24"
+              @click="triggerDeleteCustomer"
+            ></svg-icon>
+          </div>
         </div>
-      </div>
-      <div class="flex button-container">
-        <the-button :label="editMode ? 'Save' : 'Edit User'" @click="toggleEditMode"></the-button>
-        <icon-button
-          v-if="editMode"
-          icon="delete-icon"
-          background-color="red"
-          @click="triggerDeleteCustomer"
-        ></icon-button>
-      </div>
-    </div>
-    <hr />
+      </template>
+    </top-bar>
     <div class="cust-body" v-if="!editMode">
       <div class="user-summary">
         <div class="title">
@@ -29,17 +40,28 @@
         </div>
         <div class="content">
           <div>
-            <svg-icon icon="badge-icon" size="24" color="gray3" hover-color="green"></svg-icon>
+            <svg-icon
+              icon="badge-icon"
+              size="24"
+              color="gray3"
+              hover-color="green"
+            ></svg-icon>
             <p class="subs">Credit Score</p>
-            <p class="value" style="color:var(--green)">{{customer.customerCreditPoint}}</p>
+            <p class="value" style="color: var(--green)">
+              {{ customer.customerCreditPoint }}
+            </p>
           </div>
           <div>
-            <svg-icon icon="wallet-icon" size="24" color="gray3" hover-color="red"></svg-icon>
+            <svg-icon
+              icon="wallet-icon"
+              size="24"
+              color="gray3"
+              hover-color="red"
+            ></svg-icon>
             <p class="subs">Unpaid Balance</p>
-            <p
-              class="value"
-              style="color:var(--red)"
-            >₹ {{customer.customerUnpaidBalance.toFixed(2)}}</p>
+            <p class="value" style="color: var(--red)">
+              ₹ {{ customer.customerUnpaidBalance.toFixed(2) }}
+            </p>
           </div>
         </div>
       </div>
@@ -49,19 +71,34 @@
         </div>
         <div class="content">
           <div v-if="customer.customerCityName">
-            <svg-icon icon="home-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
+            <svg-icon
+              icon="home-icon"
+              size="24"
+              color="gray3"
+              hover-color="blue"
+            ></svg-icon>
             <p class="subs">Address</p>
-            <p class="value">{{customer.customerCityName}}</p>
+            <p class="value">{{ customer.customerCityName }}</p>
           </div>
           <div>
-            <svg-icon icon="browser-icon" size="24" color="gray3" hover-color="red"></svg-icon>
+            <svg-icon
+              icon="browser-icon"
+              size="24"
+              color="gray3"
+              hover-color="red"
+            ></svg-icon>
             <p class="subs">Phone Number</p>
-            <p class="value">{{customer.customerPhoneNumber}}</p>
+            <p class="value">{{ customer.customerPhoneNumber }}</p>
           </div>
           <div>
-            <svg-icon icon="box-icon" size="24" color="gray3" hover-color="blue"></svg-icon>
+            <svg-icon
+              icon="box-icon"
+              size="24"
+              color="gray3"
+              hover-color="blue"
+            ></svg-icon>
             <p class="subs">Joined on</p>
-            <p class="value">{{customer.createdAt.toDateString()}}</p>
+            <p class="value">{{ customer.createdAt.toDateString() }}</p>
           </div>
         </div>
       </div>
@@ -91,8 +128,8 @@
           <p>Address</p>
         </div>
         <div class="edit-card">
-          <div style="display:flex;flex-direction:row;gap:1.5rem;">
-            <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="display: flex; flex-direction: row; gap: 1.5rem">
+            <div style="display: flex; flex-direction: column; gap: 1rem">
               <div class="row">
                 <p>Door Number</p>
                 <input type="text" v-model="customer.customerDoorNumber" />
@@ -106,7 +143,7 @@
                 <input type="text" v-model="customer.customerCityName" />
               </div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div style="display: flex; flex-direction: column; gap: 1rem">
               <div class="row">
                 <p>State Name</p>
                 <input type="text" v-model="customer.customerStateName" />
@@ -125,13 +162,13 @@
         <p>Last Purchases</p>
         <the-button label="View All"></the-button>
       </div>
+      <hr />
       <div class="sale-list">
-        <div v-for="sale in customer.sales" :key="sale.id" class="sale-tile">
-          <p class="bold">Bill Number #{{sale.id}}</p>
-          <p>{{sale.createdAt.toDateString()}}</p>
-          <p>{{sale.paymentMethod}}</p>
-          <p>{{(sale.cashAmount+sale.cardAmount+sale.upiAmount).toFixed(2)}}</p>
-        </div>
+        <sale-card
+          v-for="sale in customer.sales"
+          :key="sale.id"
+          :sale="sale"
+        ></sale-card>
       </div>
     </div>
   </section>
@@ -180,7 +217,7 @@ export default {
       }
     },
     toggleEditMode() {
-      if(this.editMode){
+      if (this.editMode) {
         this.triggerUpdateCustomer();
       }
       this.editMode = !this.editMode;
@@ -196,9 +233,7 @@ export default {
 }
 
 .button-container {
-  div {
-    margin-left: 10px;
-  }
+   gap:1rem;
 }
 
 .header {
@@ -234,6 +269,7 @@ export default {
 .title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   p {
     font-family: var(--font-semibold);
     color: var(--gray3);
@@ -267,27 +303,14 @@ export default {
 }
 
 .sale-list {
-  margin-top: 15px;
-
-  .sale-tile {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    justify-content: space-between;
-    background: var(--gray0);
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.01);
-    margin-bottom: 3px;
-    cursor: pointer;
-
-    P {
-      font-size: 16px;
-      &:nth-last-child(1),
-      &:nth-last-child(2) {
-        text-align: right;
-      }
-    }
-  }
+  // margin-top: 30px;
+  margin-bottom: 50px;
+  // height: calc(100vh - 180px);
+  // overflow: auto;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, 300px);
+  justify-content: space-evenly;
 }
 
 .edit-body {
