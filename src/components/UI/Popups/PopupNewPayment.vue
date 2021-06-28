@@ -25,7 +25,7 @@
     </template>
     <template #actions>
       <div class="flex button-container">
-        <the-button label="Add Payment" @click="validateInput"></the-button>
+        <the-button label="Add Payment" color="green" @click="validateInput"></the-button>
       </div>
     </template>
   </the-popup>

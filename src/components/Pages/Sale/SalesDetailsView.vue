@@ -14,14 +14,15 @@
             </div>
           </div>
           <div class="flex button-container">
-            <the-button
-              label="Add Payment"
-              @click="toggleAddPaymentPopup"
-              v-if="sale.totalAmountPaid < sale.totalPrice"
-            ></the-button>
             <router-link :to="'/sales/' + sale.id + '/print'">
-              <the-button label="Print Invoice"></the-button>
+                <svg-icon class="print-btn" icon="print-icon" color="gray2" hover-color="blue" size="24"  ></svg-icon>
             </router-link>
+            <flow-button label="New Payment"
+                @click="toggleAddPaymentPopup"
+              v-if="sale.totalAmountPaid < sale.totalPrice"
+              >
+              <svg-icon icon="plus-icon" color="gray2" size="24"></svg-icon>
+            </flow-button>
           </div>
         </div>
       </template>
@@ -45,7 +46,7 @@
             <p style="text-align: right">TOTAL</p>
           </div>
           <hr />
-          <div style="min-height: 70vh">
+          <div style="min-height: 75vh">
             <div
               class="tile"
               v-for="(product, index) in productList"
@@ -213,15 +214,24 @@ section {
   padding-top: 10px !important;
 }
 
+.print-btn{
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 5px;
+
+  &:hover{
+    background: var(--gray1);
+  }
+}
+
 .menubar {
   justify-content: space-between;
   align-items: center;
 }
 
 .button-container {
-  div {
-    margin-left: 10px;
-  }
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .header {

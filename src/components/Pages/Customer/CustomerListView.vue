@@ -2,7 +2,7 @@
   <section class="container">
     <top-bar>
       <template #default>
-        <div class="flex">
+        <div class="flex menu-bar">
           <search-bar
             @typing="searchCustomer"
             :placeHolder="'Search Customer by Name, Phone Number, ...'"
@@ -11,10 +11,13 @@
             <list-box-customer-sort
               @selected="sortCustomerList"
             ></list-box-customer-sort>
-            <the-button
-              :label="'+'"
+              <svg-icon
+              icon="plus-icon"
+              color="gray2"
+              hover-color="blue"
+              size="24"
               @click="triggerCreateCustomer"
-            ></the-button>
+            ></svg-icon>
           </div>
         </div>
       </template>
@@ -139,9 +142,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.menu-bar{
+  gap:1rem;    
+}
+
 .button-container {
-  div {
-    margin-left: 10px;
+  gap:0.5rem;    
+  svg{
+    padding:5px;
+    border-radius:5px;
+    transition: all 0.3s;
+    &:hover{
+      background:var(--gray1);
+      box-shadow: inset 0px 0px 15px rgb(0,0,0,0.05);
+    }
   }
 }
 
@@ -157,7 +172,7 @@ hr {
 .content-wrapper {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, 280px);
+  grid-template-columns: repeat(auto-fill, 280px);
   justify-content: space-evenly;
   padding-top: 15px;
 }

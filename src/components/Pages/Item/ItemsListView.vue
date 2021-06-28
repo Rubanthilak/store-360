@@ -20,16 +20,24 @@
               icon="edit-icon"
               color="gray2"
               hover-color="blue"
-              size="24"
+              size="22"
               @click="toggleTableEditMode"
+              style="padding:6px;"
             ></svg-icon>
             <dropdown-menu-item
               @column-selected="toggleColumnVisibility"
               :column-data="columnProps"
             ></dropdown-menu-item>
           </div>
-          <div class="flex button-container" v-if="tableEditMode">
-            <the-button label="Save" @click="toggleTableEditMode"></the-button>
+          <div class="flex button-container" 
+           v-if="tableEditMode">
+             <svg-icon
+              icon="back-icon"
+              color="red"
+              size="24"
+              style="background:var(--gray1)"
+              @click="toggleTableEditMode"
+            ></svg-icon>
           </div>
         </div>
       </template>
@@ -429,6 +437,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
+ svg{
+    padding:5px;
+    border-radius:5px;
+    transition: all 0.3s;
+    &:hover{
+      background:var(--gray1);
+      box-shadow: inset 0px 0px 15px rgb(0,0,0,0.05);
+    }
+  }
 
 .menu-bar {
   justify-content: space-between;

@@ -59,4 +59,12 @@ svg:hover {
     fill: var(--hoverColor);
   }
 }
+
+.hero-button:hover{
+    svg {
+      path {
+        fill: var(--green) !important;
+      }
+  }
+}
 </style>

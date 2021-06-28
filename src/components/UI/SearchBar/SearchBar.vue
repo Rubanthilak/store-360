@@ -54,7 +54,7 @@ input {
   height: 35px;
   border: none;
   outline: none;
-  box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
   background: var(--gray1);
 }
