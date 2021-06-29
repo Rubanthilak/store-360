@@ -27,6 +27,8 @@
       </template>
     </top-bar>
     <div v-if="editMode" class="user-form">
+      <h1 style="font-size: 36px">Company Info</h1>
+      <svg-icon icon="user-circle-icon" color="gray2" size="200"/>
       <h1 style="font-size: 18px">Name</h1>
       <div class="flex">
         <input
@@ -68,6 +70,7 @@
       <input type="text" placeholder="GSTIN" v-model="company.gstinNumber" />
     </div>
     <div v-else class="user-profile">
+      <svg-icon icon="user-circle-icon" color="gray2" size="200"/>
       <div class="card">
         <h1 style="font-size: 32px">{{ company.companyName }}</h1>
         <p>Door No. {{ company.doorNumber }},</p>
@@ -153,7 +156,9 @@ input {
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  width: 60%;
+  width: 800px;
+  margin: 0px auto;
+  min-height: calc(100vh - 175px);
   div {
     gap: 50px;
   }
@@ -162,12 +167,15 @@ input {
 .user-profile {
   display: flex;
   flex-direction: column;
-  margin: 0px;
+  margin: 0px auto;
   gap: 25px;
   background: var(--gray0);
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  width: 60%;
+  width: 800px;
+  text-align:center;
+  min-height: calc(100vh - 175px);
+  align-items:center;
 }
 </style>

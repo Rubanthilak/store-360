@@ -17,6 +17,7 @@ import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
 import FlowButton from './components/UI/Buttons/FlowButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
+import ToolTip from './components/UI/Common/ToolTip.vue';
 import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
@@ -93,6 +94,7 @@ app.component('angle-down-icon',AngleDownIcon);
 app.component('user-circle-icon',UserCircleIcon);
 
 app.component('navigation-bar',NavigationBar);
+app.component('tool-tip',ToolTip);
 app.component('side-bar',SideBar);
 app.component('search-bar',SearchBar);
 app.component('search-bar-dropdown',SearchBarDropdown);

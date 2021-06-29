@@ -9,33 +9,36 @@
           ></search-bar>
           <div class="flex button-container" v-if="!tableEditMode">
             <list-box-item-sort></list-box-item-sort>
-            <svg-icon
-              icon="plus-icon"
-              color="gray2"
-              hover-color="blue"
-              size="24"
-              @click="triggerCreateProduct"
-            ></svg-icon>
-            <svg-icon
-              icon="edit-icon"
-              color="gray2"
-              hover-color="blue"
-              size="22"
-              @click="toggleTableEditMode"
-              style="padding:6px;"
-            ></svg-icon>
+            <tool-tip label="New Product">
+              <svg-icon
+                icon="plus-icon"
+                color="gray2"
+                hover-color="blue"
+                size="24"
+                @click="triggerCreateProduct"
+              ></svg-icon>
+            </tool-tip>
+            <tool-tip label="Update Stock">
+              <svg-icon
+                icon="edit-icon"
+                color="gray2"
+                hover-color="blue"
+                size="22"
+                @click="toggleTableEditMode"
+                style="padding: 6px"
+              ></svg-icon>
+            </tool-tip>
             <dropdown-menu-item
               @column-selected="toggleColumnVisibility"
               :column-data="columnProps"
             ></dropdown-menu-item>
           </div>
-          <div class="flex button-container" 
-           v-if="tableEditMode">
-             <svg-icon
+          <div class="flex button-container" v-if="tableEditMode">
+            <svg-icon
               icon="back-icon"
               color="red"
               size="24"
-              style="background:var(--gray1)"
+              style="background: var(--gray1)"
               @click="toggleTableEditMode"
             ></svg-icon>
           </div>
@@ -437,25 +440,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
- svg{
-    padding:5px;
-    border-radius:5px;
-    transition: all 0.3s;
-    &:hover{
-      background:var(--gray1);
-      box-shadow: inset 0px 0px 15px rgb(0,0,0,0.05);
-    }
+svg {
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  &:hover {
+    background: var(--gray1);
+    box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
   }
+}
 
 .menu-bar {
   justify-content: space-between;
-  align-items:center;
+  align-items: center;
   gap: 1rem;
 }
 
 .button-container {
-  align-items:center;
+  align-items: center;
   gap: 1rem;
 }
 

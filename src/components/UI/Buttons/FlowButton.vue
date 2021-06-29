@@ -15,12 +15,14 @@ export default {
 <style lang="scss" scoped>
 .hero-button {
   gap: 0.25rem;
-  padding: 5px 6px 5px 10px;
-  border-radius: 6px;
+  padding:5px;
+  border-radius: 50px;
   transition: all 0.3s;
   overflow: hidden;
   align-items:center;
   cursor: pointer;
+  background-color: var(--blue);
+  justify-content: center;
 
   p {
     max-width: 0px;
@@ -34,14 +36,14 @@ export default {
     transition-duration: 0.25s, 0.3s, 0.1s;
     transition-delay: 0s, 0.25s, 0.3s;
     transition-timing-function:linear;
+    margin-right:-4px;
   }
 
   &:hover {
-    background-color: var(--gray1);
-    
     p {
+      margin-right:0px;
       max-width: 100px;
-      color: black;
+      color: white;
       display:block;
       padding-right:10px;
     }

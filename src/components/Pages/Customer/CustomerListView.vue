@@ -11,13 +11,15 @@
             <list-box-customer-sort
               @selected="sortCustomerList"
             ></list-box-customer-sort>
+            <tool-tip label="New Customer">
               <svg-icon
-              icon="plus-icon"
-              color="gray2"
-              hover-color="blue"
-              size="24"
-              @click="triggerCreateCustomer"
-            ></svg-icon>
+                icon="plus-icon"
+                color="gray2"
+                hover-color="blue"
+                size="24"
+                @click="triggerCreateCustomer"
+              ></svg-icon>
+            </tool-tip>
           </div>
         </div>
       </template>
@@ -142,20 +144,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.menu-bar{
-  gap:1rem;    
+.menu-bar {
+  gap: 1rem;
 }
 
 .button-container {
-  gap:0.5rem;    
-  svg{
-    padding:5px;
-    border-radius:5px;
+  gap: 0.5rem;
+  align-items:center;
+
+  svg {
+    padding: 6px;
+    border-radius: 5px;
     transition: all 0.3s;
-    &:hover{
-      background:var(--gray1);
-      box-shadow: inset 0px 0px 15px rgb(0,0,0,0.05);
+    &:hover {
+      background: var(--gray1);
+      box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
     }
   }
 }

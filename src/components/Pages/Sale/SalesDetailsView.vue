@@ -15,14 +15,10 @@
           </div>
           <div class="flex button-container">
             <router-link :to="'/sales/' + sale.id + '/print'">
+              <tool-tip label="Print Invoice">
                 <svg-icon class="print-btn" icon="print-icon" color="gray2" hover-color="blue" size="24"  ></svg-icon>
+              </tool-tip>
             </router-link>
-            <flow-button label="New Payment"
-                @click="toggleAddPaymentPopup"
-              v-if="sale.totalAmountPaid < sale.totalPrice"
-              >
-              <svg-icon icon="plus-icon" color="gray2" size="24"></svg-icon>
-            </flow-button>
           </div>
         </div>
       </template>
@@ -107,11 +103,19 @@
               <p>Purchase Date</p>
               <p>{{ sale.createdAt.toDateString().substring(4) }}</p>
             </div>
-            <div v-if="sale.totalAmountPaid < sale.totalPrice">
-              <p>Balance</p>
-              <p style="color: var(--red)">
-                ₹ {{ (sale.totalPrice - sale.totalAmountPaid).toFixed(2) }}
-              </p>
+            <div v-if="sale.totalAmountPaid < sale.totalPrice" class="flex" style="width:100%;justify-content:space-between;height:34px;align-items:center;">
+              <div>
+                <p>Balance</p>
+                <p style="color: var(--red)">
+                  ₹ {{ (sale.totalPrice - sale.totalAmountPaid).toFixed(2) }}
+                </p>
+              </div>
+               <flow-button label="Pay Balance"
+                @click="toggleAddPaymentPopup"
+              v-if="sale.totalAmountPaid < sale.totalPrice"
+              >
+              <svg-icon icon="plus-icon" color="gray0" size="24"></svg-icon>
+            </flow-button>
             </div>
             <div v-else>
               <p>Status</p>
