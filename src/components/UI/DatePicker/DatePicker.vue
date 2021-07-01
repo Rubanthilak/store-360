@@ -1,12 +1,8 @@
 <template>
   <div class="datepicker">
-    <div class="box"  @click="toggleDropdown" style="width: 110px">
-      <div class="icon-wrapper">
+    <div class="box"  @click="toggleDropdown" style="max-width:90px">
         <svg-icon icon="calendar-icon" size="20" :color="date !== null ? 'blue' : 'gray3' "></svg-icon>
-      </div>
-      <div class="date-wrapper">
-        {{date ? date.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}) : (label ? label : 'Date Filter')}}
-      </div>
+        <p>{{date ? date.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}) : (label ? label : 'Date Filter  ')}}</p>
     </div>
     <v-date-picker v-model="date" color="blue" class="dropdown" v-if="flag" />
   </div>
@@ -43,6 +39,8 @@ export default {
   position: relative;
   box-shadow:inset 0px 0px 15px rgb(0,0,0,0.05);
   border-radius: 5px;
+  height: 36px;
+  padding: 0px 10px;
 
   .dropdown {
     position: absolute;
@@ -51,30 +49,24 @@ export default {
   }
 
 }
- .icon-wrapper{
-  //  background:var(--gray1);
-   height:100%;
-   align-items: center;
-   justify-content: center;
-   display: flex;
-   border-radius: 6px;
- }
-
- .date-wrapper{
-    text-align: left;
-    border-radius: 6px;
- }
-
+ 
  .box{
-    // border: 2px solid var(--gray2);
-    border-radius: 6px;
-    height: 34px;
     overflow:hidden;
     align-items: center;
     color: var(--gray6);
     font-family: var(--font-medium);
     font-size: 12px;
-    display: grid;
-    grid-template-columns: 35px 85px;
+    display: flex;
+    justify-content:center;
+    height: 100%;
+    width: 100%;
+    svg{
+      margin-right:8px;
+    }
+    p{
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
  }
+
 </style>

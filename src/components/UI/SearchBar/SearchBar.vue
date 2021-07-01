@@ -51,7 +51,7 @@ input {
   display: flex;
   width: 100%;
   padding: 0px 15px;
-  height: 35px;
+  height: 36px;
   border: none;
   outline: none;
   box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);

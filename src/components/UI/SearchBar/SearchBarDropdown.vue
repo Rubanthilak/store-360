@@ -90,13 +90,20 @@ export default {
 <style scoped lang="scss">
 input {
   display: flex;
-  width: calc(100% - 30px);
+  width: calc(100% - 34px);
   padding: 0px 15px;
   height: 35px;
   border: none;
   outline: none;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.01);
   border-radius: 4px;
+  border: 2px solid var(--gray0);
+  
+  &:focus{
+    border: 2px solid var(--blue);
+    background: var(--gray0);
+  }
+
 }
 
 .nf-text {

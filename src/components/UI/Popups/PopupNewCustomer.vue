@@ -133,20 +133,23 @@ h2 {
 
   div {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   input {
-    margin-bottom: 20px;
+    margin-bottom: 0.8rem;
     padding: 8px 10px;
-    border-radius: 4px;
-    border: 2px solid var(--gray2);
+    border-radius: 5px;
+    border: 2px solid var(--gray0);
+    box-shadow: inset 0px 0px 25px rgb(0,0,0,0.05);
     font-family: var(--font-regular);
+    background: var(--gray1);
     width: 320px;
 
     &:focus {
       border: 2px solid var(--blue);
       outline: none;
+      background: var(--gray0);
     }
   }
 }

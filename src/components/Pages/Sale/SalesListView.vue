@@ -1,8 +1,8 @@
 <template>
-  <section class="container">
+  <section>
     <top-bar>
       <template #default>
-        <div class="flex menubar">
+        <div class="flex menu-bar">
           <search-bar
             :placeHolder="'Search Sale by Invoice Number, ...'"
             @typing="searchProduct"
@@ -18,14 +18,14 @@
       </template>
     </top-bar>
     <div ref="content" class="content" v-if="salesList.length > 0">
-      <div class="sales-list">
+      <div class="sales-list container">
         <sale-card
           v-for="sale in salesList"
           :key="sale.id"
           :sale="sale"
         ></sale-card>
       </div>
-      <div class="paginator">
+      <div class="paginator container">
         <div class="page-link prev" @click="prevPage" v-show="showPrevButton">
           &lt; Prev
         </div>
@@ -117,6 +117,7 @@ export default {
         order: this.sortOrder.value,
       });
       this.pageNumber = 0;
+      this.$refs.content.scrollTo(0, 0);
     },
   },
   async mounted() {
@@ -130,10 +131,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+section{
+  padding: 0px !important;
+}
+.menu-bar{
+  gap:1rem;
+  align-items:center;
+  justify-content: center;
+}
+
 .button-container {
-  div {
-    margin-left: 10px;
-  }
+  gap: 1rem;
+  align-items:center;
+  justify-content: center;
 }
 
 hr {
@@ -142,11 +152,11 @@ hr {
 
 .content {
   height: calc(100vh - 100px);
-  overflow: auto;
+  overflow:auto;
+  padding-top:25px;
 }
 
 .sales-list {
-  margin-top: 15px;
   // height: calc(100vh - 180px);
   // overflow: auto;
   display: grid;

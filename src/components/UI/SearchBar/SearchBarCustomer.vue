@@ -157,6 +157,12 @@ export default {
   font-family: var(--font-medium);
   font-size: 12px;
   box-shadow: inset 0px 0px 25px rgb(0,0,0,0.05);
+  border: 2px solid var(--gray0);
+  
+  &:focus{
+    border: 2px solid var(--blue);
+    background: var(--gray0);
+  }
 }
 
 .new-cust {

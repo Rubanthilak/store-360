@@ -146,6 +146,7 @@ export default {
 <style lang="scss" scoped>
 .menu-bar {
   gap: 1rem;
+  align-items:center;
 }
 
 .button-container {

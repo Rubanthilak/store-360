@@ -48,6 +48,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);
+  // border: 2px solid var(--gray0);
 }
 
 .hint {

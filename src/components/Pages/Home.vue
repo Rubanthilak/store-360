@@ -30,7 +30,13 @@
               <tr v-for="(product,index) in cart.productList" :key="product.id">
                 <td>{{product.id}}</td>
                 <td>{{product.productName}}</td>
-                <td>{{product.productCount}}</td>
+                <td>
+                  <div class="count-box">
+                    <p class="min-btn red">-</p>
+                    <p>{{product.productCount}}</p>
+                    <p class="min-btn blue">+</p>
+                  </div>
+                </td>
                 <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
                 <td>{{product.productTaxPercentage}} %</td>
                 <td
@@ -328,7 +334,7 @@ export default {
       columnName: [
         "ID",
         "ITEM NAME",
-        "COUNT",
+        "UNIT",
         "SELLING PRICE",
         "TAX",
         "TOTAL PRICE",
@@ -600,6 +606,10 @@ th {
   &:nth-of-type(2) {
     text-align: left !important;
   }
+
+  &:nth-of-type(3) {
+    text-align: center !important;
+  }
 }
 
 td {
@@ -607,6 +617,38 @@ td {
   &:nth-of-type(2) {
     text-align: left !important;
   }
+
+  &:nth-of-type(3) {
+    text-align: center !important;
+  }
+}
+
+.count-box{
+  display:flex;
+  gap:1rem;
+  width:100%;
+  justify-content:center;
+
+  .min-btn{
+    background: var(--gray1);
+    height: 20px;
+    width: 20px;
+    border-radius: 25px;
+    text-align:center;
+    transition: all 0.3s;
+    box-shadow:inset 0px 0px 25px rgb(0,0,0,0.05);
+
+    &.blue:hover{
+      background: var(--blue);
+      color: var(--gray0)
+    }
+
+    &.red:hover{
+      background: var(--red);
+      color: var(--gray0)
+    }
+  }
+
 }
 
 .tab-body {

@@ -134,14 +134,17 @@ h2 {
 
   input {
     padding: 8px 10px;
-    border-radius: 4px;
-    border: 2px solid var(--gray2);
+    border-radius: 5px;
+    background: var(--gray1);
     font-family: var(--font-regular);
+    border: 2px solid var(--gray0);
     width: 320px;
+    box-shadow: inset 0px 0px 25px rgb(0,0,0,0.05);
 
     &:focus {
       border: 2px solid var(--blue);
       outline: none;
+      background: var(--gray0);
     }
   }
 }
