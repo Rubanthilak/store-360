@@ -32,9 +32,9 @@
                 <td>{{product.productName}}</td>
                 <td>
                   <div class="count-box">
-                    <p class="min-btn red">-</p>
-                    <p>{{product.productCount}}</p>
-                    <p class="min-btn blue">+</p>
+                    <p class="min-btn red" @click="modifyProductCount(false,index)">-</p>
+                    <input type="text" min="1" v-model="product.productCount" @keypress="isNumber($event)">
+                    <p class="min-btn blue" @click="modifyProductCount(true,index)">+</p>
                   </div>
                 </td>
                 <td>{{product.productSellingPrice.rupee+'.'+product.productSellingPrice.paisa}}</td>
@@ -345,6 +345,26 @@ export default {
     };
   },
   methods: {
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        (charCode > 31 && (charCode < 48 || charCode > 57)) ||
+        charCode === 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    modifyProductCount(flag,index){
+      if(flag){
+        this.cartList[this.activeCartIndex].productList[index].productCount++;
+      }
+      else if (!flag && this.cartList[this.activeCartIndex].productList[index].productCount > 1) {
+        this.cartList[this.activeCartIndex].productList[index].productCount--;
+      }
+    },
     intArrayToArrayBuffer(array) {
       return array.buffer.slice(
         array.byteOffset,
@@ -628,11 +648,26 @@ td {
   gap:1rem;
   width:100%;
   justify-content:center;
+  align-items:center;
+
+  input{
+    width:50%;
+    text-align: center;
+    font-family: var(--font-regular);
+    border-radius:5px;
+    border: 2px solid var(--gray2);
+
+    &:focus{
+      border: 2px solid var(--blue);
+    }
+  }
 
   .min-btn{
     background: var(--gray1);
-    height: 20px;
-    width: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    min-height: 20px;
+    min-width: 20px;
     border-radius: 25px;
     text-align:center;
     transition: all 0.3s;
@@ -728,8 +763,8 @@ td {
       }
 
       .total {
-        font-size: 42px;
-        line-height: 42px;
+        font-size: 36px;
+        line-height: 36px;
         font-family: var(--font-semibold);
       }
     }

@@ -98,7 +98,7 @@ export default {
     },
     async createNewItem() {
       if( this.product.productTaxPercentage === null){
-        this.product.productTaxPercentage = 18
+        this.product.productTaxPercentage = 0
       }
       await this.$store.dispatch("product/postProduct", this.product);
       this.close();

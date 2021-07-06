@@ -63,13 +63,22 @@ Sale.hasMany(Payment);
 Payment.belongsTo(Sale);
 
 const formatDate = function(date){
+  console.log(date);
   let result ='';
-  result  +=  date.toLocaleString('en-GB', { timeZone: 'IST', year: 'numeric' }) + '-';
-  if(date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' }).length === 1){
+  let year = date.toLocaleString('en-GB', { timeZone: 'UTC', year: 'numeric' });
+  let month = date.toLocaleString('en-GB', { timeZone: 'UTC', month: 'numeric' });
+  let day = date.toLocaleString('en-GB', { timeZone: 'UTC', day: 'numeric' });
+
+  result  +=  year + '-';
+  if(month.length === 1){
     result +='0';
   }
-  result +=date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' })+'-';
-  result += date.toLocaleString('en-GB', { timeZone: 'IST', day: 'numeric' });
+  result += month+'-';
+  if(day.length === 1){
+    result +='0';
+  }
+  result += day;
+  console.log(result);
   return result;
 }
 
@@ -87,7 +96,9 @@ const getSales = async function(columnToSort,offset,order,date) {
       where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('Sale.createdAt')), '=', formatDate(date)),
       include: [Payment]
     });
-  }else{
+  }
+  else
+  {
     sales = await Sale.findAndCountAll({
       order: [[columnToSort, order]],
       limit: 25,

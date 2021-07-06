@@ -150,7 +150,7 @@ export default {
 }
 
 .button-container {
-  gap: 0.5rem;
+  gap: 1rem;
   align-items:center;
 
   svg {
