@@ -1,6 +1,8 @@
 import connection from "../helperFunctions/getConnection.js";
 import { Payment } from './Payment';
 
+const Op = connection.Sequelize.Op;
+
 const Sale = connection.sequelize.define("sale", {
   id: {
     field: "saleid",
@@ -63,23 +65,9 @@ Sale.hasMany(Payment);
 Payment.belongsTo(Sale);
 
 const formatDate = function(date){
-  console.log(date);
-  let result ='';
-  let year = date.toLocaleString('en-GB', { timeZone: 'UTC', year: 'numeric' });
-  let month = date.toLocaleString('en-GB', { timeZone: 'UTC', month: 'numeric' });
-  let day = date.toLocaleString('en-GB', { timeZone: 'UTC', day: 'numeric' });
-
-  result  +=  year + '-';
-  if(month.length === 1){
-    result +='0';
-  }
-  result += month+'-';
-  if(day.length === 1){
-    result +='0';
-  }
-  result += day;
-  console.log(result);
-  return result;
+  let startDate = new Date(date.start.setHours(0,0,0,0));
+  let endDate = new Date(date.end.setHours(23,59,59,999));
+  return [startDate, endDate];
 }
 
 const createTable = async function() {
@@ -93,7 +81,11 @@ const getSales = async function(columnToSort,offset,order,date) {
       order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25),
-      where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('Sale.createdAt')), '=', formatDate(date)),
+      where: {
+        createdAt: {
+          [Op.between]: formatDate(date)
+        }
+      },
       include: [Payment]
     });
   }

@@ -112,7 +112,12 @@ export default {
       this.$refs.content.scrollTo(0, 0);
     },
     async dateFilter(date) {
-      this.invoiceDate = date;
+      if(date.start && date.end){
+        this.invoiceDate = date;
+      }
+      else{
+        this.invoiceDate = null;
+      }
       await this.$store.dispatch("sale/getSalesList", {
         date: this.invoiceDate,
         order: this.sortOrder.value,
