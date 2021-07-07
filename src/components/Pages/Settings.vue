@@ -1,6 +1,16 @@
 <template>
   <section>
-    <h1>Settings</h1>
+    <div class="side-menu">
+      <div class="header">
+        <h1>Settings</h1>
+      </div>
+      <div class="tile">
+        <p>Backup & Restore</p>
+      </div>
+      <div class="tile">
+        <p>Template Manager</p>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -9,4 +19,42 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+section{
+  padding:0px !important;
+}
+.side-menu{
+  background: var(--gray0);
+  width: 250px;
+  height: 100vh;
+
+  .header{
+    padding: 8px;
+    border-bottom: 1px solid var(--gray1);
+    
+    h1{
+      margin-left: 8px;
+    }
+  }
+
+  .tile{
+    padding: 8px;
+    border-bottom: 1px solid var(--gray1);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    p{
+      font-size:14px;
+      margin-left: 10px;
+      transition: all 0.2s;
+    }
+
+    &:hover{
+      background:var(--blue);
+      p{
+        color:  var(--gray0);
+      }
+    }
+
+  }
+}
 </style>
