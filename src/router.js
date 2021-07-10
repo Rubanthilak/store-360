@@ -20,8 +20,6 @@ import SalesListView from "./components/Pages/Sale/SalesListView.vue";
 import SalesDetailsView from "./components/Pages/Sale/SalesDetailsView.vue";
 import SalesPrintView from "./components/Pages/Sale/SalesPrintView.vue";
 
-
-
 const routes = [{
     path: "/",
     component: Home
