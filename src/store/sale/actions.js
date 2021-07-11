@@ -83,6 +83,14 @@ export default {
     });
     return tempList;
   },
+  async getChartDataByCustomerId(context,obj){
+    const sales = await Database.Model.Sale.getChartDataByCustomerId(obj.cust_id);
+    var tempList = new Array(12);
+    sales.forEach(sale => {
+      tempList[parseInt(sale.dataValues.month) - 1] = sale.dataValues.totalPrice;
+    });
+    return tempList;
+  },
   async postSale(context, obj) {
     const payments = generatePaymentArray(obj.paymentMethod);
     const sale = await Database.Model.Sale.createSale({

@@ -121,6 +121,23 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
   return sales;
 };
 
+const getChartDataByCustomerId= async function(cust_id){
+  const sales = await Sale.findAll({
+    attributes: [
+      [ connection.sequelize.fn('strftime', '%m' , connection.sequelize.col('createdAt')), 'month'],
+      [ connection.sequelize.fn('sum', connection.sequelize.col('totalPrice')), 'totalPrice'],
+    ],
+    where: {
+      [Op.and]: [
+        connection.sequelize.where(connection.sequelize.fn('strftime', '%Y', connection.sequelize.col('createdAt')), new Date().getFullYear().toString()),
+        { customerId: cust_id, }
+      ]
+    },
+    group: 'month'
+  });
+  return sales;
+}
+
 const createSale = async function(obj){
     const sale = await Sale.create({
         customerId : obj.customerId,
@@ -158,9 +175,10 @@ export default {
   getSales,
   getSaleById,
   getSalesCustomerId,
+  getChartDataByCustomerId,
   createSale,
   updateSale,
-  deleteSale
+  deleteSale,
 };
 
 
