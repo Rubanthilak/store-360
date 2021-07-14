@@ -8,16 +8,24 @@
               <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
             </div>
             <div v-if="!isLoading">
-              <h1>{{ customer.customerName }}</h1>
+              <h1>Customer Details</h1>
             </div>
           </div>
           <div class="flex button-container">
-            <svg-icon
-              icon="ellipsis-icon"
-              color="gray2"
-              hover-color="blue"
-              size="22"
-            ></svg-icon>
+            <router-link :to="'/customers/'+ $route.params.id +'/edit'">
+              <svg-icon
+                icon="edit-icon"
+                color="gray2"
+                hover-color="blue"
+                size="22"
+              ></svg-icon>
+            </router-link>
+             <svg-icon
+                icon="ellipsis-icon"
+                color="gray2"
+                hover-color="blue"
+                size="22"
+              ></svg-icon>
           </div>
         </div>
       </template>
@@ -207,6 +215,7 @@ export default {
     padding: 5px;
     border-radius: 5px;
     transition: all 0.3s;
+    margin-left: 10px;
     &:hover {
       background: var(--gray1);
       box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);

@@ -14,6 +14,7 @@ import ItemsListView from "./components/Pages/Item/ItemsListView.vue";
 import CustomerView from "./components/Pages/Customer/CustomerView.vue";
 import CustomerListView from "./components/Pages/Customer/CustomerListView.vue";
 import CustomerDetailsView from "./components/Pages/Customer/CustomerDetailsView.vue";
+import CustomerEditView from "./components/Pages/Customer/CustomerEditView.vue";
 
 import SalesView from "./components/Pages/Sale/SalesView.vue";
 import SalesListView from "./components/Pages/Sale/SalesListView.vue";
@@ -47,6 +48,10 @@ const routes = [{
       {
         path: ":id",
         component: CustomerDetailsView
+      },
+      {
+        path: ':id/edit',
+        component: CustomerEditView
       }
     ]
   },
