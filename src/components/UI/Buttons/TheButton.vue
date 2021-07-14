@@ -47,6 +47,7 @@ div {
   cursor: pointer;
   // box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.1);
   gap:0.25rem;
+  min-width: 100px;
 }
 
 p{

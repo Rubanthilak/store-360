@@ -60,11 +60,11 @@ svg:hover {
   }
 }
 
-.hero-button:hover{
-    svg {
-      path {
-        fill: var(--green) !important;
-      }
-  }
-}
+// .hero-button:hover{
+//     svg {
+//       path {
+//         fill: var(--green) !important;
+//       }
+//   }
+// }
 </style>

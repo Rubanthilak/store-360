@@ -96,13 +96,21 @@ export default {
 }
 
 input {
-  border-radius: 4px;
-  border: 2px solid var(--gray2);
+  border-radius: 6px;
+  border: 2px solid var(--gray0);
   font-family: var(--font-regular);
   font-size: 12px;
   width: 180px;
-  padding: 7px 0px;
+  padding: 9px 0px;
+  background: var(--gray1);
   padding-left: 10px;
+  box-shadow: inset 0px 0px 25px rgb(0,0,0,0.05);
+
+  &:focus {
+    border: 2px solid var(--blue);
+    outline: none;
+    background: var(--gray0);
+  }
 }
 
 .button-container {

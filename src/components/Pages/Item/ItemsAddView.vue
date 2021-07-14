@@ -12,9 +12,17 @@
             <h1>Add Items</h1>
           </div>
           <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
-            <the-button label="Save" @click="validateProductList"></the-button>
-            <the-button label="Add Rows" @click="addRows"></the-button>
-            <the-button label="Remove Rows" color="red" v-if="isSelected" @click="removeRows"></the-button>
+            <tool-tip label="Add More">
+              <svg-icon class="icn" icon="plus-icon" size="24" color="gray2" hover-color="blue"  @click="addRows"></svg-icon>
+            </tool-tip>
+            <tool-tip label="Remove" v-if="isSelected">
+              <svg-icon class="icn" icon="delete-icon" size="24" color="gray2" hover-color="red"  @click="removeRows"></svg-icon>
+            </tool-tip>
+            <flow-button label="Save Products"
+                @click="validateProductList"
+              >
+              <svg-icon icon="back-icon" color="gray0" size="24"></svg-icon>
+            </flow-button>
           </div>
         </div>
       </template>
@@ -415,9 +423,15 @@ h1{
 }
 
 .button-container {
-  & > div {
-    margin-left: 10px;
-  }
+ gap:0.5rem;
+ .icn{
+   padding:5px;
+   border-radius:5px;
+
+   &:hover{
+     background: var(--gray1)
+   }
+ }
 }
 
 .sno {

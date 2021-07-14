@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown" @click="dropped=!dropped" :style=" boxLength ? 'width:'+ boxLength : ''">
+  <div ref="target" class="dropdown" @click="dropped=!dropped" :style=" boxLength ? 'width:'+ boxLength : ''">
     <div>
       <div class="dropdown-active" v-if="active > -1 && active !== null">
         {{prefix ? prefix +" : ": ''}}
@@ -20,18 +20,23 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 export default {
-  props: ["valueToDisplay", "options", "active", "boxLength", "prefix"],
-  data() {
-    return {
-      dropped: false,
-    };
+  emits: 'optionSelected', 
+  setup(props, { emit }) {
+    const target = ref(null)
+    var dropped = ref(false);
+
+    onClickOutside(target, () => dropped.value=false)
+
+    function optionSelect(index) {
+      emit("optionSelected", index);
+    }
+
+    return { target,dropped, optionSelect}
   },
-  methods: {
-    optionSelect(index) {
-      this.$emit("optionSelected", index);
-    },
-  },
+  props: ["valueToDisplay", "options", "active", "boxLength", "prefix"]
 };
 </script>
 
@@ -48,6 +53,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: inset 0px 0px 25px rgba(0, 0, 0, 0.05);
+  // border: 2px solid var(--gray0);
 }
 
 .hint {

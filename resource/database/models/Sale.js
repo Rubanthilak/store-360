@@ -1,6 +1,8 @@
 import connection from "../helperFunctions/getConnection.js";
 import { Payment } from './Payment';
 
+const Op = connection.Sequelize.Op;
+
 const Sale = connection.sequelize.define("sale", {
   id: {
     field: "saleid",
@@ -63,14 +65,9 @@ Sale.hasMany(Payment);
 Payment.belongsTo(Sale);
 
 const formatDate = function(date){
-  let result ='';
-  result  +=  date.toLocaleString('en-GB', { timeZone: 'IST', year: 'numeric' }) + '-';
-  if(date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' }).length === 1){
-    result +='0';
-  }
-  result +=date.toLocaleString('en-GB', { timeZone: 'IST', month: 'numeric' })+'-';
-  result += date.toLocaleString('en-GB', { timeZone: 'IST', day: 'numeric' });
-  return result;
+  let startDate = new Date(date.start.setHours(0,0,0,0));
+  let endDate = new Date(date.end.setHours(23,59,59,999));
+  return [startDate, endDate];
 }
 
 const createTable = async function() {
@@ -84,10 +81,16 @@ const getSales = async function(columnToSort,offset,order,date) {
       order: [[columnToSort, order]],
       limit: 25,
       offset: (offset * 25),
-      where: connection.sequelize.where(connection.sequelize.fn('date', connection.sequelize.col('Sale.createdAt')), '=', formatDate(date)),
+      where: {
+        createdAt: {
+          [Op.between]: formatDate(date)
+        }
+      },
       include: [Payment]
     });
-  }else{
+  }
+  else
+  {
     sales = await Sale.findAndCountAll({
       order: [[columnToSort, order]],
       limit: 25,
@@ -117,6 +120,23 @@ const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
   });
   return sales;
 };
+
+const getChartDataByCustomerId= async function(cust_id){
+  const sales = await Sale.findAll({
+    attributes: [
+      [ connection.sequelize.fn('strftime', '%m' , connection.sequelize.col('createdAt')), 'month'],
+      [ connection.sequelize.fn('sum', connection.sequelize.col('totalPrice')), 'totalPrice'],
+    ],
+    where: {
+      [Op.and]: [
+        connection.sequelize.where(connection.sequelize.fn('strftime', '%Y', connection.sequelize.col('createdAt')), new Date().getFullYear().toString()),
+        { customerId: cust_id, }
+      ]
+    },
+    group: 'month'
+  });
+  return sales;
+}
 
 const createSale = async function(obj){
     const sale = await Sale.create({
@@ -155,9 +175,10 @@ export default {
   getSales,
   getSaleById,
   getSalesCustomerId,
+  getChartDataByCustomerId,
   createSale,
   updateSale,
-  deleteSale
+  deleteSale,
 };
 
 

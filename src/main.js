@@ -17,9 +17,11 @@ import TheButton from './components/UI/Buttons/TheButton.vue';
 import IconButton from './components/UI/Buttons/IconButton.vue';
 import FlowButton from './components/UI/Buttons/FlowButton.vue';
 import TheTable from './components/UI/Common/TheTable.vue';
+import ToolTip from './components/UI/Common/ToolTip.vue';
 import ThePopup from './components/UI/Popups/ThePopup.vue';
 import PopupListener from './components/UI/Popups/PopupListener.vue';
 import CustomerCard from './components/UI/Cards/CustomerCard.vue';
+import CustomerDetailsCard from './components/UI/Cards/CustomerDetailsCard.vue';
 import SaleCard from './components/UI/Cards/SaleCard.vue';
 import DropdownMenu from './components/UI/DropdownMenu/DropdownMenu.vue';
 import ListBox from './components/UI/ListBox/ListBox.vue';
@@ -58,8 +60,26 @@ import AngleUpIcon from './components/UI/Icons/AngleUpIcon.vue';
 import AngleDownIcon from './components/UI/Icons/AngleDownIcon.vue';
 import UserCircleIcon from './components/UI/Icons/UserCircleIcon.vue';
 
+const clickOutside = {
+    beforeMount: (el, binding) => {
+      el.clickOutsideEvent = event => {
+        // here I check that click was outside the el and his children
+        if (!(el == event.target || el.contains(event.target))) {
+          // and if it did, call method provided in attribute value
+          binding.value();
+        }
+      };
+      document.addEventListener("click", el.clickOutsideEvent);
+    },
+    unmounted: el => {
+      document.removeEventListener("click", el.clickOutsideEvent);
+    },
+  };
+
 
 const app = createApp(App);
+
+app.directive("click-outside", clickOutside)
 
 app.use(router);
 app.use(store);
@@ -93,6 +113,7 @@ app.component('angle-down-icon',AngleDownIcon);
 app.component('user-circle-icon',UserCircleIcon);
 
 app.component('navigation-bar',NavigationBar);
+app.component('tool-tip',ToolTip);
 app.component('side-bar',SideBar);
 app.component('search-bar',SearchBar);
 app.component('search-bar-dropdown',SearchBarDropdown);
@@ -104,6 +125,7 @@ app.component('the-table',TheTable);
 app.component('the-popup',ThePopup);
 app.component('popup-listener',PopupListener);
 app.component('customer-card',CustomerCard);
+app.component('customer-details-card',CustomerDetailsCard);
 app.component('sale-card',SaleCard);
 app.component('dropdown-menu',DropdownMenu);
 app.component('list-box',ListBox);
