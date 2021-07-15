@@ -12,14 +12,13 @@
             </div>
           </div>
           <div class="flex button-container">
-            <router-link :to="'/customers/'+ $route.params.id +'/edit'">
               <svg-icon
                 icon="edit-icon"
                 color="gray2"
                 hover-color="blue"
                 size="22"
+                @click="$router.replace('/customers/'+ $route.params.id +'/edit')"
               ></svg-icon>
-            </router-link>
              <svg-icon
                 icon="ellipsis-icon"
                 color="gray2"
@@ -39,6 +38,9 @@
             background: white;
             padding: 25px;
             border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
           "
         >
           <h1>Customer Purchase History</h1>

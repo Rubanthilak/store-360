@@ -4,7 +4,7 @@
       <template #default>
         <div class="flex menu-bar">
           <div class="flex header">
-            <div class="back-button" @click="$router.go(-1)">
+            <div class="back-button" @click="$router.replace('/customers/'+ $route.params.id)">
               <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
             </div>
             <div>
@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="flex button-container">
-            <the-button label="Save"></the-button>
+            <the-button label="Save" @click="validateInput"></the-button>
           </div>
         </div>
       </template>
@@ -29,7 +29,7 @@
           <div class="content">
             <div>
               <p class="label">Name</p>
-              <input type="text" v-model="customer.customerName" />
+              <input :class="{ error: isError}" type="text" v-model="customer.customerName" />
             </div>
           </div>
           <div class="content">
@@ -144,11 +144,28 @@ export default {
     return {
       customer: null,
       isLoading: false,
+      isError: false,
     };
   },
   methods: {
-    validateInput() {},
-    updateCustomerDetails() {},
+    async validateInput() {
+      this.isLoading = true;
+      if (
+        this.customer.customerName !== null &&
+        this.customer.customerCreditPoint !== null &&
+        this.customer.customerPhoneNumber !== null
+      ) {
+        await this.updateCustomerDetails();
+      }
+      else{
+        this.isError = true;
+      }
+      this.isLoading = false;
+    },
+    async updateCustomerDetails() {
+      await this.$store.dispatch("customer/updateCustomer", this.customer);
+      this.$router.replace('/customers/'+ this.$route.params.id);
+    },
   },
   async created() {
     this.isLoading = true;
@@ -234,6 +251,10 @@ section {
       outline: none;
       background: var(--gray0);
       box-shadow: none;
+    }
+
+    &.error{
+      border: 2px solid var(--red);
     }
   }
 }
