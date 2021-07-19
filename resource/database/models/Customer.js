@@ -73,7 +73,7 @@ const getCustomers = async function(columnToSort,offset,limit) {
   const customers = await Customer.findAndCountAll({
     order: [[columnToSort, "ASC"]],
     limit: limit,
-    offset: (offset * 25)
+    offset: (offset * limit)
   });
 
   return customers;

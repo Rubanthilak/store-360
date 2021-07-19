@@ -20,6 +20,13 @@
                 @click="triggerCreateCustomer"
               ></svg-icon>
             </tool-tip>
+            <svg-icon
+                icon="ellipsis-icon"
+                color="gray2"
+                hover-color="blue"
+                size="24"
+                @click="triggerCreateCustomer"
+            ></svg-icon>
           </div>
         </div>
       </template>
@@ -67,15 +74,15 @@ export default {
       });
     },
     showPrevButton() {
-      if (this.pageNumber == 0) {
+      if (this.pageNumber == 0 || this.searchKeyword !== "") {
         return false;
       }
       return true;
     },
     showNextButton() {
-      let totalSale = this.$store.getters["customer/getTotalCustomerCount"];
-      let res = Math.ceil(totalSale / 50);
-      if (this.pageNumber == res - 1 || this.searchKeyword !== "") {
+      let total = this.$store.getters["customer/getTotalCustomerCount"];
+      let res = Math.ceil(total / 5);
+      if (this.pageNumber == res - 1 || this.searchKeyword !== "" || total === 0) {
         return false;
       }
       return true;
@@ -87,7 +94,7 @@ export default {
       await this.$store.dispatch("customer/getCustomerList", {
         columnToSort: this.sortOrder,
         offset: this.pageNumber,
-        limit: 50,
+        limit: 5,
       });
       this.$refs.content.scrollTo(0, 0);
     },
@@ -96,12 +103,12 @@ export default {
       await this.$store.dispatch("customer/getCustomerList", {
         columnToSort: this.sortOrder,
         offset: this.pageNumber,
-        limit: 50,
+        limit: 5,
       });
       this.$refs.content.scrollTo(0, 0);
     },
     async searchCustomer(str) {
-      if (str !== "") {
+      if (str !== "" || str !==null) {
         await this.$store.dispatch("customer/getCustomerList", {
           limit: null,
         });
@@ -109,7 +116,7 @@ export default {
         await this.$store.dispatch("customer/getCustomerList", {
           columnToSort: this.sortOrder,
           offset: this.pageNumber,
-          limit: 50,
+          limit: 5,
         });
       }
       this.searchKeyword = str;
@@ -122,7 +129,7 @@ export default {
       await this.$store.dispatch("customer/getCustomerList", {
         columnToSort: this.sortOrder,
         offset: this.pageNumber,
-        limit: 50,
+        limit: 5,
       });
     },
   },
@@ -133,11 +140,11 @@ export default {
       sortOrder: "customerName",
     };
   },
-  async mounted() {
+  async created() {
     await this.$store.dispatch("customer/getCustomerList", {
       columnToSort: this.sortOrder,
       offset: this.pageNumber,
-      limit: 50,
+      limit: 5,
     });
   },
 };

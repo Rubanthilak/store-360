@@ -1,6 +1,6 @@
 <template>
   <div class="menu-icon">
-    <svg-icon icon="ellipsis-icon" color="gray2" hover-color="blue" size="28" @click="toggleMenu" ></svg-icon>
+    <svg-icon :icon="menuMode ? 'cross-icon' : 'ellipsis-icon'" color="gray2" :hover-color="menuMode ? 'red' : 'blue'" size="28" @click="toggleMenu" ></svg-icon>
     <transition name="dropdown">
       <div class="drop-down" v-if="menuMode">
         <slot name="options" :closeTrigger="toggleMenu"></slot>
@@ -25,6 +25,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+svg {
+    padding: 3px 6px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    &:hover {
+      background: var(--gray1);
+      box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
+    }
+}
 
 .menu-icon {
   height: 35px;
@@ -34,7 +43,7 @@ export default {
   border-radius: 4px;
   // background-color: var(--blue);
   outline: none;
-  cursor: pointer;
+  // cursor: pointer;
   // box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
   position: relative;
   display:flex;
