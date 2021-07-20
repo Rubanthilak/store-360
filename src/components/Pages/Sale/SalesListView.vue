@@ -12,7 +12,7 @@
               :sortOrder="sortOrder"
               @selected="changeSortOrder"
             ></list-box-sale-sort>
-            <date-picker @pick="dateFilter"></date-picker>
+            <date-picker @pick="dateFilter" :isRange="true"></date-picker>
           </div>
         </div>
       </template>
