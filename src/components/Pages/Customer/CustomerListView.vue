@@ -25,7 +25,6 @@
                 color="gray2"
                 hover-color="blue"
                 size="24"
-                @click="triggerCreateCustomer"
             ></svg-icon>
           </div>
         </div>

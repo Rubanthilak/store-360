@@ -35,7 +35,7 @@
           <div class="content">
             <div>
               <p class="label">Credits</p>
-              <input type="text" v-model="customer.customerCreditPoint" />
+              <input :class="{ error: isError}" type="number" v-model="customer.customerCreditPoint" />
             </div>
           </div>
           <div class="content">
@@ -75,7 +75,7 @@
           <div class="content">
             <div>
               <p class="label">Pincode</p>
-              <input type="text" v-model="customer.customerPincode" />
+              <input type="number" v-model="customer.customerPincode" />
             </div>
           </div>
         </div>
@@ -89,27 +89,27 @@
           <div class="content">
             <div>
               <p class="label">Door Number</p>
-              <input type="text" v-model="customer.customerDoorNumber" />
+              <input type="text" v-model="customer.customerShippingDoorNumber" />
             </div>
             <div>
               <p class="label">Street Name</p>
-              <input type="text" v-model="customer.customerStreetName" />
+              <input type="text" v-model="customer.customerShippingStreetName" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">City Name</p>
-              <input type="text" v-model="customer.customerCityName" />
+              <input type="text" v-model="customer.customerShippingCityName" />
             </div>
             <div>
               <p class="label">State Name</p>
-              <input type="text" v-model="customer.customerStateName" />
+              <input type="text" v-model="customer.customerShippingStateName" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">Pincode</p>
-              <input type="text" v-model="customer.customerPincode" />
+              <input type="number" v-model="customer.customerShippingPincode" />
             </div>
           </div>
         </div>
@@ -123,13 +123,13 @@
           <div class="content">
             <div>
               <p class="label">Phone Number</p>
-              <input type="text" v-model="customer.customerPhoneNumber" />
+              <input :class="{ error: isError}" type="number" v-model="customer.customerPhoneNumber" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">Alternate Phone Number</p>
-              <input type="text" v-model="customer.customerPhoneNumber" />
+              <input type="number" v-model="customer.customerAlternatePhoneNumber" />
             </div>
           </div>
         </div>
@@ -153,7 +153,10 @@ export default {
       if (
         this.customer.customerName !== null &&
         this.customer.customerCreditPoint !== null &&
-        this.customer.customerPhoneNumber !== null
+        this.customer.customerPhoneNumber !== null &&
+         this.customer.customerName !== '' &&
+        this.customer.customerCreditPoint !== '' &&
+        this.customer.customerPhoneNumber !== ''
       ) {
         await this.updateCustomerDetails();
       }

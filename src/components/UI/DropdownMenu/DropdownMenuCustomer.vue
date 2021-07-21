@@ -5,7 +5,7 @@
         <p>Edit Customer</p>
       </div>
       <div class="dropdown-option" @click="deleteCustomer">
-        <p>Delete Customer</p>
+        <p>Archive Customer</p>
       </div>
     </template>
   </dropdown-menu>
