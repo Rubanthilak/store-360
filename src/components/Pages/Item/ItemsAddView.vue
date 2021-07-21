@@ -9,7 +9,7 @@
                 <svg-icon size="34" icon="back-icon"></svg-icon>
               </div>
             </router-link>
-            <h1>Add Items</h1>
+            <h1>Add Products</h1>
           </div>
           <div class="flex button-container" v-if="!isLoading && !isSuccess && !isListEmpty">
             <tool-tip label="Add More">
@@ -18,11 +18,10 @@
             <tool-tip label="Remove" v-if="isSelected">
               <svg-icon class="icn" icon="delete-icon" size="24" color="gray2" hover-color="red"  @click="removeRows"></svg-icon>
             </tool-tip>
-            <flow-button label="Save Products"
+            <the-button label="Save Products"
                 @click="validateProductList"
               >
-              <svg-icon icon="back-icon" color="gray0" size="24"></svg-icon>
-            </flow-button>
+            </the-button>
           </div>
         </div>
       </template>

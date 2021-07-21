@@ -15,7 +15,7 @@
         </div>
         <div class="flex unpaid" v-if="customer.customerUnpaidBalance > 0">
           <svg-icon size="16" color="red"></svg-icon>
-          <p>₹ {{customer.customerUnpaidBalance}}</p>
+          <!-- <p>₹ {{customer.customerUnpaidBalance}}</p> -->
         </div>
       </div>
     </div>

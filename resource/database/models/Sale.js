@@ -169,6 +169,8 @@ const deleteSale = async function(id){
   return res === 1 ? true : false;
 }
 
+export { Sale };
+
 export default {
   Sale,
   createTable,

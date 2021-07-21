@@ -12,20 +12,7 @@
             </div>
           </div>
           <div class="flex button-container">
-            <router-link :to="'/customers/'+ $route.params.id +'/edit'">
-              <svg-icon
-                icon="edit-icon"
-                color="gray2"
-                hover-color="blue"
-                size="22"
-              ></svg-icon>
-            </router-link>
-             <svg-icon
-                icon="ellipsis-icon"
-                color="gray2"
-                hover-color="blue"
-                size="22"
-              ></svg-icon>
+             <dropdown-menu-customer :customer-id="$route.params.id"></dropdown-menu-customer>
           </div>
         </div>
       </template>
@@ -39,6 +26,9 @@
             background: white;
             padding: 25px;
             border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
           "
         >
           <h1>Customer Purchase History</h1>
@@ -77,9 +67,10 @@
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 import { BarChart } from "vue-chart-3";
+import DropdownMenuCustomer from '../../UI/DropdownMenu/DropdownMenuCustomer';
 
 export default {
-  components: { BarChart },
+  components: { BarChart, DropdownMenuCustomer},
   data() {
     return {
       isLoading: false,

@@ -32,16 +32,15 @@
       <div>
         <div class="bill-card">
           <div class="header tile">
-            <p style="text-align: right">S.NO</p>
-            <p style="text-align: left">ITEM</p>
-            <p style="text-align: right">PRICE/UNIT</p>
-            <p style="text-align: right">UNIT</p>
-            <p style="text-align: right">PRICE</p>
+            <p style="text-align: right;">S.No</p>
+            <p style="text-align: left">Item</p>
+            <p style="text-align: right">Price/Unit</p>
+            <p style="text-align: right">Unit</p>
+            <p style="text-align: right">Price</p>
             <p style="text-align: right">GST</p>
             <p style="text-align: right">GST (in ₹)</p>
-            <p style="text-align: right">TOTAL</p>
+            <p style="text-align: right;padding-right:10px;">Total</p>
           </div>
-          <hr />
           <div style="min-height: 75vh">
             <div
               class="tile"
@@ -61,13 +60,13 @@
               <p style="text-align: right">
                 {{ product.productTotalTax.toFixed(2) }}
               </p>
-              <p style="text-align: right">
+              <p style="text-align: right;padding-right:10px;">
                 {{ product.productTotalAmount.toFixed(2) }}
               </p>
             </div>
           </div>
           <hr />
-          <div class="header tile">
+          <div class="tile">
             <p style="text-align: right"></p>
             <p style="text-align: left">TOTAL</p>
             <p style="text-align: right"></p>
@@ -214,6 +213,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 section {
   padding-top: 10px !important;
 }
@@ -299,9 +299,13 @@ section {
     grid-template-columns: 45px auto 100px 70px 100px 60px 100px 100px;
     width: 100%;
     gap: 1rem;
+    padding: 5px 0px;
   }
 
   .header {
+    background: var(--gray1);
+    border-radius: 5px;
+
     p {
       font-family: var(--font-semibold);
       text-align: center;

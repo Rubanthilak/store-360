@@ -19,7 +19,7 @@
           v-model="amountEntered"
           :min="1"
         />
-        <date-picker @pick="dateFilter" label="Pick Date"></date-picker>
+        <date-picker @pick="dateFilter" label="Pick Date" :isRange="false"></date-picker>
       </div>
       <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
     </template>

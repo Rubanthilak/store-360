@@ -104,7 +104,7 @@ export default {
     },
   },
   async updated() {
-    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
+    await this.$store.dispatch("customer/getCustomerList",{ offset:0,limit:5 });
   },
 };
 </script>

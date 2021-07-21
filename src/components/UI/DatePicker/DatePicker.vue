@@ -1,67 +1,136 @@
 <template>
-  <div class="datepicker" style="min-width:90px">
-    <div class="box"  @click="toggleDropdown" style="min-width:90px">
-        <svg-icon v-if="!range.end" icon="calendar-icon" size="20" :color="range.end !== null ? 'blue' : 'gray3' "></svg-icon>
-        <p v-if="showDate" style="padding-right:25px"><strong>{{range.start.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'})}}</strong></p>
-        <p v-else-if="range.end" style="padding-right:25px"><strong>{{range.start.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'})}}</strong> - <strong>{{range.end.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'})}}</strong></p>
-        <p v-else>{{label ? label : 'Date Filter  '}}</p>
+  <div class="datepicker" style="min-width: 90px">
+    <div class="box" @click="toggleDropdown" style="min-width: 90px">
+      <svg-icon
+        v-if="isRange ? !range.end : !range"
+        icon="calendar-icon"
+        size="20"
+        color='gray3'
+      ></svg-icon>
+       <p v-if="!isRange && range" style="padding-right: 25px">
+        <strong>{{
+          range.toLocaleString("en-GB", {
+            timeZone: "IST",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          })
+        }}</strong>
+      </p>
+      <p v-else-if="showDate && isRange" style="padding-right: 25px">
+        <strong>{{
+          range.start.toLocaleString("en-GB", {
+            timeZone: "IST",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          })
+        }}</strong>
+      </p>
+      <p v-else-if="isRange && range.end" style="padding-right: 25px">
+        <strong>{{
+          range.start.toLocaleString("en-GB", {
+            timeZone: "IST",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          })
+        }}</strong>
+        -
+        <strong>{{
+          range.end.toLocaleString("en-GB", {
+            timeZone: "IST",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          })
+        }}</strong>
+      </p>
+      <p v-else>{{ label ? label : "Date Filter  " }}</p>
     </div>
-    <svg-icon v-if="range.end" icon="cross-icon" size="20" color="gray0" class="clear-btn" @click=clear></svg-icon>
-    <v-date-picker v-model="range" color="blue" class="dropdown" v-if="flag" is-range/>
+    <svg-icon
+      v-if="isRange ? range.end : range"
+      icon="cross-icon"
+      size="20"
+      color="gray0"
+      class="clear-btn"
+      @click="clear"
+    ></svg-icon>
+    <v-date-picker
+      v-model="range"
+      color="blue"
+      class="dropdown"
+      v-if="flag"
+      :is-range="isRange"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  props: ["label"],
+  props: ["label", "isRange"],
   data() {
     return {
       flag: false,
-      range: {
-        start: null,
-        end: null
-      },
+      range: this.isRange
+        ? {
+            start: null,
+            end: null,
+          }
+        : null,
     };
   },
   methods: {
     toggleDropdown() {
       this.flag = !this.flag;
     },
-    clear(){
+    clear() {
       this.flag = !this.flag;
-      this.range =  {
-        start: null,
-        end: null
-      };
-    }
+      this.range = this.isRange
+        ? {
+            start: null,
+            end: null,
+          }
+        : null;
+    },
   },
   watch: {
     range(curVal, oldVal) {
       if (curVal != oldVal) {
         this.flag = !this.flag;
-        this.$emit("pick",this.range)
+        this.$emit("pick", this.range);
       }
     },
   },
   computed: {
-    showDate(){
-      if(this.range.start === null || this.range.end === null ){
-        return false
+    showDate() {
+      if (this.isRange && (this.range.start === null || this.range.end === null)) {
+        return false;
       }
-      return (
-      this.range.start.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}) 
-      === 
-      this.range.end.toLocaleString('en-GB', { timeZone: 'IST' , year: 'numeric' , month: 'numeric' , day: 'numeric'}))
-    }
-  }
+      return this.isRange && (
+        this.range.start.toLocaleString("en-GB", {
+          timeZone: "IST",
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }) ===
+        this.range.end.toLocaleString("en-GB", {
+          timeZone: "IST",
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })
+      );
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .datepicker {
-  background:var(--gray1);
+  background: var(--gray1);
   position: relative;
-  box-shadow:inset 0px 0px 15px rgb(0,0,0,0.05);
+  box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
   border-radius: 5px;
   height: 36px;
   padding: 0px 10px;
@@ -72,39 +141,37 @@ export default {
     top: 40px;
     right: 0px;
   }
-
 }
- 
- .box{
-    overflow:hidden;
-    align-items: center;
-    color: var(--gray6);
-    font-family: var(--font-medium);
-    font-size: 12px;
-    display: flex;
-    justify-content:center;
-    height: 100%;
-    width: 100%;
-    gap:8px;
 
-    svg{
-      z-index:1;
-    }
-  
-    p{
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
- }
+.box {
+  overflow: hidden;
+  align-items: center;
+  color: var(--gray6);
+  font-family: var(--font-medium);
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  gap: 8px;
 
- .clear-btn{
-   background:var(--red);
-   height:100%;
-   position:absolute;
-   border-radius: 0px 5px 5px 0px;
-   padding: 0px 3px;
-   right:0;
-   z-index: 3;
- }
+  svg {
+    z-index: 1;
+  }
 
+  p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.clear-btn {
+  background: var(--red);
+  height: 100%;
+  position: absolute;
+  border-radius: 0px 5px 5px 0px;
+  padding: 0px 3px;
+  right: 0;
+  z-index: 3;
+}
 </style>

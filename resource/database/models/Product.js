@@ -120,6 +120,8 @@ const updateProduct = async function(obj,id){
   return res[0] === 1 ? true : false;
 }
 
+export { Product };
+
 
 export default {
   createTable:createTable,

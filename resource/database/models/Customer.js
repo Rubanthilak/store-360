@@ -1,6 +1,10 @@
 import connection from "../helperFunctions/getConnection.js";
+import { Payment } from "./Payment.js";
+import {Sale} from "./Sale.js";
 
-const Customer = connection.sequelize.define("customer", {
+const sequelize = connection.sequelize;
+
+const Customer = sequelize.define("customer", {
   id: {
     type: connection.DataTypes.INTEGER,
     allowNull: false,
@@ -17,13 +21,14 @@ const Customer = connection.sequelize.define("customer", {
     allowNull: false,
     unique: true,
   },
+  customerAlternatePhoneNumber: {
+    type: connection.DataTypes.NUMBER,
+    allowNull: true,
+    unique: true,
+  },
   customerCreditPoint: {
     type: connection.DataTypes.NUMBER,
     allowNull: false,
-  },
-  customerUnpaidBalance: {
-    type: connection.DataTypes.FLOAT,
-    allowNull: true,
   },
   customerDoorNumber: {
     type: connection.DataTypes.STRING,
@@ -42,6 +47,26 @@ const Customer = connection.sequelize.define("customer", {
     allowNull: true,
   },
   customerPincode: {
+    type: connection.DataTypes.NUMBER,
+    allowNull: true,
+  },
+  customerShippingDoorNumber: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  customerShippingStreetName: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  customerShippingCityName: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  customerShippingStateName: {
+    type: connection.DataTypes.STRING,
+    allowNull: true,
+  },
+  customerShippingPincode: {
     type: connection.DataTypes.NUMBER,
     allowNull: true,
   },
@@ -65,6 +90,9 @@ const Customer = connection.sequelize.define("customer", {
   },
 });
 
+Customer.hasMany(Sale);
+Sale.belongsTo(Customer);
+
 const createTable = async function() {
   await Customer.sync();
 };
@@ -73,14 +101,31 @@ const getCustomers = async function(columnToSort,offset,limit) {
   const customers = await Customer.findAndCountAll({
     order: [[columnToSort, "ASC"]],
     limit: limit,
-    offset: (offset * 25)
+    offset: (offset * limit),
+    where: {
+      customerArchived: false,
+    },
   });
 
   return customers;
 };
 
 const getCustomerById = async function(id) {
-  const customer = await Customer.findByPk(id);
+  const customer = await Customer.findByPk(id,{
+    include: [ {
+      model: Sale,
+      attributes: [
+        [sequelize.fn('sum', sequelize.col('totalPrice')), 'customerTotalPurchase']
+      ],
+      include: [ {
+        model: Payment,
+        attributes: [
+          [sequelize.fn('sum', sequelize.col('amountPaid')), 'customerAmountPaid']
+        ] 
+     }]
+   }]
+  });
+  customer.dataValues.customerUnpaidBalance = customer.sales[0].dataValues.customerTotalPurchase - customer.sales[0].payments[0].dataValues.customerAmountPaid;
   return customer.dataValues;
 };
 
@@ -107,12 +152,12 @@ const createCustomer = async function(obj) {
 };
 
 const deleteCustomer = async function(id) {
-  const res = await Customer.destroy({
+  const res = await Customer.update({customerArchived: true}, {
     where: {
       id: id,
     },
   });
-  return res === 1 ? true : false;
+  return res[0] === 1 ? true : false;
 };
 
 const updateCustomer = async function(obj, id) {
@@ -123,6 +168,8 @@ const updateCustomer = async function(obj, id) {
   });
   return res[0] === 1 ? true : false;
 };
+
+export { Customer };
 
 export default {
   Customer,

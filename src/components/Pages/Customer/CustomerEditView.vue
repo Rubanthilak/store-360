@@ -4,7 +4,7 @@
       <template #default>
         <div class="flex menu-bar">
           <div class="flex header">
-            <div class="back-button" @click="$router.go(-1)">
+            <div class="back-button" @click="$router.replace('/customers/'+ $route.params.id)">
               <svg-icon color="gray8" size="34" icon="back-icon"></svg-icon>
             </div>
             <div>
@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="flex button-container">
-            <the-button label="Save"></the-button>
+            <the-button label="Save" @click="validateInput"></the-button>
           </div>
         </div>
       </template>
@@ -29,13 +29,13 @@
           <div class="content">
             <div>
               <p class="label">Name</p>
-              <input type="text" v-model="customer.customerName" />
+              <input :class="{ error: isError}" type="text" v-model="customer.customerName" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">Credits</p>
-              <input type="text" v-model="customer.customerCreditPoint" />
+              <input :class="{ error: isError}" type="number" v-model="customer.customerCreditPoint" />
             </div>
           </div>
           <div class="content">
@@ -75,7 +75,7 @@
           <div class="content">
             <div>
               <p class="label">Pincode</p>
-              <input type="text" v-model="customer.customerPincode" />
+              <input type="number" v-model="customer.customerPincode" />
             </div>
           </div>
         </div>
@@ -89,27 +89,27 @@
           <div class="content">
             <div>
               <p class="label">Door Number</p>
-              <input type="text" v-model="customer.customerDoorNumber" />
+              <input type="text" v-model="customer.customerShippingDoorNumber" />
             </div>
             <div>
               <p class="label">Street Name</p>
-              <input type="text" v-model="customer.customerStreetName" />
+              <input type="text" v-model="customer.customerShippingStreetName" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">City Name</p>
-              <input type="text" v-model="customer.customerCityName" />
+              <input type="text" v-model="customer.customerShippingCityName" />
             </div>
             <div>
               <p class="label">State Name</p>
-              <input type="text" v-model="customer.customerStateName" />
+              <input type="text" v-model="customer.customerShippingStateName" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">Pincode</p>
-              <input type="text" v-model="customer.customerPincode" />
+              <input type="number" v-model="customer.customerShippingPincode" />
             </div>
           </div>
         </div>
@@ -123,13 +123,13 @@
           <div class="content">
             <div>
               <p class="label">Phone Number</p>
-              <input type="text" v-model="customer.customerPhoneNumber" />
+              <input :class="{ error: isError}" type="number" v-model="customer.customerPhoneNumber" />
             </div>
           </div>
           <div class="content">
             <div>
               <p class="label">Alternate Phone Number</p>
-              <input type="text" v-model="customer.customerPhoneNumber" />
+              <input type="number" v-model="customer.customerAlternatePhoneNumber" />
             </div>
           </div>
         </div>
@@ -144,11 +144,31 @@ export default {
     return {
       customer: null,
       isLoading: false,
+      isError: false,
     };
   },
   methods: {
-    validateInput() {},
-    updateCustomerDetails() {},
+    async validateInput() {
+      this.isLoading = true;
+      if (
+        this.customer.customerName !== null &&
+        this.customer.customerCreditPoint !== null &&
+        this.customer.customerPhoneNumber !== null &&
+         this.customer.customerName !== '' &&
+        this.customer.customerCreditPoint !== '' &&
+        this.customer.customerPhoneNumber !== ''
+      ) {
+        await this.updateCustomerDetails();
+      }
+      else{
+        this.isError = true;
+      }
+      this.isLoading = false;
+    },
+    async updateCustomerDetails() {
+      await this.$store.dispatch("customer/updateCustomer", this.customer);
+      this.$router.replace('/customers/'+ this.$route.params.id);
+    },
   },
   async created() {
     this.isLoading = true;
@@ -234,6 +254,10 @@ section {
       outline: none;
       background: var(--gray0);
       box-shadow: none;
+    }
+
+    &.error{
+      border: 2px solid var(--red);
     }
   }
 }
