@@ -157,7 +157,7 @@
       <div v-else class="flex print-preview">
         <div
           ref="invoice"
-          style="height:85vh;overflow:auto;width:100%;background:white;margin:25px 0px;border-radius:5px"
+          style="height:85vh;overflow:auto;width:700px;background:white;margin:25px auto;border-radius:5px"
         >
           <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>

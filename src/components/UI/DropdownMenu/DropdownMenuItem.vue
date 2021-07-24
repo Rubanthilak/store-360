@@ -13,14 +13,6 @@
         <p>HSC Code</p>
       </div>
       <div class="dropdown-option">
-        <div class="checkbox"  @click="columnSelected('tax_type')">
-           <div class="checkmark" v-if="columnData.tax_type.visible">
-            <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>
-          </div>
-        </div>
-        <p>Tax Type</p>
-      </div>
-      <div class="dropdown-option">
         <div class="checkbox"  @click="columnSelected('tax_percent')">
            <div class="checkmark" v-if="columnData.tax_percent.visible">
             <svg-icon icon="check-icon" color="gray0" size="12"></svg-icon>

@@ -49,8 +49,7 @@
     <the-table v-if="!tableEditMode" table-height="calc(100vh - 135px)">
       <template #colgroup>
         <col span="1" style="width: 5%" />
-        <col span="1" style="width: 25%" />
-        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 35%" />
         <col span="1" style="width: 10%" />
         <col span="1" style="width: 10%" />
         <col span="1" style="width: 10%" />
@@ -66,9 +65,6 @@
           </th>
           <th v-if="columnProps.hsc_code.visible">
             {{ columnProps.hsc_code.name }}
-          </th>
-          <th v-if="columnProps.tax_type.visible">
-            {{ columnProps.tax_type.name }}
           </th>
           <th v-if="columnProps.tax_percent.visible">
             {{ columnProps.tax_percent.name }}
@@ -93,9 +89,6 @@
           </td>
           <td v-if="columnProps.hsc_code.visible">
             {{ product.productHscNumber }}
-          </td>
-          <td v-if="columnProps.tax_type.visible">
-            {{ product.productTaxType }}
           </td>
           <td v-if="columnProps.tax_percent.visible">
             {{ product.productTaxPercentage }} %
@@ -129,9 +122,8 @@
     >
       <template #colgroup>
         <col span="1" style="width: 5%" />
-        <col span="1" style="width: 20%" />
+        <col span="1" style="width: 25%" />
         <col span="1" style="width: 10%" />
-        <col span="1" style="width: 9%" />
         <col span="1" style="width: 10%" />
         <col span="1" style="width: 10%" />
         <col span="1" style="width: 14%" />
@@ -150,7 +142,6 @@
           <td>{{ product.id }}</td>
           <td>{{ product.productName }}</td>
           <td>{{ product.productHscNumber }}</td>
-          <td>{{ product.productTaxType }}</td>
           <td>{{ product.productTaxPercentage }} %</td>
           <td>
             <input
@@ -247,10 +238,6 @@ export default {
         },
         hsc_code: {
           name: "HSC CODE",
-          visible: true,
-        },
-        tax_type: {
-          name: "TAX TYPE",
           visible: true,
         },
         tax_percent: {

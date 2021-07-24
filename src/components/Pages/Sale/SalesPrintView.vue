@@ -19,7 +19,7 @@
     <div class="flex print-preview" v-if="invoiceDetails">
       <div
         ref="invoice"
-        style="height:85vh;overflow:auto;width:100%;background:white;margin:0px;border-radius:5px"
+        style="height:85vh;overflow:auto;width:700px;background:white;margin:0px auto;border-radius:5px"
       >
         <invoice-preview :invoice="invoiceDetails"></invoice-preview>
       </div>

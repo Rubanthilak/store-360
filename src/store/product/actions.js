@@ -15,7 +15,6 @@ export default {
         id: product.id,
         productName: product.productName,
         productHscNumber: product.productHscNumber,
-        productTaxType: product.productTaxType,
         productTaxPercentage: product.productTaxPercentage,
         productQuantity: product.productQuantity,
         productSubQuantity: product.productSubQuantity,
