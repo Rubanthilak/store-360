@@ -5,7 +5,7 @@ const Op = connection.Sequelize.Op;
 
 const Sale = connection.sequelize.define("sale", {
   id: {
-    field: "saleid",
+    field: "saleId",
     type: connection.DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
@@ -172,7 +172,6 @@ const deleteSale = async function(id){
 export { Sale };
 
 export default {
-  Sale,
   createTable,
   getSales,
   getSaleById,

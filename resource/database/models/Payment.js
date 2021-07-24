@@ -8,6 +8,14 @@ const Payment = connection.sequelize.define("payment", {
     primaryKey: true,
     autoIncrement: true
   },
+  customerId: {
+    type: connection.DataTypes.INTEGER,
+    allowNull: true,
+  },
+  saleId: {
+    type: connection.DataTypes.INTEGER,
+    allowNull: true,
+  },
   paymentMethod: {
     type: connection.DataTypes.ENUM,
     values: ["Card", "Cash", "UPI", "Cheque"],
@@ -23,10 +31,6 @@ const Payment = connection.sequelize.define("payment", {
   },
   dateOfTransaction: {
     type: connection.DataTypes.DATEONLY,
-    allowNull: true,
-  },
-  saleId: {
-    type: connection.DataTypes.INTEGER,
     allowNull: true,
   }
 });

@@ -19,7 +19,7 @@
     </top-bar>
     <div v-if="!isLoading" class="container content-wrapper">
       <div class="flex" style="gap: 1rem">
-        <customer-details-card :customer="customer"></customer-details-card>
+        <customer-details-card :customer="customer" :unpaidBalance="unpaidBalance"></customer-details-card>
         <div
           style="
             width: calc(100% - 350px);
@@ -51,7 +51,7 @@
       <hr />
       <div class="sales-list">
         <sale-card
-          v-for="sale in customer.sales"
+          v-for="sale in sales"
           :key="sale.id"
           :sale="sale"
         ></sale-card>
@@ -75,6 +75,7 @@ export default {
     return {
       isLoading: false,
       customer: null,
+      sales: [],
       editMode: false,
       labels: [
         "Jan",
@@ -114,6 +115,15 @@ export default {
         ],
       };
     },
+    unpaidBalance(){
+      var totalPurchase = 0;
+      var totalAmountReceived = 0;
+      this.sales.forEach(sale => {
+        totalPurchase += sale.totalPrice
+        totalAmountReceived += sale.totalAmountPaid
+      });
+      return totalPurchase - totalAmountReceived;
+    }
   },
 
   async beforeMount() {
@@ -122,7 +132,7 @@ export default {
       "customer/getCustomerById",
       this.$route.params.id
     );
-    this.customer.sales = await this.$store.dispatch(
+    this.sales = await this.$store.dispatch(
       "sale/getSalesByCustomerId",
       {
         cust_id: this.$route.params.id,
