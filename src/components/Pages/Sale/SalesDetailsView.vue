@@ -27,6 +27,8 @@
       :open="showAddPayment"
       @close="toggleAddPaymentPopup"
       :id="sale.id"
+      :unpaidBalance="sale.totalPrice - sale.totalAmountPaid"
+      :customer-id="customerId"
     ></popup-new-payment>
     <div v-if="customer" class="content-wrapper">
       <div>
@@ -183,6 +185,12 @@ export default {
       });
       return tempList;
     },
+    customerId(){
+      if(this.customer === null){
+        return '';
+      }
+      return this.customer.id;
+    }
   },
   methods: {
     toggleAddPaymentPopup() {
@@ -203,10 +211,6 @@ export default {
     this.sale = await this.$store.dispatch(
       "sale/getSalesById",
       this.$route.params.id
-    );
-    this.customer = await this.$store.dispatch(
-      "customer/getCustomerById",
-      this.sale.customerId
     );
   },
 };

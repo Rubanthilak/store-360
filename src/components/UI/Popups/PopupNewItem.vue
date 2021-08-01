@@ -28,7 +28,6 @@
           <input type="number" placeholder="Selling Price" v-model="product.productSellingPrice" />
         </div>
         <div class="flex input-container">
-          <list-box valueToDisplay="Tax Type" :options="taxTypeOptions" :active="taxTypeOptions.indexOf(product.productTaxType)" box-length="320px" @option-selected="setTaxType"></list-box>
           <input type="number" placeholder="Tax Percentage" v-model="product.productTaxPercentage" />
         </div>
         <div class="flex input-container">
@@ -61,11 +60,9 @@ export default {
         productBarcode: null,
         productHscNumber: null,
         productTaxPercentage: null,
-        productTaxType: null,
         productStock: null,
       },
       errorFlag: false,
-      taxTypeOptions: ["GST","IGST"]
     };
   },
   methods: {
@@ -80,7 +77,6 @@ export default {
       this.product.productBarcode = null;
       this.product.productHscNumber = null;
       this.product.productTaxPercentage = null;
-      this.product.productTaxType = null;
       this.product.productStock = null;
       this.$emit("close");
     },

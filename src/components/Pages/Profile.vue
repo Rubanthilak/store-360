@@ -6,33 +6,41 @@
           style="
             display: flex;
             margin-right: 10px;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
           "
         >
-          <div class="flex" style="gap: 10px">
-            <the-button
-              label="Edit"
-              v-show="!editMode"
+          <div>
+            <svg-icon
+              size="34"
+              icon="back-icon"
+              v-show="editMode"
               @click="editMode = !editMode"
-            ></the-button>
+            ></svg-icon>
+          </div>
+
+          <div class="flex" style="gap: 10px">
+            <tool-tip label="Edit Details">
+              <svg-icon
+                icon="edit-icon"
+                color="gray2"
+                hover-color="blue"
+                size="24"
+                v-show="!editMode"
+                @click="editMode = !editMode"
+              ></svg-icon>
+            </tool-tip>
             <the-button
               label="Update"
               v-show="editMode"
               @click="updateCompanyDetails"
-            ></the-button>
-            <the-button
-              label="Cancel"
-              v-show="editMode"
-              color="red"
-              @click="editMode = !editMode"
             ></the-button>
           </div>
         </div>
       </template>
     </top-bar>
     <div v-if="editMode" class="user-form">
-      <h1 style="font-size: 36px">Company Info</h1>
+      <h1 style="font-size: 36px">Company Details</h1>
       <svg-icon icon="user-circle-icon" color="gray2" size="200" />
       <h1 style="font-size: 18px">Name</h1>
       <div class="flex">
@@ -42,6 +50,8 @@
           v-model="company.companyName"
         />
       </div>
+      <h1 style="font-size: 18px">GSTIN</h1>
+      <input type="text" placeholder="GSTIN" v-model="company.gstinNumber" />
       <h1 style="font-size: 18px">Address</h1>
       <div class="flex">
         <input
@@ -54,12 +64,10 @@
           placeholder="Street Name"
           v-model="company.streetName"
         />
-      </div>
-      <div class="flex">
         <input type="text" placeholder="City" v-model="company.cityName" />
-        <input type="text" placeholder="State" v-model="company.stateName" />
       </div>
       <div class="flex">
+        <input type="text" placeholder="State" v-model="company.stateName" />
         <input type="number" placeholder="Pincode" v-model="company.pincode" />
       </div>
       <h1 style="font-size: 18px">Contact</h1>
@@ -71,8 +79,6 @@
           v-model="company.phoneNumber"
         />
       </div>
-      <h1 style="font-size: 18px">GSTIN</h1>
-      <input type="text" placeholder="GSTIN" v-model="company.gstinNumber" />
     </div>
     <div v-else class="user-profile">
       <svg-icon icon="user-circle-icon" color="gray2" size="200" />
@@ -171,7 +177,6 @@ input {
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  width: 800px;
   margin: 0px auto;
   min-height: calc(100vh - 175px);
   div {
@@ -188,7 +193,6 @@ input {
   box-shadow: 0px 3px 15px #0000001a;
   padding: 25px;
   border-radius: 6px;
-  width: 800px;
   text-align: center;
   min-height: calc(100vh - 175px);
   align-items: center;

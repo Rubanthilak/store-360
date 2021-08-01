@@ -12,7 +12,7 @@
       </div>
       <div class="tag unpaid">
         <p>₹</p> 
-        {{ customer.customerUnpaidBalance.toFixed(2) }}
+        {{ unpaidBalance.toFixed(2) }}
       </div>
     </div>
     <hr/>
@@ -43,7 +43,7 @@
 
 <script>
 export default {
-  props: ["customer"],
+  props: ["customer","unpaidBalance"],
   computed: {
     fullAddress() {
       return (

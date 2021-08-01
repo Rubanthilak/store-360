@@ -140,6 +140,9 @@ export default {
         this.customer.customerPhoneNumber = null;
       }
     }
+  },
+  async beforeMount(){
+    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
   }
 };
 </script>

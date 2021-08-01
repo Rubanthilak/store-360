@@ -32,12 +32,6 @@ const Product = connection.sequelize.define('product', {
     type: connection.DataTypes.NUMBER,
     allowNull: true
   },
-  productTaxType: {
-    type: connection.DataTypes.ENUM,
-    values: ["GST", "IGST"],
-    allowNull: true,
-    defaultValue: 'GST'
-  },
   productTaxPercentage: {
     type: connection.DataTypes.FLOAT,
     defaultValue: 18

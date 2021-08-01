@@ -34,7 +34,7 @@
 <script>
 export default {
   emits: ["close"],
-  props: ["open", "id"],
+  props: ["open", "id","unpaidBalance","customerId"],
   data() {
     return {
       paymentOptions: ["Card Payment", "Cash Payment", "UPI Payment"],
@@ -59,8 +59,12 @@ export default {
       this.dateSelected = date;
     },
     async validateInput() {
-      if (this.amountEntered < 0) {
-        this.errorMessage = "Please enter amount greater than zero";
+      if (this.amountEntered < 1) {
+        this.errorMessage = "Please enter amount greater than zero.";
+        return;
+      }
+      else if(this.amountEntered > this.unpaidBalance){
+        this.errorMessage = "Please enter valid amount.";
         return;
       }
       if (
@@ -74,6 +78,7 @@ export default {
           paymentMethod: ["Card", "Cash", "UPI"][this.activePaymentMethod],
           amountPaid: this.amountEntered,
           dateOfTransaction: this.dateSelected,
+          customerId: this.customerId
         });
         this.$emit("close");
         this.activePaymentMethod = null;
@@ -81,7 +86,7 @@ export default {
         this.amountEntered = null;
         this.errorMessage = null;
       } else {
-        this.errorMessage = "Please fill all the fields";
+        this.errorMessage = "Please fill all the fields.";
       }
     },
   },

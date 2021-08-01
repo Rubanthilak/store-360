@@ -2,7 +2,7 @@ import Database from "../../../resource/database/Database";
 
 const paymentOptions = ["Card", "Cash", "UPI"];
 
-function generatePaymentArray(obj){
+function generatePaymentArray(obj,customerId){
   var arr = []
   if(obj.method === 4){
     return arr;
@@ -11,7 +11,8 @@ function generatePaymentArray(obj){
     let payment = {
       paymentMethod : paymentOptions[0],
       amountPaid : obj.amount.card,
-      dateOfTransaction : new Date()
+      dateOfTransaction : new Date(),
+      customerId: customerId
     }
     arr.push(payment);
   }
@@ -19,7 +20,8 @@ function generatePaymentArray(obj){
     let payment = {
       paymentMethod : paymentOptions[1],
       amountPaid : obj.amount.cash,
-      dateOfTransaction : new Date()
+      dateOfTransaction : new Date(),
+      customerId: customerId
     }
     arr.push(payment);
   }
@@ -27,7 +29,8 @@ function generatePaymentArray(obj){
     let payment = {
       paymentMethod : paymentOptions[2],
       amountPaid : obj.amount.upi,
-      dateOfTransaction : new Date()
+      dateOfTransaction : new Date(),
+      customerId: customerId
     }
     arr.push(payment);
   }
@@ -72,11 +75,9 @@ export default {
     sales.forEach(sale => {
       let temp = {
         ...sale.dataValues,
-        payments: [],
         totalAmountPaid: 0
       }
       sale.payments.forEach(payment => {
-        temp.payments.push(payment.dataValues)
         temp.totalAmountPaid += payment.dataValues.amountPaid
       })
       tempList.push(temp)
@@ -92,7 +93,7 @@ export default {
     return tempList;
   },
   async postSale(context, obj) {
-    const payments = generatePaymentArray(obj.paymentMethod);
+    const payments = generatePaymentArray(obj.paymentMethod,obj.customer.id);
     const sale = await Database.Model.Sale.createSale({
       customerId : obj.customer.id,
       productList: obj.productList,
@@ -107,7 +108,7 @@ export default {
     sale.payments.forEach(payment => {
       temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
-    })
+    });
     console.log(temp);
     return temp;         
   },

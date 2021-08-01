@@ -15,7 +15,6 @@ export default {
   name: "App",
   async mounted() {
     await this.$store.dispatch("product/getProductList");
-    await this.$store.dispatch("customer/getCustomerList",{ offset:0 });
   },
 };
 </script>
