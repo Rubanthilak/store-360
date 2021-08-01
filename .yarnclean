@@ -10,6 +10,8 @@ doc
 website
 images
 assets
+docs
+!googleapis/build/src/apis/docs
 
 # examples
 example
