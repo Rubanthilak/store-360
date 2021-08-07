@@ -3,6 +3,7 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import backupDatabase from "../resource/plugins/backupDatabase";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 
@@ -44,6 +45,11 @@ async function createWindow() {
     //Listen to get the default printer name
     const list = win.webContents.getPrinters();
     win.webContents.send('getPrinters', list);
+  });
+
+  ipcMain.on('initiateBackup', () => {
+    console.log("called")
+    backupDatabase();
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

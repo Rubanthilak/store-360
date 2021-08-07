@@ -1,4 +1,5 @@
 import Database from "../../../resource/database/Database";
+const ipcRenderer = require("electron").ipcRenderer;
 
 export default {
     async getProductList(context,columnToSort) {
@@ -6,6 +7,7 @@ export default {
       await Database.Model.Customer.createTable()
       await Database.Model.Sale.createTable()
       await Database.Model.Payment.createTable()
+      ipcRenderer.send("initiateBackup");
       const list = await Database.Model.Product.getProducts(columnToSort);
       context.commit("setProductList", { list });
     },

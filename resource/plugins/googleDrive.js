@@ -10,21 +10,31 @@ const fs = require("fs");
 const { google } = require("googleapis");
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
+const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = "token.json";
+var CLIENT_SECRET_PATH = "./credentials.json";
+var CLIENT_SECRET = null;
 
 /**
-* @param {function} callback A function need to passed as callback to execute after authentication.
-*/
-function initiateAuthentication(callback) {
+ * @param {function} callback A function need to passed as callback to execute after authentication.
+ */
+function initiateAuthentication(callback, params) {
   // Load client secrets from a local file.
-  fs.readFile("./credentials.json", (err, content) => {
+  fs.readFile(CLIENT_SECRET_PATH, (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Drive API.
-    authorize(JSON.parse(content), callback);
+    CLIENT_SECRET = JSON.parse(content); 
+    authorize(CLIENT_SECRET, callback, params);
+  });
+}
+
+function checkAuthentication() {
+  fs.readFile(TOKEN_PATH, (err) => {
+    if (err) return false;
+    return true;
   });
 }
 
@@ -34,7 +44,7 @@ function initiateAuthentication(callback) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials, callback, params) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -46,8 +56,8 @@ function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
+    callback(oAuth2Client, params); // The callback takes a param for sending authorized request.
+  }); 
 }
 
 /**
@@ -66,17 +76,119 @@ function getAccessToken(oAuth2Client, callback) {
   };
   code().then((code) => {
     oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error("Error retrieving access token", err);
+      if (err) return console.logor("Error retrieving access token", err);
       oAuth2Client.setCredentials(token);
       // Store the token to disk for later program executions
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
+        if (err) return console.logor(err);
         console.log("Token stored to", TOKEN_PATH);
       });
       callback(oAuth2Client);
     });
   });
 }
+
+function addFile(drive, folderId) {
+  var fileMetadata = {
+    'name': 'Backup.sqlite',
+    'parents': [folderId]
+  };
+  var media = {
+    mimeType: 'application/x-sqlite3',
+    body: fs.createReadStream('D:/Code/Project/Vuejs/store360/db.sqlite')
+  };
+  drive.files.create({
+    requestBody: fileMetadata,
+    media: media,
+  }, function (err, file) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('File Id: ', file);
+    }
+  });
+}
+
+function createMonthFolder(drive, folderName, parentFolderId) {
+  drive.files.create({
+    resource: {
+      name: folderName,
+      mimeType: 'application/vnd.google-apps.folder',
+      parents: [parentFolderId]
+    },
+    fields: 'id'
+  }, function (err, response) {
+    if (err) {
+      console.log('error:', err);
+    } else {
+      addFile(drive, response.id);
+    }
+  });
+}
+
+function uploadFile(auth, params) {
+  var drive = google.drive({ version: 'v3', auth:auth });
+  var isParentFolderAvailable = false;
+  var isMonthFolderAvailable = false;
+  var parentFolderId, monthFolderId;
+  drive.files.list({
+    q: "name = 'Store360 App'",
+    pageSize: 1000,
+    fields: 'nextPageToken, files(id, name)'
+  }, function (err, res) {
+    if (err) return {};
+    if (res.data.files.length) {
+      parentFolderId = res.data.files[0].id;
+      isParentFolderAvailable = true;
+    }
+    if (isParentFolderAvailable) {
+      var timeStamp = new Date();
+      timeStamp = timeStamp.toDateString().split(' ');
+      var folderName = timeStamp[1] + '-' + timeStamp[3];
+      drive.files.list({
+        pageSize: 1000,
+        fields: 'nextPageToken, files(id, name)',
+        parents: [parentFolderId]
+      }, function (err, res) {
+        if (err) return {};
+        var files = res.data.files;
+        if (files.length) {
+          for (var i = 0; i < files.length; i++) {
+            if (files[i].name === folderName) {
+              isMonthFolderAvailable = true;
+              monthFolderId = files[i].id;
+              break;
+            }
+          }
+        }
+        if (isMonthFolderAvailable) {
+          addFile(drive, monthFolderId, params.fileNameForBackup);
+        } else {
+          createMonthFolder(drive, folderName, parentFolderId);
+        }
+      });
+    } else {
+      drive.files.create({
+        resource: {
+          name: 'Store360 App',
+          mimeType: 'application/vnd.google-apps.folder'
+        },
+        fields: 'id'
+      }, function (err, response) {
+        if (err) {
+          console.log('error:', err);
+        } else {
+          var _timeStamp = new Date();
+          _timeStamp = _timeStamp.toDateString().split(' ');
+          var _folderName = _timeStamp[1] + '-' + _timeStamp[3];
+          createMonthFolder(drive, _folderName, response.id);
+        }
+      });
+    }
+  });
+}
+// ------------------------------------------------------------------------------------
+
 
 function authorizeApp(url) {
   return new Promise(function(resolve, reject) {
@@ -144,4 +256,4 @@ function authorizeApp(url) {
   });
 }
 
-export default initiateAuthentication;
+export { initiateAuthentication, checkAuthentication, uploadFile };
