@@ -47,9 +47,9 @@ async function createWindow() {
     win.webContents.send('getPrinters', list);
   });
 
-  ipcMain.on('initiateBackup', () => {
-    console.log("called")
-    backupDatabase();
+  ipcMain.on('initiateBackup', async () => {
+    let res = await backupDatabase();
+    win.webContents.send('initiateBackup', res);
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

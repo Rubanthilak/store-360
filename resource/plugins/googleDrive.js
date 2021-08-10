@@ -88,40 +88,53 @@ function getAccessToken(oAuth2Client, callback) {
   });
 }
 
-function addFile(drive, folderId) {
+function addFile(drive, folderId, fileName, filePath) {
   var fileMetadata = {
-    'name': 'Backup.sqlite',
+    'name': fileName,
     'parents': [folderId]
   };
   var media = {
-    mimeType: 'application/x-sqlite3',
-    body: fs.createReadStream('D:/Code/Project/Vuejs/store360/db.sqlite')
+    mimeType: 'application/zip',
+    body: fs.createReadStream(filePath)
   };
   drive.files.create({
     requestBody: fileMetadata,
     media: media,
-  }, function (err, file) {
+    fields: 'id'
+  }, function (err, res) {
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, function (err) {
+        if (err) {
+          console.error(err);
+        }
+      });
+    }
     if (err) {
+      if (err.code === 401 || err.message === 'invalid_grant' || err.code == 403 || err.message.toLowerCase() === 'insufficient permission') {
+        fs.unlink(TOKEN_PATH, function (err) {console.log(err);});
+        authorize(CLIENT_SECRET, uploadFile);
+        return false;
+      }
       console.error(err);
     } else {
-      console.log('File Id: ', file);
+      console.log('File Id: ', res.data.id);
     }
   });
 }
 
-function createMonthFolder(drive, folderName, parentFolderId) {
+function createMonthFolder(drive, folderName, parentFolderId, params) {
   drive.files.create({
     resource: {
-      name: folderName,
-      mimeType: 'application/vnd.google-apps.folder',
-      parents: [parentFolderId]
+      'name': folderName,
+      'mimeType': 'application/vnd.google-apps.folder',
+      'parents': [parentFolderId]
     },
     fields: 'id'
   }, function (err, response) {
     if (err) {
       console.log('error:', err);
     } else {
-      addFile(drive, response.id);
+      addFile(drive, response.id, params.fileName, params.filePathForBackup);
     }
   });
 }
@@ -162,9 +175,9 @@ function uploadFile(auth, params) {
           }
         }
         if (isMonthFolderAvailable) {
-          addFile(drive, monthFolderId, params.fileNameForBackup);
+          addFile(drive, monthFolderId, params.fileName ,params.filePathForBackup);
         } else {
-          createMonthFolder(drive, folderName, parentFolderId);
+          createMonthFolder(drive, folderName, parentFolderId, params);
         }
       });
     } else {
@@ -181,7 +194,7 @@ function uploadFile(auth, params) {
           var _timeStamp = new Date();
           _timeStamp = _timeStamp.toDateString().split(' ');
           var _folderName = _timeStamp[1] + '-' + _timeStamp[3];
-          createMonthFolder(drive, _folderName, response.id);
+          createMonthFolder(drive, _folderName, response.id, params);
         }
       });
     }
