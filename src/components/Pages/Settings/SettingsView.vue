@@ -11,6 +11,7 @@
         <p>Template Manager</p>
       </div>
     </div>
+    <router-view></router-view>
   </section>
 </template>
 
@@ -21,12 +22,14 @@ export default {};
 <style lang="scss" scoped>
 section{
   padding:0px !important;
+  display:flex;
 }
+
 .side-menu{
   background: var(--gray0);
   width: 250px;
   height: 100vh;
-
+  
   .header{
     padding: 8px;
     border-bottom: 1px solid var(--gray1);

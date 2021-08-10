@@ -5,7 +5,9 @@ import {
 
 import Home from "./components/Pages/Home.vue";
 import Profile from "./components/Pages/Profile.vue";
-import Settings from "./components/Pages/Settings.vue";
+
+import SettingsView from "./components/Pages/Settings/SettingsView.vue";
+import SettingsBackupView from "./components/Pages/Settings/SettingsBackupView.vue";
 
 import ItemsView from "./components/Pages/Item/ItemsView.vue";
 import ItemsAddView from "./components/Pages/Item/ItemsAddView.vue";
@@ -79,7 +81,13 @@ const routes = [{
   },
   {
     path: "/settings",
-    component: Settings
+    component: SettingsView,
+    children: [
+      {
+        path: "",
+        component: SettingsBackupView
+      },
+    ]
   },
 ];
 

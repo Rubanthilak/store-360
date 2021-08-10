@@ -8,6 +8,7 @@ function _interopRequireDefault(obj) {
 
 const fs = require("fs");
 const { google } = require("googleapis");
+const { BrowserWindow } = require("electron");
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
@@ -26,16 +27,16 @@ function initiateAuthentication(callback, params) {
   fs.readFile(CLIENT_SECRET_PATH, (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Drive API.
-    CLIENT_SECRET = JSON.parse(content); 
+    CLIENT_SECRET = JSON.parse(content);
     authorize(CLIENT_SECRET, callback, params);
   });
 }
 
 function checkAuthentication() {
-  fs.readFile(TOKEN_PATH, (err) => {
-    if (err) return false;
+  if (fs.existsSync(TOKEN_PATH)) {
     return true;
-  });
+  }
+  return false;
 }
 
 /**
@@ -54,10 +55,10 @@ function authorize(credentials, callback, params) {
 
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback);
+    if (err) return getAccessToken(oAuth2Client, callback, params);
     oAuth2Client.setCredentials(JSON.parse(token));
     callback(oAuth2Client, params); // The callback takes a param for sending authorized request.
-  }); 
+  });
 }
 
 /**
@@ -66,7 +67,7 @@ function authorize(credentials, callback, params) {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getAccessToken(oAuth2Client, callback) {
+function getAccessToken(oAuth2Client, callback, params) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
@@ -83,187 +84,204 @@ function getAccessToken(oAuth2Client, callback) {
         if (err) return console.logor(err);
         console.log("Token stored to", TOKEN_PATH);
       });
-      callback(oAuth2Client);
+      callback(oAuth2Client, params);
     });
+  }).catch((err) => {
+    console.log(err);
   });
 }
 
 function addFile(drive, folderId, fileName, filePath) {
   var fileMetadata = {
-    'name': fileName,
-    'parents': [folderId]
+    name: fileName,
+    parents: [folderId],
   };
   var media = {
-    mimeType: 'application/zip',
-    body: fs.createReadStream(filePath)
+    mimeType: "application/zip",
+    body: fs.createReadStream(filePath),
   };
-  drive.files.create({
-    requestBody: fileMetadata,
-    media: media,
-    fields: 'id'
-  }, function (err, res) {
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, function (err) {
-        if (err) {
-          console.error(err);
-        }
-      });
-    }
-    if (err) {
-      if (err.code === 401 || err.message === 'invalid_grant' || err.code == 403 || err.message.toLowerCase() === 'insufficient permission') {
-        fs.unlink(TOKEN_PATH, function (err) {console.log(err);});
-        authorize(CLIENT_SECRET, uploadFile);
-        return false;
+  drive.files.create(
+    {
+      requestBody: fileMetadata,
+      media: media,
+      fields: "id",
+    },
+    function(err, res) {
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, function(err) {
+          if (err) {
+            console.error(err);
+          }
+        });
       }
-      console.error(err);
-    } else {
-      console.log('File Id: ', res.data.id);
+      if (err) {
+        if (
+          err.code === 401 ||
+          err.message === "invalid_grant" ||
+          err.code == 403 ||
+          err.message.toLowerCase() === "insufficient permission"
+        ) {
+          fs.unlink(TOKEN_PATH, function(err) {
+            console.log(err);
+          });
+          authorize(CLIENT_SECRET, uploadFile);
+          return false;
+        }
+        console.error(err);
+      } else {
+        console.log("File Id: ", res.data.id);
+      }
     }
-  });
+  );
 }
 
 function createMonthFolder(drive, folderName, parentFolderId, params) {
-  drive.files.create({
-    resource: {
-      'name': folderName,
-      'mimeType': 'application/vnd.google-apps.folder',
-      'parents': [parentFolderId]
+  drive.files.create(
+    {
+      resource: {
+        name: folderName,
+        mimeType: "application/vnd.google-apps.folder",
+        parents: [parentFolderId],
+      },
+      fields: "id",
     },
-    fields: 'id'
-  }, function (err, response) {
-    if (err) {
-      console.log('error:', err);
-    } else {
-      addFile(drive, response.id, params.fileName, params.filePathForBackup);
+    function(err, response) {
+      if (err) {
+        console.log("error:", err);
+      } else {
+        addFile(
+          drive,
+          response.data.id,
+          params.fileName,
+          params.filePathForBackup
+        );
+      }
     }
-  });
+  );
 }
 
 function uploadFile(auth, params) {
-  var drive = google.drive({ version: 'v3', auth:auth });
+  var drive = google.drive({ version: "v3", auth: auth });
   var isParentFolderAvailable = false;
   var isMonthFolderAvailable = false;
   var parentFolderId, monthFolderId;
-  drive.files.list({
-    q: "name = 'Store360 App'",
-    pageSize: 1000,
-    fields: 'nextPageToken, files(id, name)'
-  }, function (err, res) {
-    if (err) return {};
-    if (res.data.files.length) {
-      parentFolderId = res.data.files[0].id;
-      isParentFolderAvailable = true;
-    }
-    if (isParentFolderAvailable) {
-      var timeStamp = new Date();
-      timeStamp = timeStamp.toDateString().split(' ');
-      var folderName = timeStamp[1] + '-' + timeStamp[3];
-      drive.files.list({
-        pageSize: 1000,
-        fields: 'nextPageToken, files(id, name)',
-        parents: [parentFolderId]
-      }, function (err, res) {
-        if (err) return {};
-        var files = res.data.files;
-        if (files.length) {
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].name === folderName) {
-              isMonthFolderAvailable = true;
-              monthFolderId = files[i].id;
-              break;
+  drive.files.list(
+    {
+      q: "name = 'Store360 App'",
+      pageSize: 1000,
+      fields: "nextPageToken, files(id, name)",
+    },
+    function(err, res) {
+      if (err) return {};
+      if (res.data.files.length) {
+        parentFolderId = res.data.files[0].id;
+        isParentFolderAvailable = true;
+      }
+      if (isParentFolderAvailable) {
+        var timeStamp = new Date();
+        timeStamp = timeStamp.toDateString().split(" ");
+        var folderName = timeStamp[1] + "-" + timeStamp[3];
+        drive.files.list(
+          {
+            pageSize: 1000,
+            fields: "nextPageToken, files(id, name)",
+            parents: [parentFolderId],
+          },
+          function(err, res) {
+            if (err) return {};
+            var files = res.data.files;
+            if (files.length) {
+              for (var i = 0; i < files.length; i++) {
+                if (files[i].name === folderName) {
+                  isMonthFolderAvailable = true;
+                  monthFolderId = files[i].id;
+                  break;
+                }
+              }
+            }
+            if (isMonthFolderAvailable) {
+              addFile(
+                drive,
+                monthFolderId,
+                params.fileName,
+                params.filePathForBackup
+              );
+            } else {
+              createMonthFolder(drive, folderName, parentFolderId, params);
             }
           }
-        }
-        if (isMonthFolderAvailable) {
-          addFile(drive, monthFolderId, params.fileName ,params.filePathForBackup);
-        } else {
-          createMonthFolder(drive, folderName, parentFolderId, params);
-        }
-      });
-    } else {
-      drive.files.create({
-        resource: {
-          name: 'Store360 App',
-          mimeType: 'application/vnd.google-apps.folder'
-        },
-        fields: 'id'
-      }, function (err, response) {
-        if (err) {
-          console.log('error:', err);
-        } else {
-          var _timeStamp = new Date();
-          _timeStamp = _timeStamp.toDateString().split(' ');
-          var _folderName = _timeStamp[1] + '-' + _timeStamp[3];
-          createMonthFolder(drive, _folderName, response.id, params);
-        }
-      });
+        );
+      } else {
+        drive.files.create(
+          {
+            resource: {
+              name: "Store360 App",
+              mimeType: "application/vnd.google-apps.folder",
+            },
+            fields: "id",
+          },
+          function(err, response) {
+            if (err) {
+              console.log("error:", err);
+            } else {
+              var _timeStamp = new Date();
+              _timeStamp = _timeStamp.toDateString().split(" ");
+              var _folderName = _timeStamp[1] + "-" + _timeStamp[3];
+              createMonthFolder(drive, _folderName, response.data.id, params);
+            }
+          }
+        );
+      }
     }
-  });
+  );
 }
 // ------------------------------------------------------------------------------------
-
 
 function authorizeApp(url) {
   return new Promise(function(resolve, reject) {
     try {
-      // Changes for GAuth wrt. bug user is not able to take backup on GDrive.
-      // Creating two browser window to authenticate user.
-      // GAuth is not working directly with user-agent.
-      // Workaround: First request is without user-agent, once we load it without user-agent then again we are trying to load it with user-agent.
+ 
       var browserWindowParams = {
         useContentSize: true,
-        center: true,
-        show: false,
-        resizable: false,
-        autoHideMenuBar: true,
-        alwaysOnTop: false,
-      };
-
-      var BrowserWindow = require("electron").remote.BrowserWindow;
-
-      var win = new BrowserWindow(
-        browserWindowParams || { "use-content-size": true }
-      );
-      win.webContents.on("did-finish-load", function() {
-        var browserWindowParams1 = {
-          useContentSize: true,
           center: true,
           show: true,
           resizable: false,
           autoHideMenuBar: true,
           alwaysOnTop: true,
-        };
-        var win1 = new BrowserWindow(
-          browserWindowParams1 || { "use-content-size": true }
-        );
-        win.close();
-        win1.loadURL(url, { userAgent: "Chrome" });
-        win1.on("closed", function() {
-          reject(new Error("User closed the window"));
-        });
-        win1.on("page-title-updated", function() {
-          (0, _setImmediate3.default)(function() {
-            var title = win1.getTitle();
-            if (title.startsWith("Denied")) {
-              reject(new Error(title.split(/[ =]/)[2]));
-              win1.removeAllListeners("closed");
-              console.log(new Error("User closed the window"));
-              win1.close();
-            } else if (title.startsWith("Success")) {
-              resolve(title.split(/[ =]/)[2]);
-              win1.removeAllListeners("closed");
-              win1.close();
-              console.log(
-                "Started Backup to Google Drive. Please continue with your work."
-              );
-            }
-          });
+      };
+
+      var win = new BrowserWindow(
+        browserWindowParams || { "use-content-size": true }
+      );
+
+      win.on("closed", function() {
+        reject(new Error("User closed the window"));
+      });
+
+      win.on("page-title-updated", function() {
+        (0, _setImmediate3.default)(function() {
+          var title = win.getTitle();
+          if (title.startsWith("Denied")) {
+            reject(new Error(title.split(/[ =]/)[2]));
+            win.removeAllListeners("closed");
+            console.log(new Error("User closed the window"));
+            win.close();
+          } else if (title.startsWith("Success")) {
+            resolve(title.split(/[ =]/)[2]);
+            win.removeAllListeners("closed");
+            win.close();
+            console.log(
+              "Started Backup to Google Drive. Please continue with your work."
+            );
+          }
         });
       });
-      win.loadURL(url);
-    } catch (ex) {
+
+      win.loadURL(url, { userAgent: "Chrome" });
+
+    } catch (err) {
       reject(
-        new Error("Unable to load the window. Please contact Store360 team.")
+        new Error(err)
       );
     }
   });

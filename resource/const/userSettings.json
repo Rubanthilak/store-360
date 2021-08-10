@@ -1,4 +1,3 @@
 {
-    "stateGST": 8,
-    "centralGST": 8
+    "autoBackup" : "weekly"
 }
