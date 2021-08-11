@@ -6,7 +6,7 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-const fs = require("fs");
+const fs = require("fs").promises;
 const { google } = require("googleapis");
 const { BrowserWindow } = require("electron");
 
@@ -16,23 +16,25 @@ const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = "token.json";
-var CLIENT_SECRET_PATH = "./credentials.json";
+var CLIENT_SECRET_PATH = "./resource/config/credentials.json";
 var CLIENT_SECRET = null;
 
 /**
  * @param {function} callback A function need to passed as callback to execute after authentication.
  */
-function initiateAuthentication(callback, params) {
-  // Load client secrets from a local file.
-  fs.readFile(CLIENT_SECRET_PATH, (err, content) => {
-    if (err) return console.log("Error loading client secret file:", err);
-    // Authorize a client with credentials, then call the Google Drive API.
+async function initiateAuthentication(callback, params) {
+  try {
+    const content = await fs.readFile(CLIENT_SECRET_PATH);
     CLIENT_SECRET = JSON.parse(content);
-    authorize(CLIENT_SECRET, callback, params);
-  });
+    const res = await authorize(CLIENT_SECRET, callback, params);
+    return res;
+  } catch (error) {
+    return { result: false, message: error };
+  }
 }
 
 function checkAuthentication() {
+  let fs = require("fs");
   if (fs.existsSync(TOKEN_PATH)) {
     return true;
   }
@@ -45,7 +47,7 @@ function checkAuthentication() {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback, params) {
+async function authorize(credentials, callback, params) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -54,11 +56,15 @@ function authorize(credentials, callback, params) {
   );
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback, params);
+  try {
+    const token = await fs.readFile(TOKEN_PATH);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client, params); // The callback takes a param for sending authorized request.
-  });
+    const res = await callback(oAuth2Client, params);
+    return res; // The callback takes a param for sending authorized request.
+  } catch (error) {
+    const res = await getAccessToken(oAuth2Client, callback, params);
+    return res;
+  }
 }
 
 /**
@@ -67,187 +73,170 @@ function authorize(credentials, callback, params) {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getAccessToken(oAuth2Client, callback, params) {
+async function getAccessToken(oAuth2Client, callback, params) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
   });
-  var code = function code() {
+  var code = function() {
     return authorizeApp(authUrl);
   };
-  code().then((code) => {
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.logor("Error retrieving access token", err);
-      oAuth2Client.setCredentials(token);
+  try {
+    const access_token = await code();
+    const { tokens } = await oAuth2Client.getToken(access_token);
+    if (tokens === undefined) {
+      throw new Error("Authentication Failed");
+    } else {
+      oAuth2Client.setCredentials(tokens);
       // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.logor(err);
-        console.log("Token stored to", TOKEN_PATH);
+      fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), (err) => {
+        if (err) return console.log(err);
+        // Add a logger here
       });
-      callback(oAuth2Client, params);
-    });
-  }).catch((err) => {
-    console.log(err);
-  });
+      const res = await callback(oAuth2Client, params);
+      return res;
+    }
+  } catch (error) {
+    return { result: false, message: error };
+  }
 }
 
-function addFile(drive, folderId, fileName, filePath) {
+async function addFile(drive, folderId, fileName, filePath) {
   var fileMetadata = {
     name: fileName,
     parents: [folderId],
   };
   var media = {
     mimeType: "application/zip",
-    body: fs.createReadStream(filePath),
+    body: require("fs").createReadStream(filePath),
   };
-  drive.files.create(
-    {
+  try {
+    const res = await drive.files.create({
       requestBody: fileMetadata,
       media: media,
       fields: "id",
-    },
-    function(err, res) {
-      if (fs.existsSync(filePath)) {
-        fs.unlink(filePath, function(err) {
-          if (err) {
-            console.error(err);
-          }
-        });
-      }
-      if (err) {
-        if (
-          err.code === 401 ||
-          err.message === "invalid_grant" ||
-          err.code == 403 ||
-          err.message.toLowerCase() === "insufficient permission"
-        ) {
-          fs.unlink(TOKEN_PATH, function(err) {
-            console.log(err);
-          });
-          authorize(CLIENT_SECRET, uploadFile);
-          return false;
-        }
-        console.error(err);
-      } else {
-        console.log("File Id: ", res.data.id);
-      }
+    });
+    return { result: true, message: res.data.id};
+  } catch (err) {
+    if (
+      err.code === 401 ||
+      err.message === "invalid_grant" ||
+      err.code == 403 ||
+      err.message.toLowerCase() === "insufficient permission"
+    ) {
+      fs.unlink(TOKEN_PATH, function(err) {
+        console.log(err);
+      });
+      const res = await authorize(CLIENT_SECRET, uploadFile);
+      return res;
     }
-  );
+    return { result: false, message: err };
+  } finally {
+    if (require("fs").existsSync(filePath)) {
+      fs.unlink(filePath, function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  }
 }
 
-function createMonthFolder(drive, folderName, parentFolderId, params) {
-  drive.files.create(
-    {
+async function createMonthFolder(drive, folderName, parentFolderId, params) {
+  try {
+    const response = await drive.files.create({
       resource: {
         name: folderName,
         mimeType: "application/vnd.google-apps.folder",
         parents: [parentFolderId],
       },
       fields: "id",
-    },
-    function(err, response) {
-      if (err) {
-        console.log("error:", err);
-      } else {
-        addFile(
-          drive,
-          response.data.id,
-          params.fileName,
-          params.filePathForBackup
-        );
-      }
-    }
-  );
+    });
+    const res = await addFile(
+      drive,
+      response.data.id,
+      params.fileName,
+      params.filePathForBackup
+    );
+    return res;
+  } catch (error) {
+    return { result: false, message: error };
+  }
 }
 
-function uploadFile(auth, params) {
+async function uploadFile(auth, params) {
   var drive = google.drive({ version: "v3", auth: auth });
   var isParentFolderAvailable = false;
   var isMonthFolderAvailable = false;
   var parentFolderId, monthFolderId;
-  drive.files.list(
-    {
+  try {
+    const res = await drive.files.list({
       q: "name = 'Store360 App'",
       pageSize: 1000,
       fields: "nextPageToken, files(id, name)",
-    },
-    function(err, res) {
-      if (err) return {};
-      if (res.data.files.length) {
-        parentFolderId = res.data.files[0].id;
-        isParentFolderAvailable = true;
-      }
-      if (isParentFolderAvailable) {
-        var timeStamp = new Date();
-        timeStamp = timeStamp.toDateString().split(" ");
-        var folderName = timeStamp[1] + "-" + timeStamp[3];
-        drive.files.list(
-          {
-            pageSize: 1000,
-            fields: "nextPageToken, files(id, name)",
-            parents: [parentFolderId],
-          },
-          function(err, res) {
-            if (err) return {};
-            var files = res.data.files;
-            if (files.length) {
-              for (var i = 0; i < files.length; i++) {
-                if (files[i].name === folderName) {
-                  isMonthFolderAvailable = true;
-                  monthFolderId = files[i].id;
-                  break;
-                }
-              }
-            }
-            if (isMonthFolderAvailable) {
-              addFile(
-                drive,
-                monthFolderId,
-                params.fileName,
-                params.filePathForBackup
-              );
-            } else {
-              createMonthFolder(drive, folderName, parentFolderId, params);
-            }
+    });
+    if (res.data.files.length) {
+      parentFolderId = res.data.files[0].id;
+      isParentFolderAvailable = true;
+    }
+    if (isParentFolderAvailable) {
+      var timeStamp = new Date();
+      timeStamp = timeStamp.toDateString().split(" ");
+      var folderName = timeStamp[1] + "-" + timeStamp[3];
+      const response = await drive.files.list({
+        pageSize: 1000,
+        fields: "nextPageToken, files(id, name)",
+        parents: [parentFolderId],
+      });
+      var files = response.data.files;
+      if (files.length) {
+        for (var i = 0; i < files.length; i++) {
+          if (files[i].name === folderName) {
+            isMonthFolderAvailable = true;
+            monthFolderId = files[i].id;
+            break;
           }
+        }
+      }
+      if (isMonthFolderAvailable) {
+        return await addFile(
+          drive,
+          monthFolderId,
+          params.fileName,
+          params.filePathForBackup
         );
       } else {
-        drive.files.create(
-          {
-            resource: {
-              name: "Store360 App",
-              mimeType: "application/vnd.google-apps.folder",
-            },
-            fields: "id",
-          },
-          function(err, response) {
-            if (err) {
-              console.log("error:", err);
-            } else {
-              var _timeStamp = new Date();
-              _timeStamp = _timeStamp.toDateString().split(" ");
-              var _folderName = _timeStamp[1] + "-" + _timeStamp[3];
-              createMonthFolder(drive, _folderName, response.data.id, params);
-            }
-          }
-        );
+        return await createMonthFolder(drive, folderName, parentFolderId, params);
       }
+    } else {
+      const response = await drive.files.create({
+        resource: {
+          name: "Store360 App",
+          mimeType: "application/vnd.google-apps.folder",
+        },
+        fields: "id",
+      });
+      var _timeStamp = new Date();
+      _timeStamp = _timeStamp.toDateString().split(" ");
+      var _folderName = _timeStamp[1] + "-" + _timeStamp[3];
+      return await createMonthFolder(drive, _folderName, response.data.id, params);
     }
-  );
+  } catch (error) {
+    return { result: false, message: error };
+  }
 }
 // ------------------------------------------------------------------------------------
 
 function authorizeApp(url) {
   return new Promise(function(resolve, reject) {
     try {
- 
       var browserWindowParams = {
         useContentSize: true,
-          center: true,
-          show: true,
-          resizable: false,
-          autoHideMenuBar: true,
-          alwaysOnTop: true,
+        center: true,
+        show: true,
+        resizable: false,
+        autoHideMenuBar: true,
+        alwaysOnTop: true,
       };
 
       var win = new BrowserWindow(
@@ -270,19 +259,12 @@ function authorizeApp(url) {
             resolve(title.split(/[ =]/)[2]);
             win.removeAllListeners("closed");
             win.close();
-            console.log(
-              "Started Backup to Google Drive. Please continue with your work."
-            );
           }
         });
       });
-
       win.loadURL(url, { userAgent: "Chrome" });
-
     } catch (err) {
-      reject(
-        new Error(err)
-      );
+      reject(new Error(err));
     }
   });
 }
