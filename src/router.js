@@ -8,6 +8,7 @@ import Profile from "./components/Pages/Profile.vue";
 
 import SettingsView from "./components/Pages/Settings/SettingsView.vue";
 import SettingsBackupView from "./components/Pages/Settings/SettingsBackupView.vue";
+import SettingsTemplateManagerView from "./components/Pages/Settings/SettingsTemplateManagerView.vue";
 
 import ItemsView from "./components/Pages/Item/ItemsView.vue";
 import ItemsAddView from "./components/Pages/Item/ItemsAddView.vue";
@@ -86,6 +87,10 @@ const routes = [{
       {
         path: "",
         component: SettingsBackupView
+      },
+      {
+        path: "template",
+        component: SettingsTemplateManagerView
       },
     ]
   },
