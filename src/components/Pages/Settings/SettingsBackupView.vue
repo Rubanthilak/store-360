@@ -31,7 +31,6 @@ export default {
   },
   computed: {
     googleSignIn() {
-      console.log(this.$store.getters.checkGoogleSignIn);
       return this.$store.getters["checkGoogleSignIn"];
     },
   },

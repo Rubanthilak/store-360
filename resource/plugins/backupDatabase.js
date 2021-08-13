@@ -19,11 +19,11 @@ async function backupDatabase() {
         zipfile.addFile(selectedFile, selectedFileName);
         zipfile.outputStream.pipe(fs.createWriteStream("./" + zipFileName))
         zipfile.end();
-        initiateAuthentication(uploadFile, {
+        const res = await initiateAuthentication(uploadFile, {
           filePathForBackup: "D:/Code/Project/Vuejs/store360/" + zipFileName,
           fileName: new Date().toString() + '.s360',
         });
-        return {result: true};
+        return res;
     } catch (error) {
         return {result: false, message: error};
     }
