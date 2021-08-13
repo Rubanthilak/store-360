@@ -3,7 +3,6 @@ node_modules
 /node_modules
 /dist
 
-
 # local env files
 .env.local
 .env.*.local
@@ -24,7 +23,6 @@ token.json
 *.njsproj
 *.sln
 *.sw?
-
 
 #Electron-builder output
 /dist_electron
