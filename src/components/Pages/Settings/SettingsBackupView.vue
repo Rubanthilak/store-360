@@ -7,6 +7,11 @@
         style="display: inline-flex"
         @click="initiateBackup"
       ></the-button>
+      <the-button
+        label="Log out"
+        style="display: inline-flex"
+        color="red"
+      ></the-button>
     </div>
     <div v-else class="wrapper">
          <the-button

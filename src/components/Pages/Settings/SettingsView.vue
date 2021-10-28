@@ -14,6 +14,21 @@
           <p>Template Manager</p>
         </div>
       </router-link>
+      <router-link to="/settings/template">
+        <div class="tile">
+          <p>Credit Settings</p>
+        </div>
+      </router-link>
+      <router-link to="/settings/template">
+        <div class="tile">
+          <p>Printer Settings</p>
+        </div>
+      </router-link>
+      <router-link to="/settings/template">
+        <div class="tile">
+          <p>About</p>
+        </div>
+      </router-link>
     </div>
     <router-view></router-view>
   </section>

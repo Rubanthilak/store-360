@@ -133,7 +133,26 @@
       </template>
       <template #thead>
         <tr>
-          <th v-for="column in columnProps" :key="column">{{ column.name }}</th>
+          <th >{{ columnProps.id.name }}</th>
+          <th >
+            {{ columnProps.item_name.name }}
+          </th>
+          <th >
+            {{ columnProps.hsc_code.name }}
+          </th>
+          <th >
+            {{ columnProps.tax_percent.name }}
+          </th>
+          <th>{{ columnProps.stock.name }}</th>
+          <th>
+            {{ columnProps.mrp_price.name }}
+          </th>
+          <th>
+            {{ columnProps.selling_price.name }}
+          </th>
+          <th>
+            {{ columnProps.bar_code.name }}
+          </th>
           <th></th>
         </tr>
       </template>
