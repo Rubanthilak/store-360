@@ -140,11 +140,15 @@ export default {
     printInvoice() {
       this.updateBill();
       const webview = this.$refs.printwebview;
+      webview.openDevTools();
+      webview.insertCSS(this.$store.getters["getCSSToPrint"]);
       webview.send("webview-print-render", this.$refs.invoice.innerHTML);
     },
     printToPDF() {
       this.updateBill();
       const webview = this.$refs.printwebview;
+      webview.openDevTools();
+      webview.insertCSS(this.$store.getters["getCSSToPrint"]);
       webview.send("webview-pdf-render", this.$refs.invoice.innerHTML);
     },
   },
