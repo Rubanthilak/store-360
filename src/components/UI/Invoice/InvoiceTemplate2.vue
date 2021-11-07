@@ -143,7 +143,7 @@ export default {
       company: {},
     };
   },
-  async mounted() {
+  async created() {
     this.customer = await this.$store.dispatch(
       "customer/getCustomerById",
       this.invoice.customerId

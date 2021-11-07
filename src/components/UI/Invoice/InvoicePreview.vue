@@ -13,7 +13,7 @@ export default {
   components: { InvoiceTemplate1, InvoiceTemplate2 },
   computed: {
     currentTemplate(){
-      return this.$store.getters["getCurrentPrinterTemplate"]
+      return this.$store.getters["setting/getCurrentInvoiceTemplate"]
     }
   }
 };

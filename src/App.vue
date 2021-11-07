@@ -15,6 +15,7 @@ export default {
   name: "App",
   async mounted() {
     await this.$store.dispatch("product/getProductList");
+    this.$store.dispatch("setting/updateUserSettings");
   },
 };
 </script>
