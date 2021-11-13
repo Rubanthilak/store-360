@@ -30,7 +30,12 @@ export default {
     initiateBackup() {
       ipcRenderer.send("initiateBackup");
       ipcRenderer.once("initiateBackup", (event, data) => {
-        console.log(data);
+        this.$moshaToast(data.result ? "Backup Successful" : "Backup Failed !", {
+          type: data.result ? "success" : "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
       });
     },
   },

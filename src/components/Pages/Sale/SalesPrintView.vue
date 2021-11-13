@@ -19,7 +19,14 @@
     <div class="flex print-preview" v-if="invoiceDetails">
       <div
         ref="invoice"
-        style="height:85vh;overflow:auto;width:700px;background:white;margin:0px auto;border-radius:5px"
+        style="
+          height: 85vh;
+          overflow: auto;
+          width: 700px;
+          background: white;
+          margin: 0px auto;
+          border-radius: 5px;
+        "
       >
         <invoice-preview :invoice="invoiceDetails"></invoice-preview>
       </div>
@@ -28,20 +35,44 @@
           <div class="price-card">
             <h1 class="title">Additional Details</h1>
             <div class="flex apart">
-              <input type="text" placeholder="PO Number" v-model="invoiceDetails.poNumber" />
-              <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.poDate" />
+              <input
+                type="text"
+                placeholder="PO Number"
+                v-model="invoiceDetails.poNumber"
+              />
+              <input
+                type="text"
+                placeholder="DD/MM/YYYY"
+                v-model="invoiceDetails.poDate"
+              />
             </div>
             <div class="flex apart">
-              <input type="text" placeholder="DC Number" v-model="invoiceDetails.dcNumber" />
-              <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.dcDate" />
+              <input
+                type="text"
+                placeholder="DC Number"
+                v-model="invoiceDetails.dcNumber"
+              />
+              <input
+                type="text"
+                placeholder="DD/MM/YYYY"
+                v-model="invoiceDetails.dcDate"
+              />
             </div>
             <div class="flex apart">
-              <input type="text" placeholder="DR Number" v-model="invoiceDetails.drNumber" />
-              <input type="text" placeholder="DD/MM/YYYY" v-model="invoiceDetails.drDate" />
+              <input
+                type="text"
+                placeholder="DR Number"
+                v-model="invoiceDetails.drNumber"
+              />
+              <input
+                type="text"
+                placeholder="DD/MM/YYYY"
+                v-model="invoiceDetails.drDate"
+              />
             </div>
           </div>
           <div class="price-card">
-            <h1  class="title">Choose Printer</h1>
+            <h1 class="title">Choose Printer</h1>
             <list-box
               @option-selected="changePrinter"
               value-to-display="Select Printer"
@@ -52,16 +83,20 @@
           <div class="price-card">
             <div class="flex apart">
               <h1>Total</h1>
-              <h1>₹ {{totalPrice.toFixed(2)}}</h1>
+              <h1>₹ {{ totalPrice.toFixed(2) }}</h1>
             </div>
             <the-button label="Print" @click="printInvoice"></the-button>
-            <the-button label="Save as PDF" color="green" @click="printToPDF"></the-button>
+            <the-button
+              label="Save as PDF"
+              color="green"
+              @click="printToPDF"
+            ></the-button>
           </div>
         </div>
       </div>
     </div>
     <webview
-      style="height:0px;width:0px;"
+      style="height: 0px; width: 0px"
       ref="printwebview"
       src="../../print.html"
       nodeintegration
@@ -75,7 +110,7 @@ export default {
   data() {
     return {
       invoiceDetails: null,
-      activePrinter: null
+      activePrinter: null,
     };
   },
   computed: {
@@ -96,18 +131,18 @@ export default {
       var printers = [];
       ipcRenderer.send("getPrinters");
       ipcRenderer.once("getPrinters", (event, data) => {
-        data.forEach((printer,index) => {
+        data.forEach((printer, index) => {
           printers.push(printer.name);
-          if(printer.isDefault){
+          if (printer.isDefault) {
             this.activePrinter = index;
           }
-        })
+        });
       });
       return printers;
     },
   },
   methods: {
-    changePrinter(index){
+    changePrinter(index) {
       this.activePrinter = index;
     },
     async updateBill() {
@@ -186,7 +221,6 @@ export default {
       }
     });
   },
- 
 };
 </script>
 
@@ -204,12 +238,12 @@ export default {
     width: 350px;
     margin: 0px 0px;
 
-    .title{
-        background: var(--gray1);
-        font-family: var(--font-bold);
-        padding: 8px 10px;
-        font-size: 14px;
-        border-radius: 4px;
+    .title {
+      background: var(--gray1);
+      font-family: var(--font-bold);
+      padding: 8px 10px;
+      font-size: 14px;
+      border-radius: 4px;
     }
 
     .price-card {
