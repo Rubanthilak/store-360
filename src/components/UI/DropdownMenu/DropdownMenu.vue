@@ -1,6 +1,12 @@
 <template>
-  <div class="menu-icon">
-    <svg-icon :icon="menuMode ? 'cross-icon' : 'ellipsis-icon'" color="gray2" :hover-color="menuMode ? 'red' : 'blue'" size="28" @click="toggleMenu" ></svg-icon>
+  <div ref="target" class="menu-icon">
+    <svg-icon
+      :icon="menuMode ? 'cross-icon' : 'ellipsis-icon'"
+      color="gray2"
+      :hover-color="menuMode ? 'red' : 'blue'"
+      size="28"
+      @click="toggleMenu"
+    ></svg-icon>
     <transition name="dropdown">
       <div class="drop-down" v-if="menuMode">
         <slot name="options" :closeTrigger="toggleMenu"></slot>
@@ -10,29 +16,34 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { onClickOutside } from "@vueuse/core";
 export default {
-  data() {
-    return {
-      menuMode: false,
-    };
+  setup() {
+    const target = ref(null);
+    var menuMode = ref(false);
+
+    onClickOutside(target, () => (menuMode.value = false));
+    
+    return { target, menuMode };
   },
-  methods: {
-    toggleMenu() {
+  methods:{
+    toggleMenu () {
       this.menuMode = !this.menuMode;
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 svg {
-    padding: 3px 6px;
-    border-radius: 5px;
-    transition: all 0.3s;
-    &:hover {
-      background: var(--gray1);
-      box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
-    }
+  padding: 3px 6px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  &:hover {
+    background: var(--gray1);
+    box-shadow: inset 0px 0px 15px rgb(0, 0, 0, 0.05);
+  }
 }
 
 .menu-icon {
@@ -46,7 +57,7 @@ svg {
   // cursor: pointer;
   // box-shadow: 0px 3px 15px rgb(0, 0, 0, 0.05);
   position: relative;
-  display:flex;
+  display: flex;
   align-items: center;
 }
 

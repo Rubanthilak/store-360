@@ -7,6 +7,11 @@
         style="display: inline-flex"
         @click="initiateBackup"
       ></the-button>
+      <the-button
+        label="Log out"
+        style="display: inline-flex"
+        color="red"
+      ></the-button>
     </div>
     <div v-else class="wrapper">
          <the-button
@@ -25,7 +30,12 @@ export default {
     initiateBackup() {
       ipcRenderer.send("initiateBackup");
       ipcRenderer.once("initiateBackup", (event, data) => {
-        console.log(data);
+        this.$moshaToast(data.result ? "Backup Successful" : "Backup Failed !", {
+          type: data.result ? "success" : "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
       });
     },
   },

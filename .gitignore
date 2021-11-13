@@ -3,7 +3,6 @@ node_modules
 /node_modules
 /dist
 
-
 # local env files
 .env.local
 .env.*.local
@@ -14,6 +13,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 token.json
+/resource/config/credentials.json
 
 # Editor directories and files
 .idea
@@ -23,7 +23,6 @@ token.json
 *.njsproj
 *.sln
 *.sw?
-
 
 #Electron-builder output
 /dist_electron
