@@ -56,7 +56,7 @@
         <p>
           <b>Date</b>
           <br />
-          {{ invoice.createdAt.toDateString() }}
+          {{ invoice.createdAt.toString() }}
         </p>
       </div>
     </div>

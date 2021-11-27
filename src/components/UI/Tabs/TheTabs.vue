@@ -1,13 +1,13 @@
 <template>
   <div class="flex tab-wrapper">
     <div
-      :class="['tab',{'is-active':(tab.key === isActive)}]"
-      v-for="tab in tabList"
-      :key="tab.key"
-      @click="setTab(tab.key)"
+      v-for="(cart,index) in cartList"
+      :class="['tab',{'is-active':(index === isActive)}]"
+      :key="index"
+      @click="setTab(index)"
     >
-      <p>{{tab.tabName}}</p>
-      <svg-icon class="close-button" @click="removeTab(tab.key)" icon="cross-icon" color="gray8" hover-color="gray0" size="18"></svg-icon>
+      <p>{{cart.customer === null ? "New Tab" : cart.customer.customerName}}</p>
+      <svg-icon class="close-button" @click="removeTab(index)" icon="cross-icon" color="gray8" hover-color="gray0" size="18"></svg-icon>
     </div>
     <div class="add-tab" @click="addTab">
       <p>+</p>
@@ -17,91 +17,35 @@
 
 <script>
 export default {
+  props: ["cartList"],
   data() {
     return {
-      tabList: [
-        {
-          tabName: "New Tab",
-          key: 0,
-        },
-      ],
       isActive: null,
       count: 1,
-      keys: [
-        { key: 0, taken: true },
-        { key: 1, taken: false },
-        { key: 2, taken: false },
-        { key: 3, taken: false },
-        { key: 4, taken: false },
-        { key: 5, taken: false },
-        { key: 6, taken: false },
-        { key: 7, taken: false },
-        { key: 8, taken: false },
-        { key: 9, taken: false },
-      ],
     };
   },
   methods: {
-    getKey() {
-      let key;
-      for (var i = 0; i < this.keys.length; i++) {
-        if (!this.keys[i].taken) {
-          key = this.keys[i].key;
-          this.keys[i].taken = true;
-          this.count++;
-          break;
-        }
-      }
-      return key;
-    },
-    freeKey(key) {
-      this.keys.forEach((k) => {
-        if (k.key === key) {
-          k.taken = false;
-        }
-      });
-    },
-    setTab(key) {
-      this.keys.forEach((k) => {
-        if (k.key === key && k.taken) {
+   setTab(key) {
+      this.cartList.forEach((cart,index) => {
+        if (index === key) {
           this.isActive = key;
         }
       });
     },
     addTab() {
-      if (this.tabList.length < 10) {
-        let key = this.getKey();
-        this.setTab(key);
-        this.tabList.push({
-          tabName: "New Tab",
-          key: key,
-        });
+      if (this.cartList.length < 10) {
+        this.$emit("addTab")
+        this.setTab(this.cartList.length - 1);
       } else {
         this.$store.commit("showSnackBar", "Maximum 10 tabs only.");
       }
     },
     removeTab(key) {
-      if (this.tabList.length > 1) {
-        this.$emit("tabRemoved",key);
-        for (var i = 0; i < this.tabList.length; i++) {
-          if (
-            this.tabList[i].key === key &&
-            this.isActive === this.tabList[i].key &&
-            i != 0
-          ) {
-            this.setTab(this.tabList[i - 1].key);
-          } else if (
-            this.tabList[i].key === key &&
-            this.isActive === this.tabList[i].key &&
-            i === 0
-          ) {
-            this.setTab(this.tabList[i + 1].key);
-          }
-          if (this.tabList[i].key === key) {
-            this.freeKey(key);
-            this.tabList.splice(i, 1);
-          }
+      if (this.cartList.length > 1) {
+        if(key === this.cartList.length - 1){
+          this.setTab(key-1);
         }
+        this.$emit("tabRemoved",key);
       } else {
         this.$store.commit("showSnackBar", "Atleast 1 tab should be open.");
       }

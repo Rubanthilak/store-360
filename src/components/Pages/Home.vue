@@ -1,6 +1,6 @@
 <template>
   <section>
-    <the-tabs @tab-removed="emptyCart" @tab-switched="switchActiveCart"></the-tabs>
+    <the-tabs @tab-removed="removeCart" @tab-switched="switchActiveCart" @add-tab="addNewCart" :cartList="cartList"></the-tabs>
     <div v-for="cart in filteredCartList" :key="cart">
       <div class="tab-body" v-if="!cart.printPreview">
         <div class="tab-lhs">
@@ -212,124 +212,7 @@ export default {
           },
           customer: null,
           printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
-        {
-          productList: [],
-          paymentMethod: {
-            method: null,
-            amount: {
-              card: null,
-              cash: null,
-              upi: null,
-            },
-          },
-          customer: null,
-          printPreview: false,
-        },
+        }
       ],
       columnName: [
         "ID",
@@ -364,6 +247,23 @@ export default {
       else if (!flag && this.cartList[this.activeCartIndex].productList[index].productCount > 1) {
         this.cartList[this.activeCartIndex].productList[index].productCount--;
       }
+    },
+    addNewCart(){
+      this.cartList.push(
+        {
+          productList: [],
+          paymentMethod: {
+            method: null,
+            amount: {
+              card: null,
+              cash: null,
+              upi: null,
+            },
+          },
+          customer: null,
+          printPreview: false,
+        }
+      )
     },
     intArrayToArrayBuffer(array) {
       return array.buffer.slice(
@@ -407,20 +307,8 @@ export default {
     switchActiveCart(key) {
       this.activeCartIndex = key;
     },
-    emptyCart(key) {
-      this.cartList[key] = {
-        productList: [],
-        paymentMethod: {
-          method: null,
-          amount: {
-            card: null,
-            cash: null,
-            upi: null,
-          },
-        },
-        customer: null,
-        printPreview: false,
-      };
+    removeCart(key) {
+      this.cartList.splice(key, 1);
     },
     setPaymentMethod(option) {
       this.cartList[this.activeCartIndex].paymentMethod.method = option;

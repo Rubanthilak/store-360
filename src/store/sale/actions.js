@@ -103,7 +103,8 @@ export default {
     let temp = {
       ...sale.dataValues,
       payments: [],
-      totalAmountPaid: 0.00
+      totalAmountPaid: 0.00,
+      customer: obj.customer
     }
     sale.payments.forEach(payment => {
       temp.payments.push(payment.dataValues)
