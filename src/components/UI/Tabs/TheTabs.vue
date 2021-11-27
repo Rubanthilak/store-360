@@ -21,7 +21,7 @@ export default {
     return {
       tabList: [
         {
-          tabName: "Billing Tab 1",
+          tabName: "New Tab",
           key: 0,
         },
       ],
@@ -73,7 +73,7 @@ export default {
         let key = this.getKey();
         this.setTab(key);
         this.tabList.push({
-          tabName: "Billing Tab " + this.count,
+          tabName: "New Tab",
           key: key,
         });
       } else {

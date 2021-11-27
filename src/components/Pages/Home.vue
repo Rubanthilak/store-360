@@ -612,6 +612,14 @@ export default {
       }
     });
   },
+  beforeUnmount(){
+    localStorage.setItem("cartlist",JSON.stringify(this.cartList));
+  },
+  created(){
+    if(localStorage.getItem("cartlist") !== null){
+      this.cartList = JSON.parse(localStorage.getItem("cartlist"));
+    }
+  }
 };
 </script>
 
