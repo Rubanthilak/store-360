@@ -132,7 +132,7 @@
               <td width="50%" class="borderBottomForTxn">
                 Date
                 <br />
-                <b>{{invoice.createdAt.toDateString()}}</b>
+                <b>{{invoice.createdAt.toString()}}</b>
               </td>
             </tr>
             <tr v-if="invoice.poNumber">
