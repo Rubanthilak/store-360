@@ -186,8 +186,9 @@ input {
 
 .user-profile {
   display: flex;
+  width: 500px;
   flex-direction: column;
-  margin: 0px auto;
+  // margin: 0px auto;
   gap: 25px;
   background: var(--gray0);
   box-shadow: 0px 3px 15px #0000001a;

@@ -6,6 +6,7 @@
         <span>{{options[active]}}</span>
       </div>
       <div class="hint" v-else>{{valueToDisplay}}</div>
+    <transition name="dropdown">
       <div class="dropdown-container" v-if="dropped">
         <div
           class="dropdown-item"
@@ -14,6 +15,7 @@
           @click="optionSelect(index)"
         >{{op}}</div>
       </div>
+    </transition>
     </div>
     <svg-icon :icon="!dropped ? 'angle-down-icon' : 'angle-up-icon'" color="gray2" size="22"></svg-icon>
   </div>
@@ -77,7 +79,7 @@ export default {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
-  z-index: 1;
+  z-index: 5;
 
   .dropdown-item {
     padding: 8px 15px;
@@ -90,4 +92,17 @@ export default {
     }
   }
 }
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+  max-height: 0px;
+}
+
 </style>
