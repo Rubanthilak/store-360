@@ -167,15 +167,15 @@
               <h1>Additional Details</h1>
               <div class="flex apart">
                 <input type="text" placeholder="PO Number" v-model="cart.poNumber" />
-                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.poDate" />
+                <date-picker @pick="(date) => cart.poDate = date" label="Pick Date" :isRange="false"></date-picker>
               </div>
               <div class="flex apart">
                 <input type="text" placeholder="DC Number" v-model="cart.dcNumber" />
-                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.dcDate" />
+                <date-picker @pick="(date) => cart.dcDate = date" label="Pick Date" :isRange="false"></date-picker>
               </div>
               <div class="flex apart">
                 <input type="text" placeholder="DR Number" v-model="cart.drNumber" />
-                <input type="text" placeholder="DD/MM/YYYY" v-model="cart.drDate" />
+                <date-picker @pick="(date) => cart.drDate = date" label="Pick Date" :isRange="false"></date-picker>
               </div>
             </div>
             <div class="price-card">
@@ -228,6 +228,21 @@ export default {
     };
   },
   methods: {
+    dateSelected(choice, date){
+      switch(choice){
+        case 1:
+          this.invoiceDetails.poDate = date;
+          break;
+
+        case 2:
+          this.invoiceDetails.dcDate = date;
+          break;
+
+        case 3:
+          this.invoiceDetails.drDate = date;
+          break;
+      }
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;

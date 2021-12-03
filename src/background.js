@@ -6,7 +6,6 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import backupDatabase from "../resource/plugins/backupDatabase";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
@@ -26,11 +25,12 @@ async function createWindow() {
       enableRemoteModule: true,
       webviewTag: true,
       webSecurity: false,
-      contextIsolation: false
+      contextIsolation: false,
+      preload: './preload.js',
     },
     frame: false
   });
-  
+
   ipcMain.on('getDefaultPrinter', () => {
     //Listen to get the default printer name
     const list = win.webContents.getPrinters();

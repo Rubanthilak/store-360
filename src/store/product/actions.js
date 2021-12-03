@@ -1,7 +1,7 @@
 import Database from "../../../resource/database/Database";
 
 export default {
-    async getProductList(context,columnToSort) {
+    async getProductList(context,columnToSort='id') {
       await Database.Model.Product.createTable()
       await Database.Model.Customer.createTable()
       await Database.Model.Sale.createTable()

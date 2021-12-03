@@ -1,7 +1,7 @@
 <template>
   <div>
-    <invoice-template-1 v-if="currentTemplate===1" :invoice="invoice"></invoice-template-1>
-    <invoice-template-2 v-else-if="currentTemplate===2" :invoice="invoice"></invoice-template-2>
+    <invoice-template-1 v-if="currentTemplate===0" :invoice="invoice"></invoice-template-1>
+    <invoice-template-2 v-else-if="currentTemplate===1" :invoice="invoice"></invoice-template-2>
   </div>
 </template>
 

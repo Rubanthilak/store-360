@@ -2,10 +2,17 @@
   <div>
     <h1>Template Manager</h1>
     <list-box
-      @option-selected="sort"
+      @option-selected="updateCurrentInvoiceTemplate"
       value-to-display="Select Invoice Template"
-      :options="sortOptionsToDisplay"
-      :active="currentTemplate"
+      :options="templateOptionsToDisplay"
+      :active="currentPrinterSettings.defaultTemplate"
+      style="width: 180px"
+    ></list-box>
+     <list-box
+      @option-selected="updateCurrentPrinter"
+      value-to-display="Select Invoice Template"
+      :options="printerOptionsToDisplay"
+      :active="currentPrinterSettings.defaultPrinter"
       style="width: 180px"
     ></list-box>
     <div style="width:720px; background: white; height: 820px">
@@ -18,7 +25,8 @@
 export default {
   data() {
     return {
-      sortOptionsToDisplay: ["Default GST Template", "Modern GST Template"],
+      templateOptionsToDisplay: ["Default GST Template", "Modern GST Template"],
+      printerOptionsToDisplay: ["A4 Invoice Printer", "Thermal Printer"],
       active: null,
       invoiceDetails: {
         billingAddress: null,
@@ -68,15 +76,21 @@ export default {
     };
   },
   computed: {
-    currentTemplate() {
-      return this.$store.getters["setting/getCurrentInvoiceTemplate"] - 1;
+    currentPrinterSettings() {
+      return this.$store.getters["setting/getUserSettings"];
     },
   },
   methods: {
-    async sort(columnIndex) {
+    async updateCurrentInvoiceTemplate(columnIndex) {
       this.$store.dispatch(
         "setting/updateCurrentInvoiceTemplate",
-        columnIndex + 1
+        columnIndex
+      );
+    },
+    async updateCurrentPrinter(columnIndex) {
+      this.$store.dispatch(
+        "setting/updateCurrentPrinter",
+        columnIndex
       );
     },
   },
@@ -84,4 +98,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

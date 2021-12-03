@@ -3,6 +3,7 @@ const path = require('path')
 
 module.exports = {
   configureWebpack: {
+    target: "electron-renderer",
     devtool: 'source-map',
     externals: {
       sequelize: "require('sequelize')",

@@ -14,7 +14,7 @@
           <p>Printer Settings</p>
         </div>
       </router-link>
-      <router-link to="/settings/template">
+      <router-link to="/settings/about">
         <div class="tile">
           <p>About</p>
         </div>

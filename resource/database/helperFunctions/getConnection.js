@@ -1,10 +1,14 @@
 import { Sequelize, DataTypes } from "sequelize";
 
-const sequelize = new Sequelize({
+var config = {
   dialect: "sqlite",
   storage: "./db.sqlite",
   logging: false,
-});
+}
+
+console.log(config); 
+
+const sequelize = new Sequelize(config);
 
 const connection = {
   sequelize: sequelize,
@@ -13,4 +17,3 @@ const connection = {
 };
 
 export default connection;
-

@@ -40,11 +40,17 @@
                 placeholder="PO Number"
                 v-model="invoiceDetails.poNumber"
               />
-              <input
+              <!-- <input
                 type="text"
                 placeholder="DD/MM/YYYY"
                 v-model="invoiceDetails.poDate"
-              />
+              /> -->
+              <date-picker
+                @pick="(date) => dateSelected(1, date)"
+                label="Pick Date"
+                :isRange="false"
+                :date="invoiceDetails.poDate"
+              ></date-picker>
             </div>
             <div class="flex apart">
               <input
@@ -52,11 +58,17 @@
                 placeholder="DC Number"
                 v-model="invoiceDetails.dcNumber"
               />
-              <input
+              <!-- <input
                 type="text"
                 placeholder="DD/MM/YYYY"
                 v-model="invoiceDetails.dcDate"
-              />
+              /> -->
+              <date-picker
+                @pick="(date) => dateSelected(2, date)"
+                label="Pick Date"
+                :isRange="false"
+                :date="invoiceDetails.dcDate"
+              ></date-picker>
             </div>
             <div class="flex apart">
               <input
@@ -64,12 +76,19 @@
                 placeholder="DR Number"
                 v-model="invoiceDetails.drNumber"
               />
-              <input
+              <!-- <input
                 type="text"
                 placeholder="DD/MM/YYYY"
                 v-model="invoiceDetails.drDate"
-              />
+              /> -->
+              <date-picker
+                @pick="(date) => dateSelected(3, date)"
+                label="Pick Date"
+                :isRange="false"
+                :date="invoiceDetails.drDate"
+              ></date-picker>
             </div>
+            <the-button label="Save" @click="updateBill(true)"></the-button>
           </div>
           <div class="price-card">
             <h1 class="title">Choose Printer</h1>
@@ -142,12 +161,38 @@ export default {
     },
   },
   methods: {
+    dateSelected(choice, date) {
+      switch (choice) {
+        case 1:
+          this.invoiceDetails.poDate = date;
+          break;
+
+        case 2:
+          this.invoiceDetails.dcDate = date;
+          break;
+
+        case 3:
+          this.invoiceDetails.drDate = date;
+          break;
+      }
+    },
     changePrinter(index) {
       this.activePrinter = index;
     },
-    async updateBill() {
+    async updateBill(popup) {
       try {
-        await this.$store.dispatch("sale/updateSale", this.invoiceDetails);
+        await this.$store.dispatch(
+          "sale/updateSale",
+          this.invoiceDetails
+        );
+        if (popup) {
+          this.$moshaToast("Saved Successfully !", {
+            type: "success",
+            hideProgressBar: true,
+            position: "bottom-right",
+            transition: "bounce",
+          });
+        }
       } catch (error) {
         this.$moshaToast(error, {
           type: "danger",

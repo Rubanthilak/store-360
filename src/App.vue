@@ -31,7 +31,7 @@ body {
 main {
   overflow: auto;
   height: 100vh;
-  position:relative;
+  position: relative;
   section {
     padding-top: 20px !important;
   }
@@ -45,13 +45,13 @@ h5,
 h6 {
   margin: 0px;
   font-family: var(--font-semibold);
-  color: var(--gray8)
+  color: var(--gray8);
 }
 
 p {
   margin: 0px;
   font-family: var(--font-regular);
-  color: var(--gray8)
+  color: var(--gray8);
 }
 
 a {

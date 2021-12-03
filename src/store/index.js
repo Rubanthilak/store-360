@@ -3,7 +3,7 @@ import productStore from "./product/index.js";
 import customerStore from "./customer/index.js";
 import settingStore from "./setting/index.js";
 import saleStore from "./sale/index.js";
-import { checkAuthentication } from "../../resource/plugins/googleDrive";
+import { checkAuthentication, removeAuthToken } from "../../resource/plugins/googleDrive";
 
 // Create a new store instance.
 const store = createStore({
@@ -41,6 +41,12 @@ const store = createStore({
       return res;
     },
   },
+  actions:{
+    googleLogout(){
+      let res = removeAuthToken();
+      return res;
+    }
+  }
 });
 
 export default store;

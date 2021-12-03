@@ -41,6 +41,19 @@ function checkAuthentication() {
   return false;
 }
 
+function removeAuthToken() {
+  let fs = require("fs");
+  if (fs.existsSync(TOKEN_PATH)) {
+    try {
+      fs.unlinkSync(TOKEN_PATH);
+    } catch (err) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -116,7 +129,7 @@ async function addFile(drive, folderId, fileName, filePath) {
       media: media,
       fields: "id",
     });
-    return { result: true, message: res.data.id};
+    return { result: true, message: res.data.id };
   } catch (err) {
     if (
       err.code === 401 ||
@@ -206,7 +219,12 @@ async function uploadFile(auth, params) {
           params.filePathForBackup
         );
       } else {
-        return await createMonthFolder(drive, folderName, parentFolderId, params);
+        return await createMonthFolder(
+          drive,
+          folderName,
+          parentFolderId,
+          params
+        );
       }
     } else {
       const response = await drive.files.create({
@@ -219,7 +237,12 @@ async function uploadFile(auth, params) {
       var _timeStamp = new Date();
       _timeStamp = _timeStamp.toDateString().split(" ");
       var _folderName = _timeStamp[1] + "-" + _timeStamp[3];
-      return await createMonthFolder(drive, _folderName, response.data.id, params);
+      return await createMonthFolder(
+        drive,
+        _folderName,
+        response.data.id,
+        params
+      );
     }
   } catch (error) {
     return { result: false, message: error };
@@ -269,4 +292,9 @@ function authorizeApp(url) {
   });
 }
 
-export { initiateAuthentication, checkAuthentication, uploadFile };
+export {
+  initiateAuthentication,
+  checkAuthentication,
+  uploadFile,
+  removeAuthToken,
+};

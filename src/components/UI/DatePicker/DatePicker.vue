@@ -68,7 +68,7 @@
 
 <script>
 export default {
-  props: ["label", "isRange"],
+  props: ["label", "isRange", "date"],
   data() {
     return {
       flag: false,
@@ -97,7 +97,7 @@ export default {
   watch: {
     range(curVal, oldVal) {
       if (curVal != oldVal) {
-        this.flag = !this.flag;
+        this.flag = false;
         this.$emit("pick", this.range);
       }
     },
@@ -123,6 +123,11 @@ export default {
       );
     },
   },
+  beforeMount(){
+    if(this.date !== null && this.date !== undefined){
+      this.range = this.date
+    }
+  }
 };
 </script>
 
@@ -140,6 +145,7 @@ export default {
     position: absolute;
     top: 40px;
     right: 0px;
+    z-index:2;
   }
 }
 
