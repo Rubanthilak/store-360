@@ -1,13 +1,6 @@
 <template>
   <div>
     <h1>Template Manager</h1>
-    <list-box
-      @option-selected="updateCurrentInvoiceTemplate"
-      value-to-display="Select Invoice Template"
-      :options="templateOptionsToDisplay"
-      :active="currentPrinterSettings.defaultTemplate"
-      style="width: 180px"
-    ></list-box>
      <list-box
       @option-selected="updateCurrentPrinter"
       value-to-display="Select Invoice Template"
@@ -15,7 +8,15 @@
       :active="currentPrinterSettings.defaultPrinter"
       style="width: 180px"
     ></list-box>
-    <div style="width:720px; background: white; height: 820px">
+    <list-box
+      v-if="currentPrinterSettings.defaultPrinter === 0"
+      @option-selected="updateCurrentInvoiceTemplate"
+      value-to-display="Select Invoice Template"
+      :options="templateOptionsToDisplay"
+      :active="currentPrinterSettings.defaultTemplate"
+      style="width: 180px"
+    ></list-box>
+    <div :style="`${currentPrinterSettings.defaultPrinter === 0 ? 'width:720px; height: 820px' : 'width:302px; height: 400px'}; background: white;`">
         <invoice-preview :invoice="invoiceDetails"></invoice-preview>
     </div>
   </div>
@@ -31,7 +32,7 @@ export default {
       invoiceDetails: {
         billingAddress: null,
         createdAt: new Date(),
-        customerId: 2,
+        customerId: 1,
         dcDate: null,
         dcNumber: null,
         drDate: "Invalid date",

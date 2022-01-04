@@ -1,5 +1,16 @@
 var template1 = `
-
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    -webkit-print-color-adjust: exact; 
+  }
+}
 .pdfTransactionHTMLView {
     display: block;
     padding: 20px 30px;
@@ -140,7 +151,22 @@ var template1 = `
   }
 `;
 
-var template2 = `.printHTMLView h1, .printHTMLView p {
+var template2 = `
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    -webkit-print-color-adjust: exact; 
+  }
+}
+
+.printHTMLView h1, .printHTMLView p {
   font-family: Segoe, "Segoe UI", Calibri, Candara, Optima, Arial, sans-serif !important;
 }
 
@@ -222,7 +248,77 @@ h1{
 }
 
 ` 
+var template3 = `
+@page {
+  margin: 0;
+  width: 80mm !important;
+}
 
+@media print {
+  html,
+  body {
+    width: 80mm;
+    height:100%;
+    -webkit-print-color-adjust: exact; 
+  }
+}
+.printHTMLView {
+  font-family: sans-serif !important;
+  width: 282px;
+  max-width: 302px;
+  padding: 10px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 14px;
+  margin: 1px;
+}
+
+.address {
+  text-align: center;
+  font-size: 12px;
+  margin: 0px;
+}
+
+.billnumber {
+  display: inline-block;
+  font-size: 12px;
+  text-align: left;
+}
+
+.date {
+  /* display: inline-block; */
+  font-size: 12px;
+  float: right;
+}
+
+th {
+  font-size: 13px;
+}
+
+td {
+  font-size: 12px;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.meta p {
+  margin: 2px;
+}
+th {
+  border-top: 1px dashed black;
+  border-bottom: 1px dashed black;
+}
+.tbody td {
+  padding: 5px 0px;
+}`
 function getTemplateCSS(i){
     switch(i){
         case 1:
@@ -230,7 +326,7 @@ function getTemplateCSS(i){
         case 2:
             return template2
         default:
-            return ``
+            return template3
     }
 }
 

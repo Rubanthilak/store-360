@@ -19,14 +19,7 @@
     <div class="flex print-preview" v-if="invoiceDetails">
       <div
         ref="invoice"
-        style="
-          height: 85vh;
-          overflow: auto;
-          width: 700px;
-          background: white;
-          margin: 0px auto;
-          border-radius: 5px;
-        "
+        :class="currentPrinter===0 ? 'A4' : 'eighty-mm'"
       >
         <invoice-preview :invoice="invoiceDetails"></invoice-preview>
       </div>
@@ -133,6 +126,9 @@ export default {
     };
   },
   computed: {
+    currentPrinter(){
+      return this.$store.getters["setting/getUserSettings"].defaultPrinter
+    },
     totalPrice() {
       let temp = 0;
       this.invoiceDetails.productList.forEach((item) => {
@@ -270,10 +266,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+section{
+  padding-bottom: 40px !important;
+}
 .print-preview {
   margin: 0px auto;
   justify-content: space-between;
   gap: 20px;
+
+  .A4{
+    height: 85vh;
+    overflow: auto;
+    width: 700px;
+    background: white;
+    margin: 0px auto;
+    border-radius: 5px;
+  }
+
+  .eighty-mm {
+    width: 302px;
+    max-width: 302px;
+    overflow: auto;
+    max-height: 85vh;
+    background: white;
+    margin: 0px auto;
+    border-radius: 3px;
+  }
 
   .side-card {
     display: flex;

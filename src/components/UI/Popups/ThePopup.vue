@@ -57,6 +57,10 @@ dialog {
   border-radius: 4px;
 }
 
+section{
+  padding-top:20px;
+}
+
 .overlay-enter-active,
 .overlay-leave-active {
   transition: opacity 0.2s ease-in;

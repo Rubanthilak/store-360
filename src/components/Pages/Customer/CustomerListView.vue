@@ -20,12 +20,12 @@
                 @click="triggerCreateCustomer"
               ></svg-icon>
             </tool-tip>
-            <svg-icon
+            <!-- <svg-icon
                 icon="ellipsis-icon"
                 color="gray2"
                 hover-color="blue"
                 size="24"
-            ></svg-icon>
+            ></svg-icon> -->
           </div>
         </div>
       </template>

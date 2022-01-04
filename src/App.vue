@@ -30,11 +30,14 @@ body {
 
 main {
   overflow: auto;
+  // min-height: 900px;
   height: 100vh;
   position: relative;
-  section {
-    padding-top: 20px !important;
-  }
+}
+
+main > section {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
 }
 
 h1,

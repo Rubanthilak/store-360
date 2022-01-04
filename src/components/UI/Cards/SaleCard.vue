@@ -7,7 +7,7 @@
     <div class="card-body">
       <div class="attribute">
         <p class="key">Customer</p>
-        <p class="value name">{{sale.customerId}}</p>
+        <p class="value name">{{customer.customerName}}</p>
       </div>
       <div class="attribute">
         <p class="key">Date</p>
@@ -35,7 +35,18 @@
 
 <script>
 export default {
-    props: ["sale"]
+    props: ["sale"],
+    data(){
+      return {
+        customer: {}
+      }
+    },
+    async mounted() {
+    this.customer = await this.$store.dispatch(
+      "customer/getCustomerById",
+      this.sale.customerId
+    );
+  },
 }
 </script>
 

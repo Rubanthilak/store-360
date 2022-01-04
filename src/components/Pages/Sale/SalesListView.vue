@@ -4,7 +4,7 @@
       <template #default>
         <div class="flex menu-bar">
           <search-bar
-            :placeHolder="'Search Sale by Invoice Number, ...'"
+            :placeHolder="'Search Sale by Invoice Number'"
             @typing="searchProduct"
           ></search-bar>
           <div class="flex button-container">

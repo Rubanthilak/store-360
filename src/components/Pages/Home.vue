@@ -157,7 +157,8 @@
       <div v-else class="flex print-preview">
         <div
           ref="invoice"
-          style="height:85vh;overflow:auto;width:700px;background:white;margin:25px auto;border-radius:5px"
+          :class="currentPrinter===0 ? 'A4' : 'eighty-mm'"
+          style="margin-top:20px"
         >
           <invoice-preview :invoice="cart" style="margin-bottom:10px;"></invoice-preview>
         </div>
@@ -407,6 +408,9 @@ export default {
     },
   },
   computed: {
+    currentPrinter(){
+      return this.$store.getters["setting/getUserSettings"].defaultPrinter
+    },
     defaultPrinter() {
       var printer = "";
       ipcRenderer.send("getDefaultPrinter");
@@ -521,6 +525,11 @@ export default {
   created(){
     if(localStorage.getItem("cartlist") !== null){
       this.cartList = JSON.parse(localStorage.getItem("cartlist"));
+      this.cartList.forEach(cart => {
+        if(cart.createdAt){
+          cart.createdAt = new Date(cart.createdAt);
+        }
+      })
     }
   }
 };
@@ -556,8 +565,28 @@ td {
   }
 }
 
+
+.A4{
+  height: 85vh;
+  overflow: auto;
+  width: 700px;
+  background: white;
+  margin: 0px auto;
+  border-radius: 5px;
+}
+
+.eighty-mm {
+  width: 302px;
+  max-width: 302px;
+  overflow: auto;
+  max-height: 85vh;
+  background: white;
+  margin: 0px auto;
+  border-radius: 3px;
+}
+
 .count-box{
-  display:flex;
+display:flex;
   gap:1rem;
   width:100%;
   justify-content:center;
