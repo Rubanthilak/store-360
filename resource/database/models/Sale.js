@@ -111,7 +111,7 @@ const getSaleById = async function(id) {
 
 const getSalesCustomerId = async function(cust_id,limit,columnToSort = "id") {
   const sales = await Sale.findAll({
-    order: [[columnToSort, "ASC"]],
+    order: [[columnToSort, "DESC"]],
     where: {
       customerId: cust_id,
     },

@@ -20,11 +20,11 @@ export default {
     p {
         position:absolute;
         color: var(--gray0);
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.527);
         border-radius: 5px;
         font-size:12px;
         padding: 0px 10px; 
-        right: -90px;
+        right: -70px;
         bottom: -20px;
         opacity:0;
         transition: opacity 0.3s 0.3s;

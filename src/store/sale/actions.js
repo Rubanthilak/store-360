@@ -93,6 +93,7 @@ export default {
     return tempList;
   },
   async postSale(context, obj) {
+    //TODO:check the product count value before purchase
     const payments = generatePaymentArray(obj.paymentMethod,obj.customer.id);
     const sale = await Database.Model.Sale.createSale({
       customerId : obj.customer.id,
@@ -110,7 +111,7 @@ export default {
       temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
     });
-    console.log(temp);
+    //TODO:Detect the Product Count Value after Purchase
     return temp;         
   },
   async updateSale(context, obj) {

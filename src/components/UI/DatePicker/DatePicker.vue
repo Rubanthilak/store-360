@@ -1,5 +1,5 @@
 <template>
-  <div class="datepicker" style="min-width: 90px">
+  <div ref="target" class="datepicker" style="min-width: 90px">
     <div class="box" @click="toggleDropdown" style="min-width: 90px">
       <svg-icon
         v-if="isRange ? !range.end : !range"
@@ -67,11 +67,20 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { onClickOutside } from "@vueuse/core";
 export default {
+   setup() {
+    const target = ref(null);
+    var flag = ref(false);
+
+    onClickOutside(target, () => (flag.value = false));
+    
+    return { target, flag };
+  },
   props: ["label", "isRange", "date"],
   data() {
     return {
-      flag: false,
       range: this.isRange
         ? {
             start: null,

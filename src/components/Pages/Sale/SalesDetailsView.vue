@@ -16,7 +16,13 @@
           <div class="flex button-container">
             <router-link :to="'/sales/' + sale.id + '/print'">
               <tool-tip label="Print Invoice">
-                <svg-icon class="print-btn" icon="print-icon" color="gray2" hover-color="blue" size="24"  ></svg-icon>
+                <svg-icon
+                  class="print-btn"
+                  icon="print-icon"
+                  color="gray2"
+                  hover-color="blue"
+                  size="24"
+                ></svg-icon>
               </tool-tip>
             </router-link>
           </div>
@@ -34,14 +40,14 @@
       <div>
         <div class="bill-card">
           <div class="header tile">
-            <p style="text-align: right;">S.No</p>
+            <p style="text-align: right">S.No</p>
             <p style="text-align: left">Item</p>
             <p style="text-align: right">Price/Unit</p>
             <p style="text-align: right">Unit</p>
             <p style="text-align: right">Price</p>
             <p style="text-align: right">GST</p>
             <p style="text-align: right">GST (in ₹)</p>
-            <p style="text-align: right;padding-right:10px;">Total</p>
+            <p style="text-align: right; padding-right: 10px">Total</p>
           </div>
           <div style="min-height: 75vh">
             <div
@@ -62,7 +68,7 @@
               <p style="text-align: right">
                 {{ product.productTotalTax.toFixed(2) }}
               </p>
-              <p style="text-align: right;padding-right:10px;">
+              <p style="text-align: right; padding-right: 10px">
                 {{ product.productTotalAmount.toFixed(2) }}
               </p>
             </div>
@@ -95,6 +101,30 @@
             </div>
           </router-link>
         </div>
+        <div class="card" v-if="sale.poNumber || sale.dcNumber || sale.drNumber">
+          <div class="title">
+            <p>Additional Details</p>
+          </div>
+          <div class="pay-list">
+            <div
+              class="flex pay-tile"
+              style="flex-direction:column;"
+            >
+              <div  v-if="sale.poNumber" class="flex" style="justify-content:space-between;width:100%">
+                <p class="method">PO Number <span class="date" style="margin-left:5px;">{{sale.poNumber}}</span> </p>
+                <p v-if="sale.poDate" class="method">Date <span class="date" style="margin-left:5px;">{{sale.poDate}}</span> </p>
+              </div>
+              <div v-if="sale.dcNumber" class="flex" style="justify-content:space-between;width:100%">
+                <p class="method">DC Number <span class="date" style="margin-left:5px;">{{sale.dcNumber}}</span> </p>
+                <p v-if="sale.dcDate" class="method">Date <span class="date" style="margin-left:5px;">{{sale.dcDate}}</span> </p>
+              </div>
+              <div v-if="sale.drNumber" class="flex" style="justify-content:space-between;width:100%">
+                <p class="method">DR Number <span class="date" style="margin-left:5px;">{{sale.drNumber}}</span> </p>
+                <p v-if="sale.drDate" class="method">Date <span class="date" style="margin-left:5px;">{{sale.drDate}}</span> </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="card">
           <div class="title">
             <p>Payment Summary</p>
@@ -104,19 +134,29 @@
               <p>Purchase Date</p>
               <p>{{ sale.createdAt.toDateString().substring(4) }}</p>
             </div>
-            <div v-if="sale.totalAmountPaid < sale.totalPrice" class="flex" style="width:100%;justify-content:space-between;height:34px;align-items:center;">
+            <div
+              v-if="sale.totalAmountPaid < sale.totalPrice"
+              class="flex"
+              style="
+                width: 100%;
+                justify-content: space-between;
+                height: 34px;
+                align-items: center;
+              "
+            >
               <div>
                 <p>Balance</p>
                 <p style="color: var(--red)">
                   ₹ {{ (sale.totalPrice - sale.totalAmountPaid).toFixed(2) }}
                 </p>
               </div>
-               <flow-button label="Pay Balance"
+              <flow-button
+                label="Pay Balance"
                 @click="toggleAddPaymentPopup"
-              v-if="sale.totalAmountPaid < sale.totalPrice"
+                v-if="sale.totalAmountPaid < sale.totalPrice"
               >
-              <svg-icon icon="plus-icon" color="gray0" size="24"></svg-icon>
-            </flow-button>
+                <svg-icon icon="plus-icon" color="gray0" size="24"></svg-icon>
+              </flow-button>
             </div>
             <div v-else>
               <p>Status</p>
@@ -124,6 +164,7 @@
             </div>
           </div>
         </div>
+        
         <div class="card">
           <div class="title">
             <p>Payment History</p>
@@ -185,12 +226,12 @@ export default {
       });
       return tempList;
     },
-    customerId(){
-      if(this.customer === null){
-        return '';
+    customerId() {
+      if (this.customer === null) {
+        return "";
       }
       return this.customer.id;
-    }
+    },
   },
   methods: {
     toggleAddPaymentPopup() {
@@ -217,17 +258,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 section {
   padding-top: 10px !important;
 }
 
-.print-btn{
+.print-btn {
   margin-top: 6px;
   padding: 6px 8px;
   border-radius: 5px;
 
-  &:hover{
+  &:hover {
     background: var(--gray1);
   }
 }
@@ -382,6 +422,7 @@ section {
 
     .method {
       font-family: var(--font-semibold);
+      font-size: 14px;
     }
     .date {
       font-family: var(--font-light);
