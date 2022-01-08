@@ -111,7 +111,8 @@ export default {
       temp.payments.push(payment.dataValues)
       temp.totalAmountPaid += parseFloat(payment.dataValues.amountPaid)
     });
-    //TODO:Detect the Product Count Value after Purchase
+    //Subtract the Product Count Value after Purchase
+    await Database.Model.Product.subtractProductStock(obj.productList);
     return temp;         
   },
   async updateSale(context, obj) {

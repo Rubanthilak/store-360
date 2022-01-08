@@ -29,11 +29,14 @@
             <template #tbody>
               <tr v-for="(product,index) in cart.productList" :key="product.id">
                 <td>{{product.id}}</td>
-                <td>{{product.productName}}</td>
+                <td>{{product.productName}} 
+                  <span style="border-radius:50px;font-size:8px;background-color:red;color:white;padding:2px 5px;" 
+                  v-if="product.productCount > product.productStock">Only {{product.productStock}} Available</span> 
+                </td>
                 <td>
                   <div class="count-box">
                     <p class="min-btn red" @click="modifyProductCount(false,index)">-</p>
-                    <input type="text" min="1" v-model="product.productCount" @keypress="isNumber($event)">
+                    <input type="text" min="1" v-model="product.productCount" @keypress="isNumber($event)" @blur="validateProductCount(index)">
                     <p class="min-btn blue" @click="modifyProductCount(true,index)">+</p>
                   </div>
                 </td>
@@ -144,12 +147,11 @@
                     <h1>Total</h1>
                     <p class="total">₹ {{totalPrice.toFixed(2)}}</p>
                   </div>
-                 
                 </div>
               </div>
             </div>
             <div class="footer">
-              <the-button label="Checkout" color="green" @click="validateBill"></the-button>
+              <the-button :label="isLoading ? 'Loading...' : 'Checkout'" :color="isLoading ? 'green' : 'blue'" @click="validateBill"></the-button>
             </div>
           </div>
         </div>
@@ -200,6 +202,7 @@ const ipcRenderer = require("electron").ipcRenderer;
 export default {
   data() {
     return {
+      isLoading: false,
       cartList: [
         {
           productList: [],
@@ -257,11 +260,31 @@ export default {
       }
     },
     modifyProductCount(flag,index){
-      if(flag){
+      if(flag && this.cartList[this.activeCartIndex].productList[index].productCount < this.cartList[this.activeCartIndex].productList[index].productStock){
         this.cartList[this.activeCartIndex].productList[index].productCount++;
       }
       else if (!flag && this.cartList[this.activeCartIndex].productList[index].productCount > 1) {
         this.cartList[this.activeCartIndex].productList[index].productCount--;
+      }
+    },
+    validateProductCount(index){
+      if(this.cartList[this.activeCartIndex].productList[index].productCount > this.cartList[this.activeCartIndex].productList[index].productStock){
+        this.cartList[this.activeCartIndex].productList[index].productCount = this.cartList[this.activeCartIndex].productList[index].productStock
+        this.$moshaToast(`Only ${this.cartList[this.activeCartIndex].productList[index].productStock} is available.`, {
+          type: "info",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
+      }
+      else if (this.cartList[this.activeCartIndex].productList[index].productCount < 1) {
+        this.cartList[this.activeCartIndex].productList[index].productCount = 1;
+        this.$moshaToast(`Quantity should be atleast 1`, {
+          type: "info",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
       }
     },
     addNewCart(){
@@ -357,14 +380,17 @@ export default {
         this.cartList[this.activeCartIndex].productList.length > 0
       ) {
         try {
+          this.isLoading = true;
           this.cartList[this.activeCartIndex].totalPrice = this.totalPrice
           this.cartList[this.activeCartIndex] = await this.$store.dispatch(
             "sale/postSale",
             this.cartList[this.activeCartIndex]
           );
+          this.isLoading = false;
           this.cartList[this.activeCartIndex].printPreview = true;
         } catch (error) {
           console.log(error);
+          this.isLoading = false;
         }
       }
     },
@@ -529,7 +555,7 @@ export default {
         if(cart.createdAt){
           cart.createdAt = new Date(cart.createdAt);
         }
-      })
+      });
     }
   }
 };

@@ -1,40 +1,40 @@
-import connection from '../helperFunctions/getConnection.js';
+import connection from "../helperFunctions/getConnection.js";
 
-const Product = connection.sequelize.define('product', {
+const Product = connection.sequelize.define("product", {
   id: {
     type: connection.DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
     field: "productId",
-    autoIncrement: true
+    autoIncrement: true,
   },
   productName: {
     type: connection.DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   productHscNumber: {
     type: connection.DataTypes.NUMBER,
-    allowNull: true
+    allowNull: true,
   },
   productBaseUnit: {
     type: connection.DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
   },
   productSecondaryUnit: {
     type: connection.DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
   },
   productUnitRatio: {
     type: connection.DataTypes.NUMBER,
-    allowNull: true
+    allowNull: true,
   },
   productStock: {
     type: connection.DataTypes.NUMBER,
-    allowNull: true
+    allowNull: true,
   },
   productTaxPercentage: {
     type: connection.DataTypes.FLOAT,
-    defaultValue: 18
+    defaultValue: 18,
   },
   productMrpPrice: {
     type: connection.DataTypes.FLOAT,
@@ -42,87 +42,92 @@ const Product = connection.sequelize.define('product', {
   },
   productSellingPrice: {
     type: connection.DataTypes.FLOAT,
-    allowNull: false
+    allowNull: false,
   },
   productBarcode: {
     type: connection.DataTypes.NUMBER,
-    allowNull: true
+    allowNull: true,
   },
   productArchived: {
     type: connection.DataTypes.BOOLEAN,
     defaultValue: false,
-    allowNull: true
-  }
+    allowNull: true,
+  },
 });
 
-const createTable = async function(){
-  await Product.sync()
-}
+const createTable = async function() {
+  await Product.sync();
+};
 
-const getProducts = async function(columnToSort='id'){
+const getProducts = async function(columnToSort = "id") {
   const products = await Product.findAll({
-      order: [[columnToSort, 'ASC']]
-    }
-  );
+    order: [[columnToSort, "ASC"]],
+  });
   return products;
-}
+};
 
-const getProductById = async function(id){
-    const product = await Product.findByPk(id);
-    return product;
-}
+const getProductById = async function(id) {
+  const product = await Product.findByPk(id);
+  return product;
+};
 
-const createProduct = async function(obj){
-    const product = await Product.create({
-      productName: obj.productName,
-      productBaseUnit : obj.productBaseUnit,
-      productSecondaryUnit : obj.productSecondaryUnit,
-      productUnitRatio : obj.productUnitRatio,
-      productMrpPrice : obj.productMrpPrice,
-      productSellingPrice : obj.productSellingPrice,
-      productBarcode: obj.productBarcode,
-      productHscNumber: obj.productHscNumber,
-      productTaxType: obj.productTaxType,
-      productTaxPercentage: obj.productTaxPercentage,
-      productStock: obj.productStock,
+const createProduct = async function(obj) {
+  const product = await Product.create({
+    productName: obj.productName,
+    productBaseUnit: obj.productBaseUnit,
+    productSecondaryUnit: obj.productSecondaryUnit,
+    productUnitRatio: obj.productUnitRatio,
+    productMrpPrice: obj.productMrpPrice,
+    productSellingPrice: obj.productSellingPrice,
+    productBarcode: obj.productBarcode,
+    productHscNumber: obj.productHscNumber,
+    productTaxType: obj.productTaxType,
+    productTaxPercentage: obj.productTaxPercentage,
+    productStock: obj.productStock,
   });
   return product.dataValues;
-}
+};
 
-const createBulkProduct = async function(list){
-    await Product.bulkCreate(list);
-    return await Product.findAll({
-      order: [['id', 'ASC']]
-    });
-}
+const createBulkProduct = async function(list) {
+  await Product.bulkCreate(list);
+  return await Product.findAll({
+    order: [["id", "ASC"]],
+  });
+};
 
-const deleteProduct = async function(id){
+const deleteProduct = async function(id) {
   const res = await Product.destroy({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
   return res === 1 ? true : false;
-}
+};
 
-const updateProduct = async function(obj,id){
-  const res = await Product.update(obj,{
+const updateProduct = async function(obj, id) {
+  const res = await Product.update(obj, {
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
   return res[0] === 1 ? true : false;
-}
+};
 
 export { Product };
 
+const subtractProductStock = async function(productList) {
+  productList.forEach(async (product) => {
+    await Product.decrement('productStock', { by: product.productCount, where: { id: product.id }});
+  })
+};
 
 export default {
-  createTable:createTable,
-  createProduct:createProduct,
-  createBulkProduct:createBulkProduct,
-  getProducts:getProducts,
-  deleteProduct:deleteProduct,
-  updateProduct:updateProduct,
-  getProductById:getProductById
-}
+  createTable: createTable,
+  createProduct: createProduct,
+  createBulkProduct: createBulkProduct,
+  getProducts: getProducts,
+  deleteProduct: deleteProduct,
+  updateProduct: updateProduct,
+  getProductById: getProductById,
+  subtractProductStock,
+};

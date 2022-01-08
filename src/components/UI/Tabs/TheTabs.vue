@@ -21,7 +21,6 @@ export default {
   data() {
     return {
       isActive: null,
-      count: 1,
     };
   },
   methods: {
@@ -37,7 +36,13 @@ export default {
         this.$emit("addTab")
         this.setTab(this.cartList.length - 1);
       } else {
-        this.$store.commit("showSnackBar", "Maximum 10 tabs only.");
+        // this.$store.commit("showSnackBar", "Maximum 10 tabs only.");
+        this.$moshaToast("Maximum 10 tabs only.", {
+          type: "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
       }
     },
     removeTab(key) {
@@ -47,7 +52,13 @@ export default {
         }
         this.$emit("tabRemoved",key);
       } else {
-        this.$store.commit("showSnackBar", "Atleast 1 tab should be open.");
+        // this.$store.commit("showSnackBar", "Atleast 1 tab should be open.");
+        this.$moshaToast("Atleast 1 tab should be open.", {
+          type: "danger",
+          hideProgressBar: "true",
+          position: "bottom-right",
+          transition: "bounce",
+        });
       }
     },
   },

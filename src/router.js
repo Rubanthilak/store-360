@@ -4,6 +4,7 @@ import {
 } from "vue-router";
 
 import Home from "./components/Pages/Home.vue";
+import Home2 from "./components/Pages/Home2.vue";
 import Profile from "./components/Pages/Profile.vue";
 
 import SettingsView from "./components/Pages/Settings/SettingsView.vue";
@@ -25,9 +26,19 @@ import SalesListView from "./components/Pages/Sale/SalesListView.vue";
 import SalesDetailsView from "./components/Pages/Sale/SalesDetailsView.vue";
 import SalesPrintView from "./components/Pages/Sale/SalesPrintView.vue";
 
-const routes = [{
+const routes = [
+  {
     path: "/",
     component: Home
+  },
+  {
+    path: "/home",
+    component: Home2,
+    children: [{
+      path: ":id",
+      component: ItemsListView
+    },
+  ],
   },
   {
     path: "/items",

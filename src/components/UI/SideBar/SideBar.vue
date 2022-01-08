@@ -6,6 +6,9 @@
           <router-link to="/">
             <svg-icon icon="home-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
+          <router-link to="/home">
+            <svg-icon icon="home-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
+          </router-link>
           <router-link to="/items">
             <svg-icon icon="box-icon" color="gray2" hover-color="blue" size="28"></svg-icon>
           </router-link>
